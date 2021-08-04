@@ -1,4 +1,4 @@
-package java.com.softserve.entity;
+package com.softserve.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

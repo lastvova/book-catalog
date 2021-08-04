@@ -2,3 +2,5 @@
 /.maven
 /.idea
 /maven
+*.log
+target

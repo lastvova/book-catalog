@@ -1,0 +1,21 @@
+<configuration>
+
+    <property name="LOG_FILE" value="LogFile"/>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>[%-5level] %-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{35} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}-%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <tolalSizeCap>1GB</tolalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

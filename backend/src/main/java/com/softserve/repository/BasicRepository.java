@@ -1,4 +1,4 @@
-package java.com.softserve.repository;
+package com.softserve.repository;
 
 import java.io.Serializable;
 import java.util.List;
