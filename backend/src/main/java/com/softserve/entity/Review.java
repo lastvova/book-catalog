@@ -21,10 +21,10 @@ public class Review implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    @Column(name = "commenter_name", length = 20, nullable = false)
+    @Column(name = "commenter_name", length = 32, nullable = false)
     private String commenterName;
 
-    @Column(name = "comment", length = 200, nullable = false)
+    @Column(name = "comment", length = 256, nullable = false)
     private String comment;
 
     @Column(name = "rating")
@@ -34,7 +34,7 @@ public class Review implements Serializable {
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "BOOK_ID_FK"))
+    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "BOOK_ID_FK"))
     private Book book;
 
     @Override

@@ -1,10 +1,9 @@
 package com.softserve.repository;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public interface BasicRepository<T extends Serializable, I extends Serializable> {
+public interface BasicRepository<T, I> {
 
     Optional<T> findById(I id);
 

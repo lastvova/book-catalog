@@ -23,10 +23,10 @@ public class Author implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    @Column(name = "first_name", length = 20, nullable = false)
+    @Column(name = "first_name", length = 32, nullable = false)
     private String firstName;
 
-    @Column(name = "second_name", length = 20, nullable = false)
+    @Column(name = "second_name", length = 32, nullable = false)
     private String secondName;
 
     @Column(name = "create_date", nullable = false, updatable = false)

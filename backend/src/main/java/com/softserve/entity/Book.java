@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//hot swap
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +26,7 @@ public class Book implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    @Column(name = "name", length = 60, nullable = false)
+    @Column(name = "name", length = 64, nullable = false)
     private String name;
 
     @Column(name = "year_publisher", nullable = false)
@@ -38,7 +37,6 @@ public class Book implements Serializable {
     private BigInteger isbn;
 
     @Column(name = "publisher", length = 128, nullable = false)
-//    more symbols like > 128
     private String publisher;
 
     @Column(name = "create_date", nullable = false, updatable = false)
