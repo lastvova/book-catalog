@@ -31,13 +31,14 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<T> findById(I id) {
         log.info("In findById of {}", basicClass.getName());
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<T> getAll() {
         log.info("In getAll of {}", basicClass.getName());
         return sessionFactory.getCurrentSession()
@@ -54,6 +55,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     @Override
+    @Transactional
     public T update(T entity) {
         log.info("In update({}) of {}", entity, basicClass.getName());
         sessionFactory.getCurrentSession().update(entity);
@@ -61,6 +63,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     @Override
+    @Transactional
     public T delete(T entity) {
         log.info("In delete({}) of {}", entity, basicClass.getName());
         sessionFactory.getCurrentSession().delete(entity);

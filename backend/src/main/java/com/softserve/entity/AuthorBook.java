@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "author_book")
+@Table(name = "authors_books")
 public class AuthorBook implements Serializable {
 
     @Id

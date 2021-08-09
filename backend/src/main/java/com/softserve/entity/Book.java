@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 public class Book implements Serializable {
 
     @Id
@@ -29,7 +30,7 @@ public class Book implements Serializable {
     @Column(name = "name", length = 64, nullable = false)
     private String name;
 
-    @Column(name = "year_publisher", nullable = false)
+    @Column(name = "year_publisher")
     private LocalDate yearPublisher;
 
     @Column(name = "isbn", unique = true, nullable = false)
