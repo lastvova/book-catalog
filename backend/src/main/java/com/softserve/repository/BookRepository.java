@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface BookRepository extends BasicRepository<Book, BigInteger> {
 
-    List<Book> getAllAvailableBooks();
+    List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort);
+
+    List<Book> getBooksByName(String name, String sort);
 
     List<Book> getAllBooksByAuthor(Author author);
 
     List<Book> getAllBooksByRating(int rating);
-
-    void deleteBookWithReviews(BigInteger id);
 
     void deleteBooksWithReviews(List<BigInteger> ids);
 }

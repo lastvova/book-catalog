@@ -3,12 +3,12 @@ package com.softserve.repository.impl;
 
 import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +16,13 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @SuppressWarnings("unchecked")
-public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
-
+public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I> {
+    //TODO session in constructor
+//    TODO change log type(debug, warn, etc..)
     protected final Class<T> basicClass;
 
-    @Autowired
-    protected SessionFactory sessionFactory;
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     @Autowired
     public BasicRepositoryImpl() {
@@ -34,15 +35,15 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     @Transactional(readOnly = true)
     public Optional<T> findById(I id) {
         log.info("In findById of {}", basicClass.getName());
-        return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
+        T entity = entityManager.find(basicClass, id);
+        return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> getAll() {
         log.info("In getAll of {}", basicClass.getName());
-        return sessionFactory.getCurrentSession()
-                .createQuery("from " + basicClass.getName())
+        return entityManager.createQuery("from " + basicClass.getName())
                 .getResultList();
     }
 
@@ -50,7 +51,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     @Transactional
     public T save(T entity) {
         log.info("In save({}) of {}", entity, basicClass.getName());
-        sessionFactory.getCurrentSession().save(entity);
+        entityManager.persist(entity);
         return entity;
     }
 
@@ -58,15 +59,16 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     @Transactional
     public T update(T entity) {
         log.info("In update({}) of {}", entity, basicClass.getName());
-        sessionFactory.getCurrentSession().update(entity);
+        entityManager.refresh(entity);
         return entity;
     }
 
     @Override
     @Transactional
-    public T delete(T entity) {
-        log.info("In delete({}) of {}", entity, basicClass.getName());
-        sessionFactory.getCurrentSession().delete(entity);
+    public T delete(I id) {
+        log.info("In delete({}) of {}", id, basicClass.getName());
+        T entity = entityManager.find(basicClass, id);
+        entityManager.remove(entity);
         return entity;
     }
 }
