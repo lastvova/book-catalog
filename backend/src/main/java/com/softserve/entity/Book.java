@@ -5,16 +5,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.NaturalId;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,6 +24,11 @@ import java.util.List;
 @Entity
 @Table(name = "books")
 public class Book implements Serializable {
+
+    //    TODO: another methods for avg rating
+    //    TODO:cascade type
+//    TODO @Fetch( FetchMode.SUBSELECT) -- крайні ситуації
+//    TODO окремо пройтись по книжці, без книжки
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +38,7 @@ public class Book implements Serializable {
     private String name;
 
     @Column(name = "year_publisher")
+
     private LocalDate yearPublisher;
 
     @Column(name = "isbn", unique = true, nullable = false)
@@ -43,19 +51,32 @@ public class Book implements Serializable {
     @Column(name = "create_date", nullable = false, updatable = false)
     private LocalDateTime createDate;
 
+
+    @Formula(value = "(select ifnull(round(avg(r.rating), 2),0) from reviews r where r.book_id = id)")
+    private BigDecimal rating;
+
     @OneToMany(
             mappedBy = "book",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             orphanRemoval = true
     )
-    private List<AuthorBook> authors = new ArrayList<>();
+
+    private Set<AuthorBook> authors = new HashSet<>();
 
     @OneToMany(
             mappedBy = "book",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Review> reviews = new ArrayList<>();
+    private Set<Review> reviews = new HashSet<>();
+
+    private void setAuthors(Set<AuthorBook> authors) {
+        this.authors = authors;
+    }
+
+    private void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
+    }
 
     public void addReview(Review review) {
         reviews.add(review);
@@ -111,16 +132,17 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", yearPublisher=" + yearPublisher +
-                ", isbn='" + isbn + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", createDate=" + createDate +
-                ", authors=" + authors +
-                ", reviews=" + reviews +
-                '}';
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("yearPublisher", yearPublisher)
+                .append("isbn", isbn)
+                .append("publisher", publisher)
+                .append("createDate", createDate)
+                .append("rating", rating)
+                .append("authors", authors)
+                .append("reviews", reviews)
+                .toString();
     }
 }
 

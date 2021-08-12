@@ -33,8 +33,7 @@ public class Review implements Serializable {
     @Column(name = "create_date", nullable = false, updatable = false)
     private LocalDateTime createDate;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "BOOK_ID_FK"))
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Book book;
 
     @Override
@@ -50,7 +49,6 @@ public class Review implements Serializable {
                 .append(commenterName, review.commenterName)
                 .append(comment, review.comment)
                 .append(createDate, review.createDate)
-                .append(book, review.book)
                 .isEquals();
     }
 
@@ -61,7 +59,6 @@ public class Review implements Serializable {
                 .append(comment)
                 .append(rating)
                 .append(createDate)
-                .append(book)
                 .toHashCode();
     }
 }
