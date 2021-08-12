@@ -25,11 +25,6 @@ import java.util.Set;
 @Table(name = "books")
 public class Book implements Serializable {
 
-    //    TODO: another methods for avg rating
-    //    TODO:cascade type
-//    TODO @Fetch( FetchMode.SUBSELECT) -- крайні ситуації
-//    TODO окремо пройтись по книжці, без книжки
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
@@ -57,10 +52,9 @@ public class Book implements Serializable {
 
     @OneToMany(
             mappedBy = "book",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-
     private Set<AuthorBook> authors = new HashSet<>();
 
     @OneToMany(

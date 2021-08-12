@@ -15,10 +15,6 @@ import java.util.List;
 @Repository
 public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> implements BookRepository {
 
-//    TODO general basic object with all params(object to sort, type of sort, pagination params)
-//    TODO transactional on service layers(Propaganation Supports)
-//    TODO logs set debug level
-
     @Override
     @Transactional
     public List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort) {

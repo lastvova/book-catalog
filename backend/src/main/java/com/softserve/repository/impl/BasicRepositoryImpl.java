@@ -17,8 +17,6 @@ import java.util.Optional;
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I> {
-    //TODO session in constructor
-//    TODO change log type(debug, warn, etc..)
     protected final Class<T> basicClass;
 
     @PersistenceContext
@@ -59,7 +57,7 @@ public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I>
     @Transactional
     public T update(T entity) {
         log.info("In update({}) of {}", entity, basicClass.getName());
-        entityManager.refresh(entity);
+        entityManager.merge(entity);
         return entity;
     }
 

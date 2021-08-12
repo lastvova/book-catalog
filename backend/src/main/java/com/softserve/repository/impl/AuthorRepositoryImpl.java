@@ -13,12 +13,17 @@ import java.util.List;
 public class AuthorRepositoryImpl extends BasicRepositoryImpl<Author, BigInteger> implements AuthorRepository {
     @Override
     public List<Author> getAllAvailableAuthors() {
-        return null;
+        return entityManager.createQuery("select a from Author a", Author.class)
+                .getResultList();
     }
 
     @Override
     public List<Author> getAuthorsByAverageRating() {
-        return null;
+        return entityManager.createQuery("select a, avg (b.rating) as rating " +
+                "from Author a join AuthorBook ab on a.id = ab.author.id " +
+                        "join Book b on ab.book.id = b.id " +
+                        "group by a.id"
+                ,Author.class).getResultList();
     }
 
     @Override
