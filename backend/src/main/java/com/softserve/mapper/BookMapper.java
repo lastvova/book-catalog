@@ -5,7 +5,6 @@ import com.softserve.dto.BookWithReviewsDTO;
 import com.softserve.dto.SaveBookDTO;
 import com.softserve.entity.Book;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

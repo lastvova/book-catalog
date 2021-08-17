@@ -11,10 +11,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    @Mapping( target = "book", source = "bookDTO")
+    @Mapping(target = "book", source = "bookDTO")
     Review convertToEntity(SaveReviewDTO saveReviewDTO);
 
-    @Mapping( target = "book", source = "bookDTO")
+    @Mapping(target = "book", source = "bookDTO")
     Review convertToEntity(ReviewDTO reviewDTO);
 
     ReviewDTO convertToDto(Review review);
