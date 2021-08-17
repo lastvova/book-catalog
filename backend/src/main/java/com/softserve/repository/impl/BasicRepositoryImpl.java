@@ -5,7 +5,6 @@ import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,7 +29,6 @@ public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I>
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<T> findById(I id) {
         log.info("In findById of {}", basicClass.getName());
         T entity = entityManager.find(basicClass, id);
@@ -38,15 +36,14 @@ public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I>
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<T> getAll() {
         log.info("In getAll of {}", basicClass.getName());
-        return entityManager.createQuery("from " + basicClass.getName())
+        return entityManager
+                .createQuery("from " + basicClass.getName())
                 .getResultList();
     }
 
     @Override
-    @Transactional
     public T save(T entity) {
         log.info("In save({}) of {}", entity, basicClass.getName());
         entityManager.persist(entity);
@@ -54,7 +51,6 @@ public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I>
     }
 
     @Override
-    @Transactional
     public T update(T entity) {
         log.info("In update({}) of {}", entity, basicClass.getName());
         entityManager.merge(entity);
@@ -62,10 +58,8 @@ public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I>
     }
 
     @Override
-    @Transactional
-    public T delete(I id) {
-        log.info("In delete({}) of {}", id, basicClass.getName());
-        T entity = entityManager.find(basicClass, id);
+    public T delete(T entity) {
+        log.info("In delete({}) of {}", entity, basicClass.getName());
         entityManager.remove(entity);
         return entity;
     }

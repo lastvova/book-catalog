@@ -5,7 +5,6 @@ import com.softserve.entity.Book;
 import com.softserve.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,7 +15,6 @@ import java.util.List;
 public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> implements BookRepository {
 
     @Override
-    @Transactional
     public List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort) {
         log.info("In getAllAvailableBooksWithRating of BookRepositoryImpl");
         return entityManager.createQuery("select b from Book b order by b.rating " + sort + ", b.createDate " + sort, Book.class)
@@ -26,7 +24,6 @@ public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> im
     }
 
     @Override
-    @Transactional
     public List<Book> getAllBooksByAuthor(Author author) {
         log.info("In getAllByAuthor of BookRepositoryImpl");
         return entityManager
@@ -37,7 +34,6 @@ public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> im
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> getBooksByName(String name, String sort) {
         log.info("In getBooksByName of BookRepositoryImpl");
         return entityManager
@@ -48,7 +44,6 @@ public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> im
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> getAllBooksByRating(int rating) {
         log.info("In getAllBooksByRating of BookRepositoryImpl");
         return entityManager
@@ -59,12 +54,18 @@ public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> im
     }
 
     @Override
-    @Transactional
     public void deleteBooksWithReviews(List<BigInteger> ids) {
         log.info("In deleteBooksWithReviews of BookRepositoryImpl");
         entityManager
                 .createQuery("delete from Book b where b.id in (:ids)")
                 .setParameter("ids", ids)
                 .executeUpdate();
+    }
+
+//    TODO save with author
+    @Override
+    public Book save(Book book) {
+        entityManager.persist(book);
+        return book;
     }
 }

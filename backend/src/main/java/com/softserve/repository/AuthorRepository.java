@@ -1,18 +1,14 @@
 package com.softserve.repository;
 
 import com.softserve.entity.Author;
+import com.softserve.entity.Book;
 
 import java.math.BigInteger;
 import java.util.List;
 
 public interface AuthorRepository extends BasicRepository<Author, BigInteger> {
 
-    List<Author> getAllAvailableAuthors();
+    List<Book> getBooksByAuthorId(BigInteger id);
 
-    List<Author> getAuthorsByAverageRating();
-
-    void deleteAuthorIfItDoesNotHaveBooks(BigInteger id);
-
-    void deleteAuthorsIfTheyDoNotHaveBooks(List<BigInteger> ids);
-
+    public boolean hasBooks(BigInteger id);
 }
