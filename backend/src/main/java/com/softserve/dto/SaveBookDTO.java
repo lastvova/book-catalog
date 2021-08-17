@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,5 +20,6 @@ public class SaveBookDTO {
     private LocalDate yearPublisher;
     private BigInteger isbn;
     private String publisher;
-    private LocalDateTime createDate = LocalDateTime.now();
+    private List<AuthorDTO> authors;
+    private LocalDateTime createdDate = LocalDateTime.now();
 }

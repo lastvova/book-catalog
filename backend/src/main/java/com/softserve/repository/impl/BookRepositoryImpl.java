@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,11 @@ public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> im
     //    TODO save with author
     @Override
     public Book save(Book book) {
+        book.getAuthors()
+                .stream()
+                .iterator()
+                .forEachRemaining(author -> entityManager.getReference(Author.class, author.getId()));
+
         entityManager.persist(book);
         return book;
     }

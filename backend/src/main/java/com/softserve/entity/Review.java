@@ -39,8 +39,8 @@ public class Review implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @Column(name = "create_date", updatable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;

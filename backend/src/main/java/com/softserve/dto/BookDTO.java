@@ -26,5 +26,5 @@ public class BookDTO {
     private BigDecimal rating;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 }

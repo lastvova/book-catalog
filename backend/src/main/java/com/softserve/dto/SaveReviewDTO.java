@@ -14,5 +14,5 @@ public class SaveReviewDTO {
     private String comment;
     private Integer rating;
     private BookDTO bookDTO;
-    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
 }

@@ -13,5 +13,5 @@ public class SaveAuthorDTO {
 
     private String firstName;
     private String secondName;
-    private LocalDateTime createDate = LocalDateTime.now();
+    private LocalDateTime createdDate = LocalDateTime.now();
 }

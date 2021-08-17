@@ -14,6 +14,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -52,19 +55,18 @@ public class Book implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @Column(name = "create_date", updatable = false)
-    private LocalDateTime createDate;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
     //    @PostLoad
     @Formula(value = "(select ifnull(round(avg(r.rating), 2),0) from reviews r where r.book_id = id)")
     private BigDecimal rating;
 
-    @OneToMany(
-            mappedBy = "book",
-            cascade = CascadeType.MERGE,
-            orphanRemoval = true
-    )
-    private Set<AuthorBook> authors = new HashSet<>();
+    @ManyToMany(cascade = { CascadeType.MERGE})
+    @JoinTable(name = "authors_books",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
 
     @OneToMany(
             mappedBy = "book",
@@ -73,7 +75,7 @@ public class Book implements Serializable {
     )
     private Set<Review> reviews = new HashSet<>();
 
-    private void setAuthors(Set<AuthorBook> authors) {
+    private void setAuthors(Set<Author> authors) {
         this.authors = authors;
     }
 
@@ -92,17 +94,13 @@ public class Book implements Serializable {
     }
 
     public void addAuthor(Author author) {
-        AuthorBook authorBook = new AuthorBook(author, this);
-        authors.add(authorBook);
-        author.getBooks().add(authorBook);
+        authors.add(author);
+        author.getBooks().add(this);
     }
 
     public void removeAuthor(Author author) {
-        AuthorBook authorBook = new AuthorBook(author, this);
-        author.getBooks().remove(authorBook);
-        authors.remove(authorBook);
-        authorBook.setBook(null);
-        authorBook.setAuthor(null);
+        authors.remove(author);
+        author.getBooks().remove(this);
     }
 }
 

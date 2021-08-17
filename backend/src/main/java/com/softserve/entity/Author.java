@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -36,15 +37,11 @@ public class Author implements Serializable {
     @Column(name = "second_name", length = 32, nullable = false)
     private String secondName;
 
-    @Column(name = "create_date", updatable = false)
+    @Column(name = "created_date", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
-    @OneToMany(
-            mappedBy = "author",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<AuthorBook> books = new HashSet<>();
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books = new HashSet<>();
 }

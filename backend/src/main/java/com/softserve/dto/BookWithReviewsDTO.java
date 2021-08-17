@@ -27,7 +27,7 @@ public class BookWithReviewsDTO {
     private BigDecimal rating;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     private List<ReviewDTO> reviews;
 //    TODO realize this
 }

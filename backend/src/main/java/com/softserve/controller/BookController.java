@@ -45,7 +45,8 @@ public class BookController {
         BookDTO bookDTO = bookMapper.convertToDto(bookService.findById(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
-//TODO save with authors
+
+    //TODO save with authors
     @PostMapping("")
     public ResponseEntity<BookDTO> save(@RequestBody SaveBookDTO saveBookDTO) {
         Book book = bookMapper.convertToEntity(saveBookDTO);
@@ -53,13 +54,18 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
-//    TODO when update, dont delete reviews
+    //    TODO when update, dont delete reviews
     @PutMapping("/{id}")
     public ResponseEntity<BookDTO> update(@PathVariable BigInteger id, @RequestBody BookDTO bookDTO) {
         if (!Objects.equals(id, bookDTO.getId())) {
             throw new IllegalStateException("Invalid entity or id");
         }
-        Book book = bookService.update(bookMapper.convertToEntity(bookDTO));
+        Book book = bookService.findById(id);
+        book.setName(bookDTO.getName());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setPublisher(bookDTO.getPublisher());
+        book.setYearPublisher(bookDTO.getYearPublisher());
+        bookService.update(book);
         return ResponseEntity.status(HttpStatus.OK).body(bookMapper.convertToDto(book));
     }
 
