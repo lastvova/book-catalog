@@ -1,10 +1,10 @@
 package com.softserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,37 +28,13 @@ public class Review implements Serializable {
     private String comment;
 
     @Column(name = "rating")
-    private int rating;
+    private Integer rating;
 
-    @Column(name = "create_date", nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Column(name = "create_date", updatable = false)
     private LocalDateTime createDate;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Review review = (Review) o;
-
-        return new EqualsBuilder()
-                .append(rating, review.rating)
-                .append(commenterName, review.commenterName)
-                .append(comment, review.comment)
-                .append(createDate, review.createDate)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(commenterName)
-                .append(comment)
-                .append(rating)
-                .append(createDate)
-                .toHashCode();
-    }
 }

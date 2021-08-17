@@ -1,13 +1,12 @@
 package com.softserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,26 +32,28 @@ public class Book implements Serializable {
     private String name;
 
     @Column(name = "year_publisher")
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate yearPublisher;
 
     @Column(name = "isbn", unique = true, nullable = false)
-    @NaturalId
+    @NaturalId(mutable = true)
     private BigInteger isbn;
 
     @Column(name = "publisher", length = 128, nullable = false)
     private String publisher;
 
-    @Column(name = "create_date", nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Column(name = "create_date", updatable = false)
     private LocalDateTime createDate;
-
 
     @Formula(value = "(select ifnull(round(avg(r.rating), 2),0) from reviews r where r.book_id = id)")
     private BigDecimal rating;
 
     @OneToMany(
             mappedBy = "book",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.MERGE,
             orphanRemoval = true
     )
     private Set<AuthorBook> authors = new HashSet<>();
@@ -94,49 +95,6 @@ public class Book implements Serializable {
         authors.remove(authorBook);
         authorBook.setBook(null);
         authorBook.setAuthor(null);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Book book = (Book) o;
-
-        return new EqualsBuilder()
-                .append(name, book.name)
-                .append(yearPublisher, book.yearPublisher)
-                .append(isbn, book.isbn)
-                .append(publisher, book.publisher)
-                .append(createDate, book.createDate)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(name)
-                .append(yearPublisher)
-                .append(isbn)
-                .append(publisher)
-                .append(createDate)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("name", name)
-                .append("yearPublisher", yearPublisher)
-                .append("isbn", isbn)
-                .append("publisher", publisher)
-                .append("createDate", createDate)
-                .append("rating", rating)
-                .append("authors", authors)
-                .append("reviews", reviews)
-                .toString();
     }
 }
 
