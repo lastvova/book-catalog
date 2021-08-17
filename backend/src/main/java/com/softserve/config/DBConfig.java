@@ -13,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -38,6 +39,11 @@ public class DBConfig {
         dataSource.setJdbcUrl(getHibernateProperties().getProperty("hibernate.connection.url"));
         dataSource.setUser(getHibernateProperties().getProperty("hibernate.connection.username"));
         dataSource.setPassword(getHibernateProperties().getProperty("hibernate.connection.password"));
+        try {
+            dataSource.setDriverClass(getHibernateProperties().getProperty("hibernate.connection.driver_class"));
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
         return dataSource;
     }
 

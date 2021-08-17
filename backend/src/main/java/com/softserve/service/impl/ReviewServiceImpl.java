@@ -1,11 +1,16 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Review;
+import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectFieldException;
 import com.softserve.repository.ReviewRepository;
 import com.softserve.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -22,27 +27,42 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Review findById(BigInteger id) {
-        return repository.findById(id).get();
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Not found review with id = " + id));
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Review> getAll() {
         return repository.getAll();
     }
 
     @Override
-    public Review save(Review entity) {
-        return repository.save(entity);
+    @Transactional
+    public Review save(Review review) {
+        isInvalidReview(review);
+        return repository.save(review);
     }
 
     @Override
-    public Review update(Review entity) {
-        return repository.update(entity);
+    @Transactional
+    public Review update(Review review) {
+        isInvalidReview(review);
+        return repository.update(review);
     }
 
     @Override
+    @Transactional
     public Review delete(BigInteger id) {
-        return repository.delete(id);
+        Review review = findById(id);
+        return repository.delete(review);
+    }
+
+    private void isInvalidReview(Review review) {
+        if (StringUtils.isBlank(review.getCommenterName()) || StringUtils.isBlank(review.getComment())) {
+            throw new IncorrectFieldException("Review has nulls or whitespaces in commenterName or comment");
+        }
     }
 }
