@@ -4,16 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -31,15 +28,14 @@ public class Author implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    @Column(name = "first_name", length = 32, nullable = false)
+    @Column(name = "first_name", length = 128, nullable = false)
     private String firstName;
 
-    @Column(name = "second_name", length = 32, nullable = false)
+    @Column(name = "second_name", length = 128)
     private String secondName;
 
-    @Column(name = "created_date", updatable = false)
+    @Column(name = "created_date", insertable = false,updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime createdDate;
 
     @ManyToMany(mappedBy = "authors")

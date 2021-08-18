@@ -21,31 +21,23 @@ import java.util.Properties;
 @PropertySource("classpath:hibernate.properties")
 public class DBConfig {
 
-    private Properties getHibernateProperties() {
+    //        try with environment
+    private Properties getHibernateProperties() throws IOException {
         Properties properties = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//        try with environment
-        try {
-            properties.load(classLoader.getResourceAsStream("hibernate.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        properties.load(classLoader.getResourceAsStream("hibernate.properties"));
         return properties;
     }
 
     @Bean
-    public DataSource getDataSource() {
+    public DataSource getDataSource() throws PropertyVetoException, IOException {
 
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         Properties hibernateProperties = getHibernateProperties();
         dataSource.setJdbcUrl(hibernateProperties.getProperty("hibernate.connection.url"));
         dataSource.setUser(hibernateProperties.getProperty("hibernate.connection.username"));
         dataSource.setPassword(hibernateProperties.getProperty("hibernate.connection.password"));
-        try {
-            dataSource.setDriverClass(hibernateProperties.getProperty("hibernate.connection.driver_class"));
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        }
+        dataSource.setDriverClass(hibernateProperties.getProperty("hibernate.connection.driver_class"));
         return dataSource;
     }
 
