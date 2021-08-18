@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 @Slf4j
 @Repository
-public class ReviewRepositoryImpl extends BasicRepositoryImpl<Review, BigInteger> implements ReviewRepository {
+public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger> implements ReviewRepository {
 
     @Override
     public Review save(Review review) {

@@ -6,7 +6,7 @@ import com.softserve.entity.Book;
 import java.math.BigInteger;
 import java.util.List;
 
-public interface AuthorRepository extends BasicRepository<Author, BigInteger> {
+public interface AuthorRepository extends BaseRepository<Author, BigInteger> {
 
     List<Book> getBooksByAuthorId(BigInteger id);
 

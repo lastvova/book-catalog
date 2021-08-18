@@ -4,5 +4,5 @@ import com.softserve.entity.Review;
 
 import java.math.BigInteger;
 
-public interface ReviewRepository extends BasicRepository<Review, BigInteger> {
+public interface ReviewRepository extends BaseRepository<Review, BigInteger> {
 }

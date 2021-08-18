@@ -8,12 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
 @Repository
-public class BookRepositoryImpl extends BasicRepositoryImpl<Book, BigInteger> implements BookRepository {
+public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
 
     @Override
     public List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort) {

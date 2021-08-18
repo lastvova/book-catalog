@@ -6,7 +6,7 @@ import com.softserve.entity.Book;
 import java.math.BigInteger;
 import java.util.List;
 
-public interface AuthorService extends BasicService<Author, BigInteger> {
+public interface AuthorService extends BaseService<Author, BigInteger> {
 
     public List<Book> getBooksByAuthorId(BigInteger id);
 }

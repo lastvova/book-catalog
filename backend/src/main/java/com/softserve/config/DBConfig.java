@@ -4,9 +4,6 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -38,12 +35,14 @@ public class DBConfig {
 
     @Bean
     public DataSource getDataSource() {
+
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setJdbcUrl(getHibernateProperties().getProperty("hibernate.connection.url"));
-        dataSource.setUser(getHibernateProperties().getProperty("hibernate.connection.username"));
-        dataSource.setPassword(getHibernateProperties().getProperty("hibernate.connection.password"));
+        Properties hibernateProperties = getHibernateProperties();
+        dataSource.setJdbcUrl(hibernateProperties.getProperty("hibernate.connection.url"));
+        dataSource.setUser(hibernateProperties.getProperty("hibernate.connection.username"));
+        dataSource.setPassword(hibernateProperties.getProperty("hibernate.connection.password"));
         try {
-            dataSource.setDriverClass(getHibernateProperties().getProperty("hibernate.connection.driver_class"));
+            dataSource.setDriverClass(hibernateProperties.getProperty("hibernate.connection.driver_class"));
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         }
@@ -60,10 +59,10 @@ public class DBConfig {
     }
 
     @Bean("entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(getDataSource());
-        emf.setJpaVendorAdapter(jpaVendorAdapter());
+        emf.setDataSource(dataSource);
+        emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setPersistenceUnitName("basicEntities");
         emf.setPackagesToScan("com.softserve.entity");
         return emf;
@@ -73,41 +72,4 @@ public class DBConfig {
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
-
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-        resourceDatabasePopulator.addScript(new ClassPathResource("/init-data.sql"));
-        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
-        dataSourceInitializer.setDataSource(dataSource);
-        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
-        return dataSourceInitializer;
-    }
 }
-
-//    @Bean
-//    public HikariDataSource getDataSource() {
-//        HikariConfig config = new HikariConfig();
-//        config.setJdbcUrl(getHibernateProperties().getProperty("hibernate.connection.url"));
-//        config.setUsername(getHibernateProperties().getProperty("hibernate.connection.username"));
-//        config.setPassword(getHibernateProperties().getProperty("hibernate.connection.password"));
-//        config.setMinimumIdle(NumberUtils.toInt((getHibernateProperties().getProperty("dataSource.minimumIdle")), 5));
-//        config.setMaximumPoolSize(NumberUtils.toInt((getHibernateProperties().getProperty("dataSource.maximumPoolSize")), 20));
-//        config.setIdleTimeout(NumberUtils.toInt((getHibernateProperties().getProperty("dataSource.idleTimeout")), 30000));
-//        config.setConnectionTimeout(NumberUtils.toInt((getHibernateProperties().getProperty("dataSource.connectionTimeout")), 30000));
-//        config.addDataSourceProperty("cachePrepStmts", getHibernateProperties().getProperty("dataSource.cachePrepStmts"));
-//        config.addDataSourceProperty("prepStmtCacheSize", getHibernateProperties().getProperty("dataSource.prepStmtCacheSize"));
-//        config.addDataSourceProperty("prepStmtCacheSqlLimit", getHibernateProperties().getProperty("dataSource.prepStmtCacheSqlLimit"));
-//        config.addDataSourceProperty("useServerPrepStmts", getHibernateProperties().getProperty("dataSource.useServerPrepStmts"));
-//        config.addDataSourceProperty("useLocalSessionState", getHibernateProperties().getProperty("dataSource.useLocalSessionState"));
-//        return new HikariDataSource(config);
-//    }
-//    @Bean
-//    public LocalSessionFactoryBean getSessionFactory() {
-//        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-//        sessionFactoryBean.setDataSource(getDataSource());
-//        sessionFactoryBean.setHibernateProperties(getHibernateProperties());
-//        sessionFactoryBean.setPackagesToScan("com.softserve");
-//        return sessionFactoryBean;
-//    }
-//}

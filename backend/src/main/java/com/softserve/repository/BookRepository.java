@@ -6,7 +6,7 @@ import com.softserve.entity.Book;
 import java.math.BigInteger;
 import java.util.List;
 
-public interface BookRepository extends BasicRepository<Book, BigInteger> {
+public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
     List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort);
 

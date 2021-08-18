@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @Repository
-public class AuthorRepositoryImpl extends BasicRepositoryImpl<Author, BigInteger> implements AuthorRepository {
+public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger> implements AuthorRepository {
     public List<Author> getAuthorsByAverageRating() {
         return entityManager.createQuery("select a, avg (b.rating) as rating " +
                         "from Author a join AuthorBook ab on a.id = ab.author.id " +

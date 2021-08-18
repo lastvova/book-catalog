@@ -4,7 +4,7 @@ import com.softserve.entity.Book;
 
 import java.math.BigInteger;
 
-public interface BookService extends BasicService<Book, BigInteger> {
+public interface BookService extends BaseService<Book, BigInteger> {
 
     Book getBooksWithReviews(BigInteger id);
 }

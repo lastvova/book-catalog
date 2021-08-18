@@ -3,7 +3,7 @@ package com.softserve.repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BasicRepository<T, I> {
+public interface BaseRepository<T, I> {
 
     Optional<T> findById(I id);
 

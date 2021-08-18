@@ -1,9 +1,8 @@
 package com.softserve.repository.impl;
 
 
-import com.softserve.repository.BasicRepository;
+import com.softserve.repository.BaseRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,14 +14,13 @@ import java.util.Optional;
 @Slf4j
 @Repository
 @SuppressWarnings("unchecked")
-public abstract class BasicRepositoryImpl<T, I> implements BasicRepository<T, I> {
+public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected final Class<T> basicClass;
 
     @PersistenceContext
     protected EntityManager entityManager;
 
-    @Autowired
-    public BasicRepositoryImpl() {
+    protected BaseRepositoryImpl() {
         basicClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
