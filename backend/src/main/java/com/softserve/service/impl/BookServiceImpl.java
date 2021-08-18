@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Book;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.service.BookService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +25,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book findById(BigInteger id) {
-        return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Not found book with id = " + id));
+    public Book getById(BigInteger id) {
+        return repository.getById(id);
     }
 
     @Override
@@ -51,9 +49,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book delete(BigInteger id) {
-        Book book = findById(id);
-        return repository.delete(book);
+    public boolean delete(BigInteger id) {
+        Book book = getById(id);
+        return repository.delete(book.getId());
     }
 
     @Override

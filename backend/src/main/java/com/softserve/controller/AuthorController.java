@@ -46,7 +46,7 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> get(@PathVariable BigInteger id) {
-        AuthorDTO authorDTO = authorMapper.convertToDto(service.findById(id));
+        AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
@@ -68,7 +68,8 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<AuthorDTO> delete(@PathVariable BigInteger id) {
-        AuthorDTO authorDTO = authorMapper.convertToDto(service.delete(id));
+        AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
+        service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(authorDTO);
     }
 

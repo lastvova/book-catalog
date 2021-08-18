@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface BaseService<T, I> {
 
-    T findById(I id);
+    T getById(I id);
 
     List<T> getAll();
 
@@ -12,5 +12,5 @@ public interface BaseService<T, I> {
 
     T update(T entity);
 
-    T delete(I id);
+    boolean delete(I id);
 }

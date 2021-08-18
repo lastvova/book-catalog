@@ -3,7 +3,6 @@ package com.softserve.service.impl;
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
 import com.softserve.exception.DeleteAuthorWithBooksException;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectFieldException;
 import com.softserve.repository.AuthorRepository;
 import com.softserve.service.AuthorService;
@@ -30,9 +29,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Author findById(BigInteger id) {
-        return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Not found author with id = " + id));
+    public Author getById(BigInteger id) {
+        return repository.getById(id);
     }
 
     @Override
@@ -57,12 +55,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional
-    public Author delete(BigInteger id) {
-        Author author = findById(id);
+    public boolean delete(BigInteger id) {
+        Author author = getById(id);
         if (repository.hasBooks(author.getId())) {
             throw new DeleteAuthorWithBooksException("cant delete author with id = " + author.getId());
         }
-        return repository.delete(author);
+        return repository.delete(author.getId());
     }
 
     @Override

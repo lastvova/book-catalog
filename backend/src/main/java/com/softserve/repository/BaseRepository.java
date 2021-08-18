@@ -1,11 +1,10 @@
 package com.softserve.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BaseRepository<T, I> {
 
-    Optional<T> findById(I id);
+    T getById(I id);
 
     List<T> getAll();
 
@@ -13,5 +12,5 @@ public interface BaseRepository<T, I> {
 
     T update(T entity);
 
-    T delete(T id);
+    boolean delete(I id);
 }

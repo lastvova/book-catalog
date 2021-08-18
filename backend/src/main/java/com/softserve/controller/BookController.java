@@ -42,7 +42,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> get(@PathVariable BigInteger id) {
-        BookDTO bookDTO = bookMapper.convertToDto(bookService.findById(id));
+        BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
@@ -60,18 +60,14 @@ public class BookController {
         if (!Objects.equals(id, bookDTO.getId())) {
             throw new IllegalStateException("Invalid entity or id");
         }
-        Book book = bookService.findById(id);
-        book.setName(bookDTO.getName());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setPublisher(bookDTO.getPublisher());
-        book.setYearPublisher(bookDTO.getYearPublisher());
-        bookService.update(book);
-        return ResponseEntity.status(HttpStatus.OK).body(bookMapper.convertToDto(book));
+        bookService.update(bookMapper.convertToEntity(bookDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BookDTO> delete(@PathVariable BigInteger id) {
-        BookDTO bookDTO = bookMapper.convertToDto(bookService.delete(id));
+        BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
+        bookService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(bookDTO);
     }
 }

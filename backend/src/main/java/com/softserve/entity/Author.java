@@ -24,6 +24,7 @@ import java.util.Set;
 @Entity
 @Table(name = "authors")
 public class Author implements Serializable {
+    private static final long serialVersionUID = -7910979735208650001L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;

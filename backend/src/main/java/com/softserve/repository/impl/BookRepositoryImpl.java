@@ -65,11 +65,6 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     //    TODO save with author
     @Override
     public Book save(Book book) {
-        book.getAuthors()
-                .stream()
-                .iterator()
-                .forEachRemaining(author -> entityManager.getReference(Author.class, author.getId()));
-
         entityManager.persist(book);
         return book;
     }

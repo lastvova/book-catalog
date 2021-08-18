@@ -42,7 +42,7 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> get(@PathVariable BigInteger id) {
-        ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.findById(id));
+        ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTO);
     }
 
@@ -65,7 +65,8 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ReviewDTO> delete(@PathVariable BigInteger id) {
-        ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.delete(id));
+        ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.getById(id));
+        reviewService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(reviewDTO);
     }
 

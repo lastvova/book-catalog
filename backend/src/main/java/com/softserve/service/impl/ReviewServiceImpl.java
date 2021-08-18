@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Review;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectFieldException;
 import com.softserve.repository.ReviewRepository;
 import com.softserve.service.ReviewService;
@@ -28,9 +27,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Review findById(BigInteger id) {
-        return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Not found review with id = " + id));
+    public Review getById(BigInteger id) {
+        return repository.getById(id);
     }
 
     @Override
@@ -55,9 +53,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review delete(BigInteger id) {
-        Review review = findById(id);
-        return repository.delete(review);
+    public boolean delete(BigInteger id) {
+        Review review = getById(id);
+        return repository.delete(review.getId());
     }
 
     private void isInvalidReview(Review review) {

@@ -31,6 +31,7 @@ import java.util.Set;
 @Table(name = "books")
 public class Book implements Serializable {
 
+    private static final long serialVersionUID = -4426773266096656069L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;

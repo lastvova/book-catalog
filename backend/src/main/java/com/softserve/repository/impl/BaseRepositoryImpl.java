@@ -1,20 +1,26 @@
 package com.softserve.repository.impl;
 
 
+import com.softserve.exception.IncorrectIdException;
+import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
-@Slf4j
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseRepositoryImpl.class);
     protected final Class<T> basicClass;
 
     @PersistenceContext
@@ -27,39 +33,58 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
-    public Optional<T> findById(I id) {
-        log.info("In findById of {}", basicClass.getName());
-        T entity = entityManager.find(basicClass, id);
-        return Optional.ofNullable(entity);
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public T getById(I id) {
+        log.debug("In findById of {}", basicClass.getName());
+        if (Objects.isNull(id)) {
+            throw new IncorrectIdException("Wrong id = " + id +" in getById of repository");
+        }
+        return entityManager.find(basicClass, id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<T> getAll() {
-        log.info("In getAll of {}", basicClass.getName());
+        log.debug("In getAll of {}", basicClass.getName());
         return entityManager
                 .createQuery("from " + basicClass.getName())
                 .getResultList();
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public T save(T entity) {
-        log.info("In save({}) of {}", entity, basicClass.getName());
+        log.debug("In save({}) of {}", entity, basicClass.getName());
+        if (!isValidEntity(entity)) {
+            throw new WrongEntityException("Wrong entity in save method of repository" + entity);
+        }
         entityManager.persist(entity);
         return entity;
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public T update(T entity) {
-        log.info("In update({}) of {}", entity, basicClass.getName());
+        log.debug("In update({}) of {}", entity, basicClass.getName());
+        if (!isValidEntity(entity)) {
+            throw new WrongEntityException("Wrong entity in update method of repository" + entity);
+        }
         entityManager.merge(entity);
         return entity;
     }
 
     @Override
-    public T delete(T entity) {
-        log.info("In delete({}) of {}", entity, basicClass.getName());
+    @Transactional(propagation = Propagation.MANDATORY)
+    public boolean delete(I id) {
+        log.debug("In delete({}) of {}", id, basicClass.getName());
+        T entity = getById(id);
         entityManager.remove(entity);
-        return entity;
+        return true;
+    }
+
+    protected boolean isValidEntity(T entity) {
+        log.debug("In delete({}) of {}", entity, basicClass.getName());
+        return true;
     }
 }
 

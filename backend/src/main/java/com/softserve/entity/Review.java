@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "reviews")
 public class Review implements Serializable {
+    private static final long serialVersionUID = 1020476374006568471L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
