@@ -1,7 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.BookDTO;
-import com.softserve.dto.SaveBookDTO;
+import com.softserve.dto.BookWithAuthorsDTO;
 import com.softserve.entity.Book;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
@@ -47,18 +47,18 @@ public class BookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<BookDTO> save(@RequestBody SaveBookDTO saveBookDTO) {
-        Book book = bookService.save(bookMapper.convertToEntity(saveBookDTO));
+    public ResponseEntity<BookDTO> save(@RequestBody BookWithAuthorsDTO bookWithAuthorsDTO) {
+        Book book = bookService.save(bookMapper.convertToEntity(bookWithAuthorsDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SaveBookDTO> update(@PathVariable BigInteger id, @RequestBody SaveBookDTO saveBookDTO) {
-        if (!Objects.equals(id, saveBookDTO.getId())) {
+    public ResponseEntity<BookWithAuthorsDTO> update(@PathVariable BigInteger id, @RequestBody BookWithAuthorsDTO bookWithAuthorsDTO) {
+        if (!Objects.equals(id, bookWithAuthorsDTO.getId())) {
             throw new IllegalStateException("Invalid entity or id");
         }
-        bookService.update(bookMapper.convertToEntity(saveBookDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(saveBookDTO);
+        bookService.update(bookMapper.convertToEntity(bookWithAuthorsDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(bookWithAuthorsDTO);
     }
 
     @DeleteMapping("/{id}")

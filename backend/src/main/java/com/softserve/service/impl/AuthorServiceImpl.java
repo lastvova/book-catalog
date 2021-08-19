@@ -3,7 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
 import com.softserve.exception.DeleteAuthorWithBooksException;
-import com.softserve.exception.IncorrectFieldException;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.AuthorRepository;
 import com.softserve.service.AuthorService;
 import lombok.extern.slf4j.Slf4j;
@@ -70,8 +70,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     private void isInvalidAuthor(Author author) {
-        if (StringUtils.isBlank(author.getFirstName()) || StringUtils.isBlank(author.getSecondName())) {
-            throw new IncorrectFieldException("Author has nulls or whitespaces in name or secondName");
+        if (StringUtils.isBlank(author.getFirstName())) {
+            throw new WrongInputValueException("Author has null or whitespaces in name ");
         }
     }
 }

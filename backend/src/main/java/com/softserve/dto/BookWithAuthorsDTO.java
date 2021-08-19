@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SaveBookDTO {
+public class BookWithAuthorsDTO {
 
     private BigInteger id;
     private String name;

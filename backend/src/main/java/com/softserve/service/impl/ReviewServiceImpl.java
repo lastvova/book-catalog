@@ -1,7 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Review;
-import com.softserve.exception.IncorrectFieldException;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.ReviewRepository;
 import com.softserve.service.ReviewService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private void isInvalidReview(Review review) {
         if (StringUtils.isBlank(review.getCommenterName()) || StringUtils.isBlank(review.getComment())) {
-            throw new IncorrectFieldException("Review has nulls or whitespaces in commenterName or comment");
+            throw new WrongInputValueException("Review has nulls or whitespaces in commenterName or comment");
         }
     }
 }

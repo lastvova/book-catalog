@@ -2,7 +2,7 @@ package com.softserve.mapper;
 
 import com.softserve.dto.BookDTO;
 import com.softserve.dto.BookWithReviewsDTO;
-import com.softserve.dto.SaveBookDTO;
+import com.softserve.dto.BookWithAuthorsDTO;
 import com.softserve.entity.Book;
 import org.mapstruct.Mapper;
 
@@ -13,7 +13,7 @@ public interface BookMapper {
 
     Book convertToEntity(BookDTO bookDTO);
 
-    Book convertToEntity(SaveBookDTO saveBookDTO);
+    Book convertToEntity(BookWithAuthorsDTO bookWithAuthorsDTO);
 
     Book convertToEntity(BookWithReviewsDTO bookWithReviewsDTO);
 
