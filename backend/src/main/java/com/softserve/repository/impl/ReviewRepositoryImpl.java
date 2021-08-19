@@ -4,7 +4,6 @@ import com.softserve.entity.Book;
 import com.softserve.entity.Review;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.ReviewRepository;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -24,12 +22,9 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Review save(Review review) {
-        log.debug("In save of {}", basicClass.getName());
-        if (!isValidEntity(review)) {
-            throw new WrongEntityException("Wrong review in save method of repository");
-        }
-        if (!isBookExist(review.getBook().getId())) {
-            throw new WrongEntityException("Wrong book in review");
+        log.debug("In save method with input value: [{}] of {}", review, basicClass.getName());
+        if (isInvalidEntity(review) || isBookNotExist(review.getBook().getId())) {
+            throw new WrongEntityException("Wrong review in save method ");
         }
         Book book = entityManager.getReference(Book.class, review.getBook().getId());
         review.setBook(book);
@@ -40,12 +35,9 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Review update(Review review) {
-        log.debug("In update of {}", basicClass.getName());
-        if (!isValidEntity(review)) {
-            throw new WrongEntityException("Wrong review in update method of repository");
-        }
-        if (!isBookExist(review.getBook().getId())) {
-            throw new WrongEntityException("Wrong book in review");
+        log.debug("In update method with input value: [{}] of {}", review, basicClass.getName());
+        if (isInvalidEntity(review) || isBookNotExist(review.getBook().getId())) {
+            throw new WrongEntityException("Wrong review in update method ");
         }
         Book book = entityManager.getReference(Book.class, review.getBook().getId());
         review.setBook(book);
@@ -54,16 +46,18 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
     }
 
     @Override
-    protected boolean isValidEntity(Review review) {
-        log.debug("In isValidEntity of {}", basicClass.getName());
-        return !StringUtils.isBlank(review.getComment()) && !StringUtils.isBlank(review.getCommenterName())
-                && !Objects.isNull(review.getBook());
+    protected boolean isInvalidEntity(Review review) {
+        log.debug("In isInvalidEntity method with input value: [{}] of {}", review, basicClass.getName());
+        return StringUtils.isBlank(review.getComment()) || StringUtils.isBlank(review.getCommenterName())
+                || Objects.isNull(review.getBook()) || review.getRating() == null
+                || review.getRating() <= 0 || review.getRating() > 5;
     }
 
-    private boolean isBookExist(BigInteger id) {
-        List<Book> list = entityManager.createQuery("select b from Book where id = :id", Book.class)
+    private boolean isBookNotExist(BigInteger id) {
+        log.debug("In isBookNoExist method with input value: [{}] of {}", id, basicClass.getName());
+        long count = (long) entityManager.createQuery("select count(b) from Book b where b.id = :id")
                 .setParameter("id", id)
-                .getResultList();
-        return !CollectionUtils.isEmpty(list);
+                .getSingleResult();
+        return count <= 0;
     }
 }

@@ -18,6 +18,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
 
     private static final Logger log = LoggerFactory.getLogger(AuthorRepositoryImpl.class);
 
+    //    TODO not working
     public List<Author> getAuthorsByAverageRating() {
         log.debug("In getAuthorsByAverageRating of {}", basicClass.getName());
         return entityManager.createQuery("select a, avg (b.rating) as rating " +
@@ -27,33 +28,32 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
                 , Author.class).getResultList();
     }
 
-    //    TODO not work
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByAuthorId(BigInteger id) {
-        log.debug("In getBooksByAuthorId of {}", basicClass.getName());
+        log.debug("In getBookByAuthorId method with input value: [{}] of {}", id, basicClass.getName());
         return entityManager.createQuery("select b from Book b " +
-                        "left join AuthorBook ab on ab.book.id = b.id " +
-                        "where ab.author.id = :authorId", Book.class)
+                        "join b.authors a " +
+                        "where a.id = :authorId", Book.class)
                 .setParameter("authorId", id)
                 .getResultList();
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean hasBooks(BigInteger id) {
-        log.debug("In hasBooks of {}", basicClass.getName());
-        Long count = (Long) entityManager.createQuery("select count (b.id) from Book b " +
-                        "left join AuthorBook ab on b.id = ab.book.id " +
-                        "where ab.author.id = :id")
+        log.debug("In hasBooks method with input value: [{}] of {}", id, basicClass.getName());
+        Long count = (Long) entityManager.createQuery("select count (b) from Book b " +
+                        "join b.authors a " +
+                        "where a.id = :id")
                 .setParameter("id", id)
                 .getSingleResult();
         return count > 0;
     }
 
     @Override
-    public boolean isValidEntity(Author author) {
-        log.debug("In isValidEntity of {}", basicClass.getName());
-        return !StringUtils.isBlank(author.getFirstName());
+    public boolean isInvalidEntity(Author author) {
+        log.debug("In isInvalidEntity method with input value: [{}] of {}", author, basicClass.getName());
+        return StringUtils.isBlank(author.getFirstName());
     }
 }

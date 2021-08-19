@@ -1,6 +1,5 @@
 package com.softserve.repository;
 
-import com.softserve.entity.Author;
 import com.softserve.entity.Book;
 
 import java.math.BigInteger;
@@ -8,13 +7,10 @@ import java.util.List;
 
 public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
-    List<Book> getAllAvailableBooks(Integer firstResult, Integer maxResult, String sort);
+    List<Book> getBooksByName(String name);
 
-    List<Book> getBooksByName(String name, String sort);
+    List<Book> getBooksByRating(int rating);
 
-    List<Book> getAllBooksByAuthor(Author author);
+    Book findByIsbn(BigInteger isbn);
 
-    List<Book> getAllBooksByRating(int rating);
-
-    void deleteBooksWithReviews(List<BigInteger> ids);
 }

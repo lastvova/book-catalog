@@ -10,5 +10,5 @@ public interface AuthorRepository extends BaseRepository<Author, BigInteger> {
 
     List<Book> getBooksByAuthorId(BigInteger id);
 
-    public boolean hasBooks(BigInteger id);
+    boolean hasBooks(BigInteger id);
 }

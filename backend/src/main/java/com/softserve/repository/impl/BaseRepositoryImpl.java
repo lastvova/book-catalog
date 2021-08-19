@@ -1,8 +1,8 @@
 package com.softserve.repository.impl;
 
 
-import com.softserve.exception.IncorrectIdException;
 import com.softserve.exception.WrongEntityException;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +35,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
-        log.debug("In findById of {}", basicClass.getName());
+        log.debug("In getById method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
-            throw new IncorrectIdException("Wrong id = " + id +" in getById of repository");
+            throw new WrongInputValueException("Wrong id = " + id + " in getById ");
         }
         return entityManager.find(basicClass, id);
     }
@@ -45,7 +45,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<T> getAll() {
-        log.debug("In getAll of {}", basicClass.getName());
+        log.debug("In getAll method of {}", basicClass.getName());
         return entityManager
                 .createQuery("from " + basicClass.getName())
                 .getResultList();
@@ -54,9 +54,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public T save(T entity) {
-        log.debug("In save({}) of {}", entity, basicClass.getName());
-        if (!isValidEntity(entity)) {
-            throw new WrongEntityException("Wrong entity in save method of repository" + entity);
+        log.debug("In save method with input value: [{}] of {}", entity, basicClass.getName());
+        if (isInvalidEntity(entity)) {
+            throw new WrongEntityException("Wrong entity in save method " + entity);
         }
         entityManager.persist(entity);
         return entity;
@@ -65,9 +65,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public T update(T entity) {
-        log.debug("In update({}) of {}", entity, basicClass.getName());
-        if (!isValidEntity(entity)) {
-            throw new WrongEntityException("Wrong entity in update method of repository" + entity);
+        log.debug("In update method with input value: [{}] of {}", entity, basicClass.getName());
+        if (isInvalidEntity(entity)) {
+            throw new WrongEntityException("Wrong entity in update method " + entity);
         }
         entityManager.merge(entity);
         return entity;
@@ -76,14 +76,14 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(I id) {
-        log.debug("In delete({}) of {}", id, basicClass.getName());
+        log.debug("In delete method with input value: [{}] of {}", id, basicClass.getName());
         T entity = getById(id);
         entityManager.remove(entity);
         return true;
     }
 
-    protected boolean isValidEntity(T entity) {
-        log.debug("In delete({}) of {}", entity, basicClass.getName());
+    protected boolean isInvalidEntity(T entity) {
+        log.debug("In isInvalidEntity method with input value: [{}] of {}", entity, basicClass.getName());
         return true;
     }
 }
