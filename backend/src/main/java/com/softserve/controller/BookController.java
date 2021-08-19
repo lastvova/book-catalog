@@ -46,22 +46,19 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
-    //TODO save with authors
     @PostMapping("")
     public ResponseEntity<BookDTO> save(@RequestBody SaveBookDTO saveBookDTO) {
-        Book book = bookMapper.convertToEntity(saveBookDTO);
-        book = bookService.save(bookMapper.convertToEntity(saveBookDTO));
+        Book book = bookService.save(bookMapper.convertToEntity(saveBookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
-    //    TODO when update, dont delete reviews
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> update(@PathVariable BigInteger id, @RequestBody BookDTO bookDTO) {
-        if (!Objects.equals(id, bookDTO.getId())) {
+    public ResponseEntity<SaveBookDTO> update(@PathVariable BigInteger id, @RequestBody SaveBookDTO saveBookDTO) {
+        if (!Objects.equals(id, saveBookDTO.getId())) {
             throw new IllegalStateException("Invalid entity or id");
         }
-        bookService.update(bookMapper.convertToEntity(bookDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
+        bookService.update(bookMapper.convertToEntity(saveBookDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(saveBookDTO);
     }
 
     @DeleteMapping("/{id}")
