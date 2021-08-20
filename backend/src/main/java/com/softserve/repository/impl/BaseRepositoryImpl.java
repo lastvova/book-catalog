@@ -82,6 +82,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
             throw new WrongInputValueException("Wrong id = " + id + " in delete method");
         }
         T entity = getById(id);
+        if (Objects.isNull(entity)) {
+            return false;
+        }
         entityManager.remove(entity);
         return true;
     }

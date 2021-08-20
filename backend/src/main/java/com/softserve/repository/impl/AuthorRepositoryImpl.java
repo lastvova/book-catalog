@@ -2,6 +2,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
+import com.softserve.exception.DeleteAuthorWithBooksException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.AuthorRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +58,21 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
                 .setParameter("id", id)
                 .getSingleResult();
         return count > 0;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public boolean delete(BigInteger id) {
+        log.debug("In delete method with input value: [{}] of {}", id, basicClass.getName());
+        Author author = getById(id);
+        if (Objects.isNull(author)) {
+            return false;
+        }
+        if (hasBooks(id)) {
+            throw new DeleteAuthorWithBooksException("Cant delete author with id: " + id);
+        }
+        entityManager.remove(author);
+        return true;
     }
 
     @Override

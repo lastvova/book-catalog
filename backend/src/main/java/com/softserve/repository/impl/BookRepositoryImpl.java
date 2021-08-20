@@ -35,7 +35,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         }
         return entityManager
                 .createQuery("select b from Book b " +
-                        "join b.authors a " +
+                        "join fetch b.authors a " +
                         "where b.name like :name " +
                         "or a.firstName like :name " +
                         "or a.secondName like :name", Book.class)
