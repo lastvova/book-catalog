@@ -2,12 +2,12 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
-import com.softserve.exception.DeleteAuthorWithBooksException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.AuthorRepository;
 import com.softserve.service.AuthorService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,63 +15,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
-@Slf4j
 @Service
-public class AuthorServiceImpl implements AuthorService {
+public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> implements AuthorService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthorServiceImpl.class);
     private final AuthorRepository repository;
 
     @Autowired
     public AuthorServiceImpl(AuthorRepository repository) {
+        super(repository);
         this.repository = repository;
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Author getById(BigInteger id) {
-        return repository.getById(id);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Author> getAll() {
-        return repository.getAll();
-    }
-
-    @Override
-    @Transactional
-    public Author save(Author author) {
-        isInvalidAuthor(author);
-        return repository.save(author);
-    }
-
-    @Override
-    @Transactional
-    public Author update(Author entity) {
-        isInvalidAuthor(entity);
-        return repository.update(entity);
-    }
-
-    @Override
-    @Transactional
-    public boolean delete(BigInteger id) {
-        Author author = getById(id);
-        if (repository.hasBooks(author.getId())) {
-            throw new DeleteAuthorWithBooksException("cant delete author with id = " + author.getId());
-        }
-        return repository.delete(author.getId());
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByAuthorId(BigInteger id) {
+        log.debug("Enter into getBooksByAuthor method with input value: [{}]", id);
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong author id :" + id);
+        }
         return repository.getBooksByAuthorId(id);
     }
 
-    private void isInvalidAuthor(Author author) {
-        if (StringUtils.isBlank(author.getFirstName())) {
-            throw new WrongInputValueException("Author has null or whitespaces in name ");
-        }
+    @Override
+    public boolean isInvalidEntity(Author entity) {
+        log.debug("Enter into isInvalidEntity method with input value: [{}]", entity);
+        return Objects.isNull(entity) || StringUtils.isBlank(entity.getFirstName());
     }
 }
