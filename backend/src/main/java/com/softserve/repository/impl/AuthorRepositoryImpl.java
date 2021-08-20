@@ -2,6 +2,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.AuthorRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger> implements AuthorRepository {
@@ -32,6 +34,9 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByAuthorId(BigInteger id) {
         log.debug("In getBookByAuthorId method with input value: [{}] of {}", id, basicClass.getName());
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong id = " + id);
+        }
         return entityManager.createQuery("select b from Book b " +
                         "join b.authors a " +
                         "where a.id = :authorId", Book.class)
@@ -43,6 +48,9 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean hasBooks(BigInteger id) {
         log.debug("In hasBooks method with input value: [{}] of {}", id, basicClass.getName());
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong id = " + id);
+        }
         Long count = (Long) entityManager.createQuery("select count (b) from Book b " +
                         "join b.authors a " +
                         "where a.id = :id")
@@ -54,6 +62,6 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     public boolean isInvalidEntity(Author author) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", author, basicClass.getName());
-        return StringUtils.isBlank(author.getFirstName());
+        return Objects.isNull(author) || StringUtils.isBlank(author.getFirstName());
     }
 }

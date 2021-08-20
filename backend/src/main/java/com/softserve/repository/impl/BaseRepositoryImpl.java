@@ -4,6 +4,7 @@ package com.softserve.repository.impl;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BaseRepository;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     public T getById(I id) {
         log.debug("In getById method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong id = " + id + " in getById ");
+            throw new WrongInputValueException("Wrong id = " + id);
         }
         return entityManager.find(basicClass, id);
     }
@@ -77,6 +78,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(I id) {
         log.debug("In delete method with input value: [{}] of {}", id, basicClass.getName());
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong id = " + id + " in delete method");
+        }
         T entity = getById(id);
         entityManager.remove(entity);
         return true;
@@ -84,7 +88,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     protected boolean isInvalidEntity(T entity) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", entity, basicClass.getName());
-        return true;
+        return Objects.isNull(entity);
     }
 }
 

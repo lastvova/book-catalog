@@ -45,9 +45,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Book> getBooksByRating(int rating) {
-        log.debug("In getBookByRating method with input value: [{}] of {}", rating, basicClass.getName());
-        if (rating <= 0 || rating > 5) {
+    public List<Book> getBooksByRating(Integer rating) {
+        log.debug("In getBooksByRating method with input value: [{}] of {}", rating, basicClass.getName());
+        if (Objects.isNull(rating) || rating <= 0 || rating > 5) {
             throw new WrongInputValueException("Wrong input rating");
         }
         return entityManager
@@ -111,7 +111,8 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     protected boolean isInvalidEntity(Book book) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", book, basicClass.getName());
-        return StringUtils.isBlank(book.getName()) || Objects.isNull(book.getIsbn())
+        return Objects.isNull(book) || StringUtils.isBlank(book.getName())
+                || Objects.isNull(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || book.getYearPublisher() < 0
                 || book.getYearPublisher() > LocalDate.now().getYear();
