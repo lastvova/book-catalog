@@ -2,11 +2,15 @@ package com.softserve.controller;
 
 import com.softserve.dto.AuthorDTO;
 import com.softserve.dto.BookDTO;
-import com.softserve.dto.SaveAuthorDTO;
 import com.softserve.entity.Author;
+import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.AuthorService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ import java.util.Objects;
 @RequestMapping(value = "/authors")
 public class AuthorController {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthorController.class);
     private final AuthorService service;
     private final AuthorMapper authorMapper;
     private final BookMapper bookMapper;
@@ -40,42 +45,56 @@ public class AuthorController {
 
     @GetMapping("")
     public ResponseEntity<List<AuthorDTO>> getAll() {
+        log.debug("Enter into getAll method of AuthorController");
         List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(authors);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> get(@PathVariable BigInteger id) {
+        log.debug("Enter into get method of AuthorController with input value: {}", id);
         AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
     @PostMapping("")
-    public ResponseEntity<AuthorDTO> save(@RequestBody SaveAuthorDTO saveAuthorDTO) {
-        Author author = service.save(authorMapper.convertToEntity(saveAuthorDTO));
+    public ResponseEntity<AuthorDTO> save(@RequestBody AuthorDTO authorDTO) {
+        log.debug("Enter into save method of AuthorController with input value: {}", authorDTO);
+        if (!Objects.isNull(authorDTO.getId()) || isInvalidAuthor(authorDTO)) {
+            throw new WrongEntityException("Wrong author in save method ");
+        }
+        Author author = service.save(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable BigInteger id, @RequestBody AuthorDTO authorDTO) {
+        log.debug("Enter into update method of AuthorController with input value: {}", authorDTO);
         if (!Objects.equals(id, authorDTO.getId())) {
-            throw new IllegalStateException("Invalid entity or id");
+            throw new EntityNotFoundException("Author id not equals provided id");
         }
-        Author author = authorMapper.convertToEntity(authorDTO);
-        service.update(author);
+        if (isInvalidAuthor(authorDTO)) {
+            throw new WrongEntityException("Wrong author in update method ");
+        }
+        service.update(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AuthorDTO> delete(@PathVariable BigInteger id) {
-        AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
+    public ResponseEntity<String> delete(@PathVariable BigInteger id) {
+        log.debug("Enter into delete method of AuthorController with input value: {}", id);
         service.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(authorDTO);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was delete");
     }
 
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable BigInteger id) {
+        log.debug("Enter into getBooksByAuthor method of AuthorController with input value: {}", id);
         List<BookDTO> bookDTOS = bookMapper.convertToDtoList(service.getBooksByAuthorId(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
+    }
+
+    private boolean isInvalidAuthor(AuthorDTO authorDTO) {
+        return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
     }
 }

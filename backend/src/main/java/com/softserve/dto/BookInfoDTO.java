@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BookWithAuthorsDTO {
+public class BookInfoDTO {
 
     private BigInteger id;
     private String name;
@@ -22,6 +22,7 @@ public class BookWithAuthorsDTO {
     private String publisher;
     private BigDecimal rating;
     private List<AuthorDTO> authors;
+    private List<ReviewDTO> reviews;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
     private LocalDateTime createdDate = LocalDateTime.now();
 }
