@@ -9,7 +9,7 @@ public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
     List<Book> getBooksByName(String name);
 
-    List<Book> getBooksByRating(int rating);
+    List<Book> getBooksByRating(Integer rating);
 
     Book findByIsbn(BigInteger isbn);
 
