@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Review;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.ReviewRepository;
 import com.softserve.service.ReviewService;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -22,6 +24,15 @@ public class ReviewServiceImpl extends BaseServiceImpl<Review, BigInteger> imple
     public ReviewServiceImpl(ReviewRepository repository) {
         super(repository);
         this.repository = repository;
+    }
+
+    @Override
+    public List<Review> getReviewsByBookId(BigInteger id) {
+        log.debug("Enter into getReviewsByBookId method of ReviewServiceImpl with input value: [{}]", id);
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong entity id :" + id);
+        }
+        return repository.getReviewsByBookId(id);
     }
 
     @Override

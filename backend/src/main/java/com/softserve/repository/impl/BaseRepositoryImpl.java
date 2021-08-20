@@ -4,7 +4,6 @@ package com.softserve.repository.impl;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BaseRepository;
-import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

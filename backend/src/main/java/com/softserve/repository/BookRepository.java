@@ -13,4 +13,5 @@ public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
     Book findByIsbn(BigInteger isbn);
 
+    Book getBookWithAuthors(BigInteger id);
 }

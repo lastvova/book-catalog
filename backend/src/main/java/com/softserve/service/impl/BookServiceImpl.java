@@ -52,9 +52,12 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book getBookWithReviewsAndAuthors(BigInteger id) {
+    public Book getBookWithAuthors(BigInteger id) {
         log.debug("Enter into getBooksWithReviews method of BookServiceImpl with input value: [{}]", id);
-        return null;
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong entity id :" + id);
+        }
+        return repository.getBookWithAuthors(id);
     }
 
     @Override

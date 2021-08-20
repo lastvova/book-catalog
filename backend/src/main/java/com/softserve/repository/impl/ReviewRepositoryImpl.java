@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Book;
 import com.softserve.entity.Review;
 import com.softserve.exception.WrongEntityException;
+import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.ReviewRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -43,6 +45,18 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
         review.setBook(book);
         entityManager.merge(review);
         return review;
+    }
+
+    @Override
+    public List<Review> getReviewsByBookId(BigInteger bookId) {
+        log.debug("In getReviewsByBookId method with input value: [{}] of {}", bookId, basicClass.getName());
+        if (Objects.isNull(bookId)) {
+            throw new WrongInputValueException("Wrong id = " + bookId);
+        }
+        return entityManager.createQuery("select r from Review r " +
+                        "where r.book.id = :bookId", Review.class)
+                .setParameter("bookId", bookId)
+                .getResultList();
     }
 
     @Override

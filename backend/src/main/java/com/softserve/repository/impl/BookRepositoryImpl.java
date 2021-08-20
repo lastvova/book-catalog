@@ -109,6 +109,19 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     @Override
+    public Book getBookWithAuthors(BigInteger id) {
+        log.debug("In getBookWithReviewsAndAuthors method with input value: [{}] of {}", id, basicClass.getName());
+        if (Objects.isNull(id)) {
+            throw new WrongInputValueException("Wrong id = " + id);
+        }
+        return entityManager.createQuery("select b from Book b " +
+                "join fetch b.authors " +
+                "where b.id = :id", Book.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
     protected boolean isInvalidEntity(Book book) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", book, basicClass.getName());
         return Objects.isNull(book) || StringUtils.isBlank(book.getName())

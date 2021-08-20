@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BookService extends BaseService<Book, BigInteger> {
 
-    Book getBookWithReviewsAndAuthors(BigInteger id);
+    Book getBookWithAuthors(BigInteger id);
 
     List<Book> getBooksByName(String name);
 
