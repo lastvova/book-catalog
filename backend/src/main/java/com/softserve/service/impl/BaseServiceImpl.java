@@ -59,7 +59,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in update method :" + entity);
         }
-        return baseRepository.save(entity);
+        return baseRepository.update(entity);
     }
 
     @Override

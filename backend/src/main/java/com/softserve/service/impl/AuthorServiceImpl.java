@@ -32,7 +32,7 @@ public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> imple
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByAuthorId(BigInteger id) {
-        log.debug("Enter into getBooksByAuthor method with input value: [{}]", id);
+        log.debug("Enter into getBooksByAuthor method of AuthorServiceImpl with input value: [{}]", id);
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong author id :" + id);
         }
@@ -41,7 +41,7 @@ public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> imple
 
     @Override
     public boolean isInvalidEntity(Author entity) {
-        log.debug("Enter into isInvalidEntity method with input value: [{}]", entity);
+        log.debug("Enter into isInvalidEntity method of AuthorServiceImpl with input value: [{}]", entity);
         return Objects.isNull(entity) || StringUtils.isBlank(entity.getFirstName());
     }
 }

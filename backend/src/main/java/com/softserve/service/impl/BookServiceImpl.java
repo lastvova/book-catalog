@@ -33,7 +33,7 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByName(String name) {
-        log.debug("Enter into getBooksByName method with input value: [{}]", name);
+        log.debug("Enter into getBooksByName method of BookServiceImpl with input value: [{}]", name);
         if (StringUtils.isBlank(name)) {
             throw new WrongInputValueException("Wrong input string for search");
         }
@@ -43,7 +43,7 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByRating(Integer rating) {
-        log.debug("Enter into getBooksByRating method with input value: [{}]", rating);
+        log.debug("Enter into getBooksByRating method of BookServiceImpl with input value: [{}]", rating);
         if (Objects.isNull(rating) || rating > 5 || rating <= 0) {
             throw new WrongInputValueException("Wrong input rating");
         }
@@ -52,14 +52,14 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book getBookWithReviews(BigInteger id) {
-        log.debug("Enter into getBooksWithReviews method with input value: [{}]", id);
+    public Book getBookWithReviewsAndAuthors(BigInteger id) {
+        log.debug("Enter into getBooksWithReviews method of BookServiceImpl with input value: [{}]", id);
         return null;
     }
 
     @Override
     public boolean isInvalidEntity(Book book) {
-        log.debug("Enter into isInvalidEntity method with input value: [{}]", book);
+        log.debug("Enter into isInvalidEntity method of BookServiceImpl with input value: [{}]", book);
         return Objects.isNull(book) || StringUtils.isBlank(book.getName())
                 || Objects.isNull(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())

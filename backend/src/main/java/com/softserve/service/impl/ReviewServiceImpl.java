@@ -26,7 +26,7 @@ public class ReviewServiceImpl extends BaseServiceImpl<Review, BigInteger> imple
 
     @Override
     public boolean isInvalidEntity(Review review) {
-        log.debug("Enter into isInvalidEntity method with input value: [{}]", review);
+        log.debug("Enter into isInvalidEntity method of ReviewServiceImpl with input value: [{}]", review);
         return Objects.isNull(review) || StringUtils.isBlank(review.getCommenterName())
                 || StringUtils.isBlank(review.getComment());
     }
