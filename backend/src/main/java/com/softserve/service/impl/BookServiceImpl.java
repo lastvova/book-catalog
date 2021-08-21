@@ -63,7 +63,7 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     @Override
     public boolean isInvalidEntity(Book book) {
         log.debug("Enter into isInvalidEntity method of BookServiceImpl with input value: [{}]", book);
-        return Objects.isNull(book) || StringUtils.isBlank(book.getName())
+        return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
                 || Objects.isNull(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || book.getYearPublisher() < 0

@@ -40,8 +40,8 @@ public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> imple
     }
 
     @Override
-    public boolean isInvalidEntity(Author entity) {
-        log.debug("Enter into isInvalidEntity method of AuthorServiceImpl with input value: [{}]", entity);
-        return Objects.isNull(entity) || StringUtils.isBlank(entity.getFirstName());
+    public boolean isInvalidEntity(Author author) {
+        log.debug("Enter into isInvalidEntity method of AuthorServiceImpl with input value: [{}]", author);
+        return super.isInvalidEntity(author) || StringUtils.isBlank(author.getFirstName());
     }
 }

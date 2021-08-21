@@ -52,12 +52,13 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong id = " + id);
         }
-        Long count = (Long) entityManager.createQuery("select count (b) from Book b " +
-                        "join b.authors a " +
-                        "where a.id = :id")
+        BigInteger count = (BigInteger) entityManager
+                .createNativeQuery("select exists (select 1 from books b " +
+                        "join authors_books a " +
+                        "where a.author_id = :id) as count")
                 .setParameter("id", id)
                 .getSingleResult();
-        return count > 0;
+        return !Objects.isNull(count);
     }
 
     @Override
@@ -78,6 +79,6 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     public boolean isInvalidEntity(Author author) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", author, basicClass.getName());
-        return Objects.isNull(author) || StringUtils.isBlank(author.getFirstName());
+        return super.isInvalidEntity(author) || StringUtils.isBlank(author.getFirstName());
     }
 }
