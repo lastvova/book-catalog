@@ -90,7 +90,7 @@ public class AuthorController {
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable BigInteger id) {
         log.debug("Enter into getBooksByAuthor method of AuthorController with input value: {}", id);
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoList(service.getBooksByAuthorId(id));
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(service.getBooksByAuthorId(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 

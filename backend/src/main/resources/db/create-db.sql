@@ -16,10 +16,10 @@ CREATE TABLE authors
 CREATE TABLE books
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT,
-    name           VARCHAR(128) NOT NULL,
+    name           VARCHAR(256) NOT NULL,
     year_publisher INT,
     isbn           BIGINT       NOT NULL,
-    publisher      VARCHAR(256),
+    publisher      VARCHAR(512),
     created_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT books_pk PRIMARY KEY (id),
     CONSTRAINT books_isbn_uq UNIQUE (isbn)
@@ -29,7 +29,7 @@ CREATE TABLE reviews
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT,
     commenter_name VARCHAR(128)     NOT NULL,
-    comment        VARCHAR(1024)    NOT NULL,
+    comment        TEXT(4096) NOT NULL,
     rating         TINYINT UNSIGNED NOT NULL,
     book_id        BIGINT UNSIGNED  NOT NULL,
     created_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -1,16 +1,12 @@
 package com.softserve.controller;
 
 import com.softserve.dto.BookDTO;
-import com.softserve.dto.BookInfoDTO;
-import com.softserve.dto.BookWithAuthorsDTO;
 import com.softserve.entity.Book;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.mapper.BookMapper;
-import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.BookService;
-import com.softserve.service.ReviewService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,23 +35,19 @@ public class BookController {
 
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
-    private final ReviewService reviewService;
     private final BookMapper bookMapper;
-    private final ReviewMapper reviewMapper;
 
     @Autowired
-    public BookController(BookService bookService, BookMapper bookMapper, ReviewService reviewService, ReviewMapper reviewMapper) {
+    public BookController(BookService bookService, BookMapper bookMapper) {
         this.bookService = bookService;
-        this.reviewService = reviewService;
         this.bookMapper = bookMapper;
-        this.reviewMapper = reviewMapper;
 
     }
 
     @GetMapping("")
     public ResponseEntity<List<BookDTO>> getAll() {
         log.debug("Enter into getAll method of BookController");
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoList(bookService.getAll());
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
@@ -67,26 +59,26 @@ public class BookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<BookDTO> save(@RequestBody BookWithAuthorsDTO bookWithAuthorsDTO) {
-        log.debug("Enter into save method of BookController with input value: [{}]", bookWithAuthorsDTO);
-        if (!Objects.isNull(bookWithAuthorsDTO.getId()) || isInvalidBook(bookWithAuthorsDTO)) {
+    public ResponseEntity<BookDTO> save(@RequestBody BookDTO bookDTO) {
+        log.debug("Enter into save method of BookController with input value: [{}]", bookDTO);
+        if (!Objects.isNull(bookDTO.getId()) || isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in save method");
         }
-        Book book = bookService.save(bookMapper.convertToEntity(bookWithAuthorsDTO));
+        Book book = bookService.save(bookMapper.convertToEntity(bookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookWithAuthorsDTO> update(@PathVariable BigInteger id, @RequestBody BookWithAuthorsDTO bookWithAuthorsDTO) {
-        log.debug("Enter into update method of BookController with input value: [{}]", bookWithAuthorsDTO);
-        if (!Objects.equals(id, bookWithAuthorsDTO.getId())) {
+    public ResponseEntity<BookDTO> update(@PathVariable BigInteger id, @RequestBody BookDTO bookDTO) {
+        log.debug("Enter into update method of BookController with input value: [{}]", bookDTO);
+        if (!Objects.equals(id, bookDTO.getId())) {
             throw new EntityNotFoundException("Book id not equals provided id");
         }
-        if (isInvalidBook(bookWithAuthorsDTO)) {
+        if (isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in update method");
         }
-        bookService.update(bookMapper.convertToEntity(bookWithAuthorsDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(bookWithAuthorsDTO);
+        bookService.update(bookMapper.convertToEntity(bookDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -97,20 +89,19 @@ public class BookController {
     }
 
     @GetMapping("/{id}/detail")
-    public ResponseEntity<BookInfoDTO> getBookInfo(@PathVariable BigInteger id) {
+    public ResponseEntity<BookDTO> getBookInfo(@PathVariable BigInteger id) {
         log.debug("Enter into getFullInfo method of BookController with input value: {}", id);
-        BookInfoDTO bookDTO = bookMapper.convertToBookInfoDto(bookService.getBookWithAuthors(id));
-        bookDTO.setReviews(reviewMapper.convertToDtoList(reviewService.getReviewsByBookId(id)));
+        BookDTO bookDTO = bookMapper.convertToDto(bookService.getBookWithAuthors(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<BookWithAuthorsDTO>> searchByName(@RequestParam String name) {
+    public ResponseEntity<List<BookDTO>> searchByName(@RequestParam String name) {
         log.debug("Enter into searchByName method of BookController");
         if (StringUtils.isBlank(name)) {
             throw new WrongInputValueException("Wrong input string for search");
         }
-        List<BookWithAuthorsDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getBooksByName(name));
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getBooksByName(name));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
@@ -120,11 +111,11 @@ public class BookController {
         if (Objects.isNull(rating) || rating <= 0 || rating > 6) {
             throw new WrongInputValueException("Wrong input rating for search");
         }
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoList(bookService.getBooksByRating(rating));
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getBooksByRating(rating));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
-    private boolean isInvalidBook(BookWithAuthorsDTO bookDTO) {
+    private boolean isInvalidBook(BookDTO bookDTO) {
         return Objects.isNull(bookDTO) || StringUtils.isBlank(bookDTO.getName())
                 || Objects.isNull(bookDTO.getIsbn())
                 || CollectionUtils.isEmpty(bookDTO.getAuthors())
