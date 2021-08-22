@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BaseRepository;
@@ -21,7 +22,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     private final BaseRepository<T, I> baseRepository;
 
     @Autowired
-    public BaseServiceImpl(BaseRepository<T, I> baseRepository) {
+    protected BaseServiceImpl(BaseRepository<T, I> baseRepository) {
         this.baseRepository = baseRepository;
     }
 
@@ -32,7 +33,11 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong entity id :" + id);
         }
-        return baseRepository.getById(id);
+        T entity = baseRepository.getById(id);
+        if (Objects.isNull(entity)) {
+            throw new EntityNotFoundException("Entity with id: " + id.toString() + " not found");
+        }
+        return entity;
     }
 
     @Override

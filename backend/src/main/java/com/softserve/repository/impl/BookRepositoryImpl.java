@@ -36,9 +36,52 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         return entityManager
                 .createQuery("select b from Book b " +
                         "join fetch b.authors a " +
-                        "where b.name like :name " +
-                        "or a.firstName like :name " +
-                        "or a.secondName like :name", Book.class)
+                        "where b.name like :name ", Book.class)
+                .setParameter("name", "%" + name + "%")
+                .getResultList();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Book> getBooksByPublisher(String name) {
+        log.debug("In getBooksByPublisher method with input value: [{}] of {}", name, basicClass.getName());
+        if (StringUtils.isBlank(name)) {
+            throw new WrongInputValueException("Wrong input string for search");
+        }
+        return entityManager
+                .createQuery("select b from Book b " +
+                        "join fetch b.authors a " +
+                        "where b.publisher like :name ", Book.class)
+                .setParameter("name", "%" + name + "%")
+                .getResultList();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Book> getBooksByAuthorsName(String name) {
+        log.debug("In getBooksByAuthorsName method with input value: [{}] of {}", name, basicClass.getName());
+        if (StringUtils.isBlank(name)) {
+            throw new WrongInputValueException("Wrong input string for search");
+        }
+        return entityManager
+                .createQuery("select b from Book b " +
+                        "join fetch b.authors a " +
+                        "where a.firstName like :name ", Book.class)
+                .setParameter("name", "%" + name + "%")
+                .getResultList();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Book> getBooksByAuthorsSecondName(String name) {
+        log.debug("In getBooksByAuthorsSecondName method with input value: [{}] of {}", name, basicClass.getName());
+        if (StringUtils.isBlank(name)) {
+            throw new WrongInputValueException("Wrong input string for search");
+        }
+        return entityManager
+                .createQuery("select b from Book b " +
+                        "join fetch b.authors a " +
+                        "where a.secondName like :name ", Book.class)
                 .setParameter("name", "%" + name + "%")
                 .getResultList();
     }
@@ -52,7 +95,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         }
         return entityManager
                 .createQuery("select b from Book b " +
-                        "where b.rating between :rating and :rating+1 ", Book.class)
+                        "where b.rating >= :rating and b.rating < :rating+1 ", Book.class)
                 .setParameter("rating", BigDecimal.valueOf(rating))
                 .getResultList();
     }
@@ -64,7 +107,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         if (isInvalidEntity(book)) {
             throw new WrongEntityException("Wrong book in save method");
         }
-        if (!Objects.isNull(findByIsbn(book.getIsbn()))) {
+        if (!Objects.isNull(getByIsbn(book.getIsbn()))) {
             throw new WrongInputValueException("This isbn already exist: " + book.getIsbn());
         }
         entityManager.persist(book);
@@ -78,7 +121,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         if (isInvalidEntity(book)) {
             throw new WrongEntityException("Wrong book in update method");
         }
-        Book temporaryBook = findByIsbn(book.getIsbn());
+        Book temporaryBook = getByIsbn(book.getIsbn());
         if (!Objects.isNull(temporaryBook) && !Objects.equals(temporaryBook.getId(), book.getId())) {
             throw new WrongInputValueException("This isbn already exist: " + book.getIsbn());
         }
@@ -91,7 +134,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     //    try catch here, because getSingleResult throws NoResultException if not founded entity
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book findByIsbn(BigInteger isbn) {
+    public Book getByIsbn(BigInteger isbn) {
         log.debug("In findByIsbn method with input value: [{}] of {}", isbn, basicClass.getName());
         if (Objects.isNull(isbn)) {
             throw new WrongInputValueException("Wrong isbn");
@@ -109,22 +152,30 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     @Override
-    public Book getBookWithAuthors(BigInteger id) {
+    public Book getById(BigInteger id) {
         log.debug("In getBookWithReviewsAndAuthors method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong id = " + id);
         }
         return entityManager.createQuery("select b from Book b " +
-                "join fetch b.authors " +
-                "where b.id = :id", Book.class)
+                        "join fetch b.authors " +
+                        "where b.id = :id", Book.class)
                 .setParameter("id", id)
                 .getSingleResult();
     }
 
     @Override
+    public List<Book> getAll() {
+        log.debug("In getAll method of {}", basicClass.getName());
+        return entityManager.createQuery("select b from Book b " +
+                        "join fetch b.authors", Book.class)
+                .getResultList();
+    }
+
+    @Override
     protected boolean isInvalidEntity(Book book) {
         log.debug("In isInvalidEntity method with input value: [{}] of {}", book, basicClass.getName());
-        return Objects.isNull(book) || StringUtils.isBlank(book.getName())
+        return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
                 || Objects.isNull(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || book.getYearPublisher() < 0

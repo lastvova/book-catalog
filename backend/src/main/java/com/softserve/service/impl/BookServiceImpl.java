@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Book;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BookRepository;
 import com.softserve.service.BookService;
@@ -41,6 +42,11 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     }
 
     @Override
+    public List<Book> getBooksBySearchingParams(String searchBy, String name) {
+        return null;
+    }
+
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByRating(Integer rating) {
         log.debug("Enter into getBooksByRating method of BookServiceImpl with input value: [{}]", rating);
@@ -52,12 +58,16 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book getBookWithAuthors(BigInteger id) {
+    public Book getById(BigInteger id) {
         log.debug("Enter into getBooksWithReviews method of BookServiceImpl with input value: [{}]", id);
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong entity id :" + id);
         }
-        return repository.getBookWithAuthors(id);
+        Book book = repository.getById(id);
+        if (Objects.isNull(book)) {
+            throw new EntityNotFoundException("Entity with id: " + id.toString() + " not found");
+        }
+        return book;
     }
 
     @Override
