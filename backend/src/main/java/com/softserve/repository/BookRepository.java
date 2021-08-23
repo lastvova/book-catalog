@@ -9,9 +9,14 @@ public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
     List<Book> getBooksByName(String name);
 
+    List<Book> getBooksByPublisher(String name);
+
+    List<Book> getBooksByAuthorsName(String name);
+
+    List<Book> getBooksByAuthorsSecondName(String name);
+
     List<Book> getBooksByRating(Integer rating);
 
-    Book findByIsbn(BigInteger isbn);
+    Book getByIsbn(BigInteger isbn);
 
-    Book getBookWithAuthors(BigInteger id);
 }
