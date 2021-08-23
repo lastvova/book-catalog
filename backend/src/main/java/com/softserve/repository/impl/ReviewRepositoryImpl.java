@@ -2,6 +2,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Book;
 import com.softserve.entity.Review;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.ReviewRepository;
@@ -70,9 +71,11 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
 
     private boolean isBookNotExist(BigInteger id) {
         log.debug("In isBookNoExist method with input value: [{}] of {}", id, basicClass.getName());
-        long count = (long) entityManager.createQuery("select count(b) from Book b where b.id = :id")
+        BigInteger count = (BigInteger) entityManager
+                .createNativeQuery("select exists (select 1 from books b " +
+                        "where b.id = :id)")
                 .setParameter("id", id)
                 .getSingleResult();
-        return count <= 0;
+        return !Objects.isNull(count);
     }
 }
