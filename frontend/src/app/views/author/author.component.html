@@ -37,9 +37,29 @@
     <div class="content">
       <div class="container-fluid">
         <div class="col-12">
-          <app-author></app-author>
-          <app-book></app-book>
-          <app-review></app-review>
+          <div class="card">
+            <div class="card-header card-header-warning">
+              <h4 class="card-title">Authors</h4>
+            </div>
+            <div class="card-body table-responsive">
+              <table class="table table-hover">
+                <thead class="text-warning">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Books</th>
+                </thead>
+                <tbody>
+                <tr *ngFor="let author of authors">
+                  <td>{{author.id}}</td>
+                  <td>{{author.firstname}}</td>
+                  <td>{{author.secondName}}</td>
+                  <td>{{author.books}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,3 +67,5 @@
     </footer>
   </div>
 </div>
+
+
