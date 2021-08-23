@@ -36,7 +36,7 @@ public class Author implements Serializable {
     private String secondName;
 
     @Column(name = "created_date", insertable = false,updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]") // todo: why are you need this annotation?
     private LocalDateTime createdDate;
 
     @ManyToMany(mappedBy = "authors")

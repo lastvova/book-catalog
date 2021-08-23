@@ -17,5 +17,5 @@ public class AuthorDTO {
     private String firstName;
     private String secondName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate; // todo: do you really need this field here?
 }

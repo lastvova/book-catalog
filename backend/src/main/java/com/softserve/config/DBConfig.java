@@ -22,6 +22,7 @@ import java.util.Properties;
 public class DBConfig {
 
     //        try with environment
+    // todo: this method do the same as annotation in line 21
     private Properties getHibernateProperties() throws IOException {
         Properties properties = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

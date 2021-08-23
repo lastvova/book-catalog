@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Repository
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(BookRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BookRepositoryImpl.class); // todo: wrong name pattern!
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -100,6 +100,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                 .getResultList();
     }
 
+    // todo: redundant method!!!
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Book save(Book book) {
@@ -116,6 +117,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
+    // todo: redundant method!!!
     public Book update(Book book) {
         log.debug("In update method with input value: [{}] of {}", book, basicClass.getName());
         if (isInvalidEntity(book)) {
@@ -125,6 +127,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         if (!Objects.isNull(temporaryBook) && !Objects.equals(temporaryBook.getId(), book.getId())) {
             throw new WrongInputValueException("This isbn already exist: " + book.getIsbn());
         }
+        // todo: author ID must be in this method without this manipulation
         book.setAuthors(book.getAuthors().stream()
                 .map(author -> entityManager.getReference(Author.class, author.getId()))
                 .collect(Collectors.toSet()));
@@ -134,6 +137,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     //    try catch here, because getSingleResult throws NoResultException if not founded entity
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    // todo: redundant method!!!
     public Book getByIsbn(BigInteger isbn) {
         log.debug("In findByIsbn method with input value: [{}] of {}", isbn, basicClass.getName());
         if (Objects.isNull(isbn)) {
@@ -157,6 +161,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong id = " + id);
         }
+        // todo: how authors will appear in your Book entity?
         return entityManager.createQuery("select b from Book b " +
                         "join fetch b.authors " +
                         "where b.id = :id", Book.class)

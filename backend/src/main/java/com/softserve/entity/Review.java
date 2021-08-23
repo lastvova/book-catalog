@@ -36,10 +36,10 @@ public class Review implements Serializable {
     @Column(name = "comment", length = 1024, nullable = false)
     private String comment;
 
-    @Column(name = "rating")
+    @Column(name = "rating") // todo: whta is about "nullable" ?
     private Integer rating;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]") // todo: why are you need this annotation?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 

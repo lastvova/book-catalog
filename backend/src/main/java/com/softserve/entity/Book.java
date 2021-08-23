@@ -43,13 +43,13 @@ public class Book implements Serializable {
     private Integer yearPublisher;
 
     @Column(name = "isbn", unique = true, nullable = false)
-    @NaturalId(mutable = true)
+    @NaturalId(mutable = true) // todo: do you really need this annotation?
     private BigInteger isbn;
 
     @Column(name = "publisher", length = 256)
     private String publisher;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]") // todo: why are you need this annotation?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 

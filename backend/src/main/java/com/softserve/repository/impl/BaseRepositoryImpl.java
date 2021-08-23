@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") // todo: better to put this annotation on methods
 public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseRepositoryImpl.class); // todo: wrong name pattern!
     protected final Class<T> basicClass;
 
     @PersistenceContext
@@ -35,9 +35,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
+        // todo: more easier: log.debug("{}.getById({})", id, basicClass.getName());
         log.debug("In getById method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong id = " + id);
+            // todo: in java exist exception for this issue: IllegalArgumentException
+            throw new WrongInputValueException("Wrong id = " + id); // todo: id always == null!
         }
         return entityManager.find(basicClass, id);
     }
@@ -69,6 +71,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in update method " + entity);
         }
+        // todo: what will be in case if entity.id == null ?
         entityManager.merge(entity);
         return entity;
     }
@@ -78,7 +81,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     public boolean delete(I id) {
         log.debug("In delete method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong id = " + id + " in delete method");
+            throw new WrongInputValueException("Wrong id = " + id + " in delete method"); // todo: id always == null!
         }
         T entity = getById(id);
         if (Objects.isNull(entity)) {

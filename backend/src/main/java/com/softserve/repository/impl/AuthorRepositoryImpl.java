@@ -19,7 +19,7 @@ import java.util.Objects;
 @Repository
 public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger> implements AuthorRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthorRepositoryImpl.class); // todo: wrong name pattern!
 
     //    TODO not working
     public List<Author> getAuthorsByAverageRating() {
@@ -36,7 +36,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     public List<Book> getBooksByAuthorId(BigInteger id) {
         log.debug("In getBookByAuthorId method with input value: [{}] of {}", id, basicClass.getName());
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong id = " + id);
+            throw new WrongInputValueException("Wrong id = " + id); // todo: id always == null!
         }
         return entityManager.createQuery("select b from Book b " +
                         "join b.authors a " +
@@ -52,10 +52,10 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (Objects.isNull(id)) {
             throw new WrongInputValueException("Wrong id = " + id);
         }
-        BigInteger count = (BigInteger) entityManager
+        BigInteger count = (BigInteger) entityManager  // todo: "exists" will return boolean value!!!
                 .createNativeQuery("select exists (select 1 from books b " +
                         "join authors_books a " +
-                        "where a.author_id = :id) as count")
+                        "where a.author_id = :id) as count") // todo: not necessary to use table books - just use authors_books
                 .setParameter("id", id)
                 .getSingleResult();
         return !Objects.isNull(count);
@@ -64,13 +64,14 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(BigInteger id) {
+        // todo: argument validation ?
         log.debug("In delete method with input value: [{}] of {}", id, basicClass.getName());
-        Author author = getById(id);
+        Author author = getById(id); // todo: why are you need this read?
         if (Objects.isNull(author)) {
             return false;
         }
         if (hasBooks(id)) {
-            throw new DeleteAuthorWithBooksException("Cant delete author with id: " + id);
+            throw new DeleteAuthorWithBooksException("Cant delete author with id: " + id); // todo: not informative message
         }
         entityManager.remove(author);
         return true;

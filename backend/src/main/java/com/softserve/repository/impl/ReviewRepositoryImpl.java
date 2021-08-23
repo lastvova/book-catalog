@@ -20,10 +20,11 @@ import java.util.Objects;
 @Repository
 public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger> implements ReviewRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(ReviewRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ReviewRepositoryImpl.class); // todo: wrong name pattern!
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
+    // todo: redundant method!!!
     public Review save(Review review) {
         log.debug("In save method with input value: [{}] of {}", review, basicClass.getName());
         if (isInvalidEntity(review) || isBookNotExist(review.getBook().getId())) {
@@ -37,6 +38,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
+    // todo: redundant method!!! Review is not updatable!
     public Review update(Review review) {
         log.debug("In update method with input value: [{}] of {}", review, basicClass.getName());
         if (isInvalidEntity(review) || isBookNotExist(review.getBook().getId())) {
@@ -49,6 +51,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
     }
 
     @Override
+    // todo: redundant method!!!
     public List<Review> getReviewsByBookId(BigInteger bookId) {
         log.debug("In getReviewsByBookId method with input value: [{}] of {}", bookId, basicClass.getName());
         if (Objects.isNull(bookId)) {
