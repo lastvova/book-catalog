@@ -16,6 +16,5 @@ export class BookComponent implements OnInit {
 
   ngOnInit(): void {
     this.books = this.dataHandler.getBooks();
-    console.log(this.books);
   }
 }

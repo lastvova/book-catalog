@@ -8,9 +8,11 @@ import {Routes} from "@angular/router";
 import { ReviewComponent } from './views/review/review.component';
 import { AppRoutingModule } from './app-routing.module';
 import {FormsModule} from "@angular/forms";
+import { MainPageComponent } from './views/main-page/main-page.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent},
+  { path: '', component: MainPageComponent},
+  { path: 'main', component: MainPageComponent},
   { path: 'authors', component: AuthorComponent},
   { path: 'books', component: BookComponent},
 ]
@@ -21,6 +23,7 @@ const routes: Routes = [
     BookComponent,
     AuthorComponent,
     ReviewComponent,
+    MainPageComponent,
   ],
   imports: [
     BrowserModule,
