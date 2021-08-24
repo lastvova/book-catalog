@@ -2,34 +2,23 @@
 
   <div class="main-panel">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-      <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-transparent navbar-absolute fixed-top ">
+      <div class="container-fluid justify-content-center">
         <div class="navbar-wrapper">
           <a class="navbar-brand" href="/">Main</a>
-          <i class="material-icons">home</i>
+          <em class="material-icons">home</em>
         </div>
         <button aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation"
                 class="navbar-toggler" data-toggle="collapse" type="button">
         </button>
         <div class="navbar-wrapper">
           <a class="navbar-brand" href="/authors">Authors</a>
-          <i class="material-icons">people</i>
+          <em class="material-icons">people</em>
         </div>
 
         <div class="navbar-wrapper">
           <a class="navbar-brand" href="/books">Books</a>
-          <i class="material-icons">books</i>
-        </div>
-        <div class="collapse navbar-collapse justify-content-end">
-          <form class="navbar-form">
-            <div class="input-group no-border">
-              <input class="form-control" placeholder="Search..." type="text" value="">
-              <button class="btn btn-white btn-round btn-just-icon" type="submit">
-                <i class="material-icons">search</i>
-                <div class="ripple-container"></div>
-              </button>
-            </div>
-          </form>
+          <em class="material-icons">books</em>
         </div>
       </div>
     </nav>
@@ -37,9 +26,7 @@
     <div class="content">
       <div class="container-fluid">
         <div class="col-12">
-          <app-author></app-author>
-          <app-book></app-book>
-          <app-review></app-review>
+          <router-outlet></router-outlet>
         </div>
       </div>
     </div>
