@@ -7,6 +7,7 @@ import {AuthorComponent} from './views/author/author.component';
 import {Routes} from "@angular/router";
 import { ReviewComponent } from './views/review/review.component';
 import { AppRoutingModule } from './app-routing.module';
+import {FormsModule} from "@angular/forms";
 
 const routes: Routes = [
   { path: '', component: AppComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

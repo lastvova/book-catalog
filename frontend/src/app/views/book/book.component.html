@@ -2,36 +2,80 @@
   <div class="main-panel">
     <div class="content">
       <div class="container-fluid">
+        <div class="row">
+          <div class="col-6">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createBookModal">CREATE</button>
+            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteBookModal">DELETE</button>
+          </div>
+          <div class="col-6">
+            <div class="d-flex justify-content-end align-items-end">
+              <div class="dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropDownPagination"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="Books on page">Books on
+                  page
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropDownPagination">
+                  <a class="dropdown-item" href="#">10</a>
+                  <a class="dropdown-item" href="#">25</a>
+                  <a class="dropdown-item" href="#">50</a>
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-info" data-toggle="modal" data-target="#searchBook">SEARCH</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="col-12">
           <div class="card">
             <div class="card-header card-header-warning">
               <h4 class="card-title">Books</h4>
               <p id="availableBooks">Available books</p>
             </div>
-              <div class="card-body table-responsive">
-                <table class="table table-hover" aria-describedby="availableBooks">
-                  <thead class="text-warning">
-                  <th id="id">ID</th>
-                  <th id="name">Name</th>
-                  <th id="publisher">Publisher</th>
-                  <th id="yearOfPublisher">Year of publisher</th>
-                  <th id="isbn">ISBN</th>
-                  <th id="rating">rating</th>
-                  <th id="authors">Authors</th>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let book of books">
-                    <td>{{book.id}}</td>
-                    <td>{{book.name}}</td>
-                    <td>{{book.publisher}}</td>
-                    <td>{{book.yearPublisher}}</td>
-                    <td>{{book.isbn}}</td>
-                    <td>{{book.rating}}</td>
-                    <td>{{book.authors}}</td>
-                  </tr>
-
-                  </tbody>
-                </table>
+            <div class="card-body table-responsive">
+              <table class="table table-hover table-striped" aria-describedby="availableBooks">
+                <thead class="text-warning">
+                <th id="checkBox">
+                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
+                </th>
+                <th id="tableId">ID</th>
+                <th id="tableName">Name</th>
+                <th id="tablePublisher">Publisher</th>
+                <th id="tableYearOfPublisher">Year of publisher</th>
+                <th id="tableIsbn">ISBN</th>
+                <th id="tableRating">rating</th>
+                <th id="tableAuthors">Authors</th>
+                </thead>
+                <tbody>
+                <tr *ngFor="let book of books">
+                  <td>
+                    <div class="form-check">
+                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">
+                    </div>
+                  </td>
+                  <td>{{book.id}}</td>
+                  <td>{{book.name}}</td>
+                  <td>{{book.publisher}}</td>
+                  <td>{{book.yearPublisher}}</td>
+                  <td>{{book.isbn}}</td>
+                  <td>{{book.rating}}</td>
+                  <td>{{book.authors}}</td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-success btn-sm rounded-top" type="button" data-toggle="modal"
+                              data-target="#updateBookModal"
+                              data-placement="top" title="Edit"><em class="fa fa-edit"></em></button>
+                      <button class="btn btn-danger btn-sm rounded-bottom" type="button" data-toggle="modal"
+                              data-target="#deleteBookModal"
+                              data-placement="top" title="Delete"><em class="fa fa-trash"></em></button>
+                      <button class="btn btn-info btn-sm rounded-bottom" type="button" data-toggle="modal"
+                              data-target="#infoBookModal"
+                              data-placement="top" title="Detail"><em class="fa fa-info"></em></button>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -39,5 +83,158 @@
     </div>
     <footer class="footer">
     </footer>
+  </div>
+</div>
+
+<div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">Create Book</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="name"
+                 class="form-control" id="name" placeholder="name" required>
+        </div>
+        <div class="form-group">
+          <label for="yearOfPublisher">Year of publisher</label>
+          <input type="text" name="yearOfPublisher"
+                 class="form-control" id="yearOfPublisher" placeholder="year of publisher" required>
+        </div>
+        <div class="form-group">
+          <label for="publisher">Publisher</label>
+          <input type="text" name="publisher"
+                 class="form-control" id="publisher" placeholder="publisher" required>
+        </div>
+        <div class="form-group">
+          <label for="isbn">Publisher</label>
+          <input type="text" name="isbn"
+                 class="form-control" id="isbn" placeholder="isbn" required>
+        </div>
+        <div class="form-group">
+          <label for="authors">Authors</label>
+          <input type="text" name="authors"
+                 class="form-control" id="authors" placeholder="authors" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal">Create</button>
+        <button class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">Update Book</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="bookName">Name</label>
+          <input type="text" name="name"
+                 class="form-control" id="bookName" placeholder="name" required>
+        </div>
+        <div class="form-group">
+          <label for="yearOfPublisher">Year of publisher</label>
+          <input type="text" name="yearOfPublisher"
+                 class="form-control" id="bookYearPublisher" placeholder="year of publisher" required>
+        </div>
+        <div class="form-group">
+          <label for="publisher">Publisher</label>
+          <input type="text" name="publisher"
+                 class="form-control" id="bookPublisher" placeholder="publisher" required>
+        </div>
+        <div class="form-group">
+          <label for="isbn">Publisher</label>
+          <input type="text" name="isbn"
+                 class="form-control" id="bookIsbn" placeholder="isbn" required>
+        </div>
+        <div class="form-group">
+          <label for="authors">Authors</label>
+          <input type="text" name="authors"
+                 class="form-control" id="bookAuthors" placeholder="authors" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal">Save changes</button>
+        <button class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="deleteBookModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">Delete Book</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this book?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button class="btn btn-danger" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="searchBook" tabindex="-1" role="dialog" aria-labelledby="createBookModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">Create Book</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="searchByName">By name</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByName" placeholder="name" required>
+        </div>
+        <div class="form-group">
+          <label for="searchByPublisher">By publisher</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByPublisher" placeholder="publisher" required>
+        </div>
+        <div class="form-group">
+          <label for="searchByIsbn">By isbn</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByIsbn" placeholder="isbn" required>
+        </div>
+        <div class="form-group">
+          <label for="searchByAuthors">By authors</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByAuthors" placeholder="authors" required>
+        </div>
+        <div class="form-group">
+          <label for="searchByRating">By rating</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByRating" placeholder="rating" required>
+        </div>
+        <div class="form-group">
+          <label for="searchByYear">By year</label>
+          <input type="text" name="name"
+                 class="form-control" id="searchByYear" placeholder="year" required>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" data-dismiss="modal">Search</button>
+          <button class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
