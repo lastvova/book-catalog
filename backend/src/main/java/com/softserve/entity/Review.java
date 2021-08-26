@@ -1,6 +1,5 @@
 package com.softserve.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,10 +35,9 @@ public class Review implements Serializable {
     @Column(name = "comment", length = 1024, nullable = false)
     private String comment;
 
-    @Column(name = "rating") // todo: whta is about "nullable" ?
+    @Column(name = "rating", nullable = false)
     private Integer rating;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]") // todo: why are you need this annotation?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 

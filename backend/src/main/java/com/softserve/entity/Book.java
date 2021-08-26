@@ -1,11 +1,9 @@
 package com.softserve.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,17 +41,14 @@ public class Book implements Serializable {
     private Integer yearPublisher;
 
     @Column(name = "isbn", unique = true, nullable = false)
-    @NaturalId(mutable = true) // todo: do you really need this annotation?
     private BigInteger isbn;
 
     @Column(name = "publisher", length = 256)
     private String publisher;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss[.SSS][.SS][.S]") // todo: why are you need this annotation?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 
-    //    @PostLoad
     @Formula(value = "(select ifnull(round(avg(r.rating), 2),0) from reviews r where r.book_id = id)")
     private BigDecimal rating;
 
