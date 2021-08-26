@@ -9,7 +9,7 @@ public interface BaseRepository<T, I> {
 
     List<T> getAll();
 
-    T save(T entity); // todo: need to rename to "create"
+    T create(T entity);
 
     T update(T entity);
 
