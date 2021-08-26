@@ -8,7 +8,7 @@ public interface BaseService<T, I> {
 
     List<T> getAll();
 
-    T save(T entity);
+    T create(T entity);
 
     T update(T entity);
 

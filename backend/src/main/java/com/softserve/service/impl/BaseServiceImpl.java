@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
-import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ import java.util.Objects;
 @Service
 public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceImpl.class);
     private final BaseRepository<T, I> baseRepository;
 
     @Autowired
@@ -29,13 +28,13 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
-        log.debug("Enter into getById method with input value: [{}]", id);
+        LOGGER.debug("{}.getById({})", this.getClass().getName(), id);
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong entity id :" + id);
+            throw new IllegalStateException("Wrong entity id");
         }
         T entity = baseRepository.getById(id);
         if (Objects.isNull(entity)) {
-            throw new EntityNotFoundException("Entity with id: " + id.toString() + " not found");
+            throw new EntityNotFoundException("Not found entity with id: " + id.toString());
         }
         return entity;
     }
@@ -43,24 +42,24 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<T> getAll() {
-        log.debug("Enter into getAll method");
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
         return baseRepository.getAll();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public T save(T entity) {
-        log.debug("Enter into save method with input value: [{}]", entity);
+    public T create(T entity) {
+        LOGGER.debug("{}.create({})", this.getClass().getName(), entity);
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in save method :" + entity);
         }
-        return baseRepository.save(entity);
+        return baseRepository.create(entity);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T update(T entity) {
-        log.debug("Enter into update method with input value: [{}]", entity);
+        LOGGER.debug("{}.update({})", this.getClass().getName(), entity);
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in update method :" + entity);
         }
@@ -70,14 +69,15 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(I id) {
-        log.debug("Enter into delete method with input value: [{}]", id);
+        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong entity id :" + id);
+            throw new IllegalStateException("Wrong entity id");
         }
         return baseRepository.delete(id);
     }
 
     protected boolean isInvalidEntity(T entity) {
+        LOGGER.debug("{}.inInvalidEntity({})", this.getClass().getName(), entity);
         return Objects.isNull(entity);
     }
 }

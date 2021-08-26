@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
-import com.softserve.exception.WrongInputValueException;
 import com.softserve.repository.AuthorRepository;
 import com.softserve.service.AuthorService;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,7 @@ import java.util.Objects;
 @Service
 public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> implements AuthorService {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorServiceImpl.class);
     private final AuthorRepository repository;
 
     @Autowired
@@ -32,16 +31,16 @@ public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> imple
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Book> getBooksByAuthorId(BigInteger id) {
-        log.debug("Enter into getBooksByAuthor method of AuthorServiceImpl with input value: [{}]", id);
+        LOGGER.debug("{}.getBooksByAuthorId({})", this.getClass().getName(), id);
         if (Objects.isNull(id)) {
-            throw new WrongInputValueException("Wrong author id :" + id);
+            throw new IllegalStateException("Wrong author id");
         }
         return repository.getBooksByAuthorId(id);
     }
 
     @Override
     public boolean isInvalidEntity(Author author) {
-        log.debug("Enter into isInvalidEntity method of AuthorServiceImpl with input value: [{}]", author);
+        LOGGER.debug("{}.isInvalidEntity({})", this.getClass().getName(), author);
         return super.isInvalidEntity(author) || StringUtils.isBlank(author.getFirstName());
     }
 }

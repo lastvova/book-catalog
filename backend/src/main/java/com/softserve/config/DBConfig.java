@@ -1,9 +1,11 @@
 package com.softserve.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -14,31 +16,26 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:hibernate.properties")
 public class DBConfig {
 
-    //        try with environment
-    // todo: this method do the same as annotation in line 21
-    private Properties getHibernateProperties() throws IOException {
-        Properties properties = new Properties();
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        properties.load(classLoader.getResourceAsStream("hibernate.properties"));
-        return properties;
+    private final Environment environment;
+
+    @Autowired
+    public DBConfig(Environment environment) {
+        this.environment = environment;
     }
 
     @Bean
-    public DataSource getDataSource() throws PropertyVetoException, IOException {
+    public DataSource getDataSource() throws PropertyVetoException {
 
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        Properties hibernateProperties = getHibernateProperties();
-        dataSource.setJdbcUrl(hibernateProperties.getProperty("hibernate.connection.url"));
-        dataSource.setUser(hibernateProperties.getProperty("hibernate.connection.username"));
-        dataSource.setPassword(hibernateProperties.getProperty("hibernate.connection.password"));
-        dataSource.setDriverClass(hibernateProperties.getProperty("hibernate.connection.driver_class"));
+        dataSource.setJdbcUrl(environment.getProperty("hibernate.connection.url"));
+        dataSource.setUser(environment.getProperty("hibernate.connection.username"));
+        dataSource.setPassword(environment.getProperty("hibernate.connection.password"));
+        dataSource.setDriverClass(environment.getProperty("hibernate.connection.driver_class"));
         return dataSource;
     }
 
