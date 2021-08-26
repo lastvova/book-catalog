@@ -4,7 +4,6 @@ import com.softserve.dto.BookDTO;
 import com.softserve.entity.Book;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
-import com.softserve.exception.WrongInputValueException;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,7 +63,7 @@ public class BookController {
         if (!Objects.isNull(bookDTO.getId()) || isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in save method");
         }
-        Book book = bookService.save(bookMapper.convertToEntity(bookDTO));
+        Book book = bookService.create(bookMapper.convertToEntity(bookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
@@ -91,27 +90,17 @@ public class BookController {
     @GetMapping("/{id}/detail")
     public ResponseEntity<BookDTO> getBookInfo(@PathVariable BigInteger id) {
         log.debug("Enter into getFullInfo method of BookController with input value: {}", id);
-        BookDTO bookDTO = bookMapper.convertToDto(bookService.getBookWithAuthors(id));
+        BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<BookDTO>> searchByName(@RequestParam String name) {
-        log.debug("Enter into searchByName method of BookController");
-        if (StringUtils.isBlank(name)) {
-            throw new WrongInputValueException("Wrong input string for search");
-        }
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getBooksByName(name));
-        return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
     @GetMapping("/rating")
     public ResponseEntity<List<BookDTO>> searchByRating(@RequestParam Integer rating) {
         log.debug("Enter into searchByRating method of BookController");
         if (Objects.isNull(rating) || rating <= 0 || rating > 6) {
-            throw new WrongInputValueException("Wrong input rating for search");
+            throw new IllegalStateException("Wrong input rating for search");
         }
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getBooksByRating(rating));
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(null);//TODO
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
@@ -119,7 +108,14 @@ public class BookController {
         return Objects.isNull(bookDTO) || StringUtils.isBlank(bookDTO.getName())
                 || Objects.isNull(bookDTO.getIsbn())
                 || CollectionUtils.isEmpty(bookDTO.getAuthors())
-                || bookDTO.getYearPublisher() < 0
+                || isInValidYearOfPublisher(bookDTO);
+    }
+
+    private boolean isInValidYearOfPublisher(BookDTO bookDTO) {
+        if (Objects.isNull(bookDTO.getYearPublisher())) {
+            return false;
+        }
+        return bookDTO.getYearPublisher() < 0
                 || bookDTO.getYearPublisher() > LocalDate.now().getYear();
     }
 }

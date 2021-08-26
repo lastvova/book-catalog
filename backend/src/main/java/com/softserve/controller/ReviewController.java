@@ -59,7 +59,7 @@ public class ReviewController {
         if (!Objects.isNull(reviewDTO.getId()) || isInvalidAuthor(reviewDTO)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
-        Review review = reviewService.save(reviewMapper.convertToEntity(reviewDTO));
+        Review review = reviewService.create(reviewMapper.convertToEntity(reviewDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewMapper.convertToDto(review));
     }
 

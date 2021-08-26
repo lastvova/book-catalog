@@ -63,7 +63,7 @@ public class AuthorController {
         if (!Objects.isNull(authorDTO.getId()) || isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
-        Author author = service.save(authorMapper.convertToEntity(authorDTO));
+        Author author = service.create(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
 
