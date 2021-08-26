@@ -31,7 +31,7 @@ import java.util.Objects;
 @RequestMapping(value = "/authors")
 public class AuthorController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
     private final AuthorService service;
     private final AuthorMapper authorMapper;
     private final BookMapper bookMapper;
@@ -45,21 +45,21 @@ public class AuthorController {
 
     @GetMapping("")
     public ResponseEntity<List<AuthorDTO>> getAll() {
-        log.debug("Enter into getAll method of AuthorController");
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
         List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(authors);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> get(@PathVariable BigInteger id) {
-        log.debug("Enter into get method of AuthorController with input value: {}", id);
+        LOGGER.debug("{}.get({})", this.getClass().getName(), id);
         AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
     @PostMapping("")
-    public ResponseEntity<AuthorDTO> save(@RequestBody AuthorDTO authorDTO) {
-        log.debug("Enter into save method of AuthorController with input value: {}", authorDTO);
+    public ResponseEntity<AuthorDTO> create(@RequestBody AuthorDTO authorDTO) {
+        LOGGER.debug("{}.create({})", this.getClass().getName(), authorDTO);
         if (!Objects.isNull(authorDTO.getId()) || isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
@@ -69,7 +69,7 @@ public class AuthorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable BigInteger id, @RequestBody AuthorDTO authorDTO) {
-        log.debug("Enter into update method of AuthorController with input value: {}", authorDTO);
+        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, authorDTO);
         if (!Objects.equals(id, authorDTO.getId())) {
             throw new EntityNotFoundException("Author id not equals provided id");
         }
@@ -82,14 +82,14 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        log.debug("Enter into delete method of AuthorController with input value: {}", id);
+        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was delete");
     }
 
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable BigInteger id) {
-        log.debug("Enter into getBooksByAuthor method of AuthorController with input value: {}", id);
+        LOGGER.debug("{}.getBooksByAuthor({})", this.getClass().getName(), id);
         List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(service.getBooksByAuthorId(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }

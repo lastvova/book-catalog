@@ -32,7 +32,7 @@ import java.util.Objects;
 @RequestMapping(value = "/books")
 public class BookController {
 
-    private static final Logger log = LoggerFactory.getLogger(BookController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
     private final BookMapper bookMapper;
 
@@ -45,21 +45,21 @@ public class BookController {
 
     @GetMapping("")
     public ResponseEntity<List<BookDTO>> getAll() {
-        log.debug("Enter into getAll method of BookController");
+        LOGGER.debug("{}.getALl()", this.getClass().getName());
         List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(bookService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> get(@PathVariable BigInteger id) {
-        log.debug("Enter into get method of BookController with input value: {}", id);
+        LOGGER.debug("{}.get({})", this.getClass().getName(), id);
         BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
     @PostMapping("")
-    public ResponseEntity<BookDTO> save(@RequestBody BookDTO bookDTO) {
-        log.debug("Enter into save method of BookController with input value: [{}]", bookDTO);
+    public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
+        LOGGER.debug("{}.create({})", this.getClass().getName(), bookDTO);
         if (!Objects.isNull(bookDTO.getId()) || isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in save method");
         }
@@ -69,7 +69,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BookDTO> update(@PathVariable BigInteger id, @RequestBody BookDTO bookDTO) {
-        log.debug("Enter into update method of BookController with input value: [{}]", bookDTO);
+        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, bookDTO);
         if (!Objects.equals(id, bookDTO.getId())) {
             throw new EntityNotFoundException("Book id not equals provided id");
         }
@@ -82,21 +82,14 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        log.debug("Enter into delete method of BookController with input value: [{}]", id);
+        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
         bookService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Book was deleted");
     }
 
-    @GetMapping("/{id}/detail")
-    public ResponseEntity<BookDTO> getBookInfo(@PathVariable BigInteger id) {
-        log.debug("Enter into getFullInfo method of BookController with input value: {}", id);
-        BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
-        return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
-    }
-
     @GetMapping("/rating")
     public ResponseEntity<List<BookDTO>> searchByRating(@RequestParam Integer rating) {
-        log.debug("Enter into searchByRating method of BookController");
+        LOGGER.debug("{}.searchByRating({})", this.getClass().getName(), rating);
         if (Objects.isNull(rating) || rating <= 0 || rating > 6) {
             throw new IllegalStateException("Wrong input rating for search");
         }

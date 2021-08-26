@@ -41,12 +41,12 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong author id");
         }
-        BigInteger count = (BigInteger) entityManager  // todo: "exists" will return boolean value!!! java.math.BigInteger cannot be cast to java.lang.Boolean
+        BigInteger count = (BigInteger) entityManager
                 .createNativeQuery("select exists (select 1 from authors_books a " +
                         "where a.author_id = :id)")
                 .setParameter("id", id)
                 .getSingleResult();
-        return !Objects.isNull(count);
+        return count.compareTo(BigInteger.ZERO) > 0;
     }
 
     @Override

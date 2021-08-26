@@ -29,7 +29,7 @@ import java.util.Objects;
 @RequestMapping(value = "/reviews")
 public class ReviewController {
 
-    private static final Logger log = LoggerFactory.getLogger(ReviewController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
@@ -41,21 +41,21 @@ public class ReviewController {
 
     @GetMapping("")
     public ResponseEntity<List<ReviewDTO>> getAll() {
-        log.debug("Enter into getAll method of ReviewController");
+        LOGGER.debug("{}.getALl()", this.getClass().getName());
         List<ReviewDTO> reviewDTOS = reviewMapper.convertToDtoList(reviewService.getAll());
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTOS);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> get(@PathVariable BigInteger id) {
-        log.debug("Enter into get method of ReviewController with input value: {}", id);
+        LOGGER.debug("{}.get({})", this.getClass().getName(), id);
         ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTO);
     }
 
     @PostMapping("")
-    public ResponseEntity<ReviewDTO> save(@RequestBody ReviewDTO reviewDTO) {
-        log.debug("Enter into save method of ReviewController with input value: {}", reviewDTO);
+    public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
+        LOGGER.debug("{}.create({})", this.getClass().getName(), reviewDTO);
         if (!Objects.isNull(reviewDTO.getId()) || isInvalidAuthor(reviewDTO)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
@@ -65,7 +65,7 @@ public class ReviewController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ReviewDTO> update(@PathVariable BigInteger id, @RequestBody ReviewDTO reviewDTO) {
-        log.debug("Enter into update method of ReviewController with input value: {}", reviewDTO);
+        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id,reviewDTO);
         if (!Objects.equals(id, reviewDTO.getId())) {
             throw new EntityNotFoundException("Review id not equals provided id");
         }
@@ -79,7 +79,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        log.debug("Enter into delete method of ReviewController with input value: {}", id);
+        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
         reviewService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review was deleted");
     }
