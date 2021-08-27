@@ -9,6 +9,8 @@ import { ReviewComponent } from './views/review/review.component';
 import { AppRoutingModule } from './app-routing.module';
 import {FormsModule} from "@angular/forms";
 import { MainPageComponent } from './views/main-page/main-page.component';
+import {BookService} from "./service/book.service";
+import {HttpClientModule} from "@angular/common/http";
 
 const routes: Routes = [
   { path: '', component: MainPageComponent},
@@ -28,9 +30,10 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [BookService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
