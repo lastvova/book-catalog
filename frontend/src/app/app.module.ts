@@ -33,7 +33,7 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule
   ],
-  providers: [BookService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

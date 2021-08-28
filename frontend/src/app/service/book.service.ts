@@ -17,12 +17,16 @@ export class BookService {
     return this.http.get<Book[]>(`${this.apiServerUrl}/books`);
   }
 
+  public getBook(bookId: number): Observable<Book> {
+    return this.http.get<Book>(`${this.apiServerUrl}/books/${bookId}`);
+  }
+
   public createBook(book: Book): Observable<Book> {
     return this.http.post<Book>(`${this.apiServerUrl}/books`, book);
   }
 
   public updateBook(book: Book): Observable<Book> {
-    return this.http.put<Book>(`${this.apiServerUrl}/books/`, book);
+    return this.http.put<Book>(`${this.apiServerUrl}/books/${book.id}`, book);
   }
 
   public deleteBook(bookId: number): Observable<void> {
