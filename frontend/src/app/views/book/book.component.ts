@@ -11,6 +11,7 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['./book.component.css']
 })
 export class BookComponent implements OnInit {
+
   public books: Book[] = [];
   // @ts-ignore
   public editBook: Book;
@@ -60,7 +61,7 @@ export class BookComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert(error.message);
         addForm.reset();
-      },
+      }
     )
   }
 
@@ -72,7 +73,7 @@ export class BookComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
-      },
+      }
     )
   }
 
@@ -84,12 +85,12 @@ export class BookComponent implements OnInit {
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
-      },
+      }
     )
   }
 
   public onOpenModal(mode: string, book: Book): void {
-    const container = document.getElementById('main-container')
+    const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';

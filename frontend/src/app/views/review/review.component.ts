@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {DataHandlerService} from "../../service/data-handler.service";
+import {Component, OnInit} from '@angular/core';
 import {Review} from "../../model/Review";
 
 @Component({
@@ -11,10 +10,10 @@ export class ReviewComponent implements OnInit {
 
   reviews: Review [] = [];
 
-  constructor(private dataHandler: DataHandlerService) { }
+  constructor() {
+  }
 
   ngOnInit(): void {
-    this.reviews = this.dataHandler.getReviews();
   }
 
 }

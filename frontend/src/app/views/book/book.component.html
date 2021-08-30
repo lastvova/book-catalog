@@ -62,14 +62,10 @@
                   <td>{{book.authors}}</td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a (click)="onOpenModal('edit',book)" class="btn btn-success btn-sm rounded-top"
-                         data-placement="top" title="Edit"><em
-                        class="fa fa-edit"></em></a>
+                      <a (click)="onOpenModal('edit',book)" class="btn btn-info btn-sm rounded-top"
+                         data-placement="top" title="Edit"><em class="fa fa-info"></em></a>
                       <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><em
-                        class="fa fa-trash"></em></a>
-                      <a (click)="onOpenModal('detail',book)" class="btn btn-info btn-sm rounded-bottom"
-                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
+                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
                     </div>
                   </td>
                 </tr>
@@ -100,8 +96,8 @@
             <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name" required>
           </div>
           <div class="form-group">
-            <label for="yearOfPublisher">Year of publisher</label>
-            <input type="text" ngModel name="yearOfPublisher" class="form-control" id="yearOfPublisher"
+            <label for="yearPublisher">Year of publisher</label>
+            <input type="text" ngModel name="yearPublisher" class="form-control" id="yearPublisher"
                    placeholder="year of publisher">
           </div>
           <div class="form-group">
@@ -144,7 +140,7 @@
           </div>
           <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">
           <div class="form-group">
-            <label for="yearOfPublisher">Year of publisher</label>
+            <label for="bookYearPublisher">Year of publisher</label>
             <input type="text" ngModel="{{editBook?.yearPublisher}}" name="yearOfPublisher" class="form-control"
                    id="bookYearPublisher"
                    placeholder="year of publisher">
@@ -185,25 +181,6 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           <button (click)="deleteBook(deletedBook.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="detailBookModal" tabindex="-1" role="dialog" aria-labelledby="detailBookModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H4 class="modal-title">Detail Book {{detailBook?.name}}</H4>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <div>Name: {{detailBook?.name}}</div>
-        <div>ISBN: {{detailBook?.isbn}}</div>
-        <div>Publisher: {{detailBook?.publisher}}</div>
-        <div>Year of publisher: {{detailBook?.yearPublisher}}</div>
-        <div>Rating: {{detailBook?.rating}}</div>
       </div>
     </div>
   </div>
