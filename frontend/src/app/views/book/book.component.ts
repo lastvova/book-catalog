@@ -4,6 +4,8 @@ import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
+import {Author} from "../../model/Author";
+import {AuthorService} from "../../service/author.service";
 
 @Component({
   selector: 'app-book',
@@ -13,17 +15,29 @@ import {NgForm} from "@angular/forms";
 export class BookComponent implements OnInit {
 
   public books: Book[] = [];
+  public authors: Author[] = [];
   // @ts-ignore
   public editBook: Book;
-  public detailBook: Book | undefined;
   // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
 
-  constructor(private router: Router, private bookService: BookService) {
+  constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
 
   ngOnInit() {
     this.getBooks();
+    this.getAuthors();
+  }
+
+  public getAuthors(): void {
+    this.authorService.getAuthors().subscribe(
+      (response: Author[]) => {
+        this.authors = response;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
   }
 
   public getBooks(): void {
@@ -105,10 +119,6 @@ export class BookComponent implements OnInit {
     if (mode === 'delete') {
       this.deletedBook = book;
       button.setAttribute('data-target', '#deleteBookModal');
-    }
-    if (mode === 'detail') {
-      this.detailBook = book;
-      button.setAttribute('data-target', '#detailBookModal')
     }
     // @ts-ignore
     container.appendChild(button);

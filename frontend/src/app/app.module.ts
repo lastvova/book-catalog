@@ -5,12 +5,12 @@ import {AppComponent} from './app.component';
 import {BookComponent} from './views/book/book.component';
 import {AuthorComponent} from './views/author/author.component';
 import {Routes} from "@angular/router";
-import { ReviewComponent } from './views/review/review.component';
-import { AppRoutingModule } from './app-routing.module';
+import {ReviewComponent} from './views/review/review.component';
+import {AppRoutingModule} from './app-routing.module';
 import {FormsModule} from "@angular/forms";
-import { MainPageComponent } from './views/main-page/main-page.component';
-import {BookService} from "./service/book.service";
+import {MainPageComponent} from './views/main-page/main-page.component';
 import {HttpClientModule} from "@angular/common/http";
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 const routes: Routes = [
   { path: '', component: MainPageComponent},
@@ -31,7 +31,8 @@ const routes: Routes = [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

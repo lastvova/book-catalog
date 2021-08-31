@@ -17,4 +17,62 @@
     <maven.compiler.target>8</maven.compiler.target>
   </properties>
 
+  <build>
+    <plugins>
+
+      <!--      <plugin>-->
+      <!--        <artifactId>maven-clean-plugin</artifactId>-->
+      <!--        <version>2.5</version>-->
+      <!--        <configuration>-->
+      <!--          <filesets>-->
+      <!--            <fileset>-->
+      <!--              <directory>dist</directory>-->
+      <!--              <includes>-->
+      <!--                <include>*</include>-->
+      <!--              </includes>-->
+      <!--            </fileset>-->
+      <!--          </filesets>-->
+      <!--        </configuration>-->
+      <!--      </plugin>-->
+
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
+        <configuration>
+          <nodeVersion>v14.17.5</nodeVersion>
+          <npmVersion>6.14.4</npmVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+
 </project>

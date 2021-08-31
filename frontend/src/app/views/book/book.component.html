@@ -59,7 +59,13 @@
                   <td>{{book.yearPublisher}}</td>
                   <td>{{book.isbn}}</td>
                   <td>{{book.rating}}</td>
-                  <td>{{book.authors}}</td>
+                  <td>
+                    <div
+                      *ngFor="let author of book.authors">
+                      {{author.firstName}}
+                      {{author.secondName}}/
+                    </div>
+                  </td>
                   <td>
                     <div class="btn-group" role="group">
                       <a (click)="onOpenModal('edit',book)" class="btn btn-info btn-sm rounded-top"
@@ -96,8 +102,8 @@
             <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name" required>
           </div>
           <div class="form-group">
-            <label for="yearPublisher">Year of publisher</label>
-            <input type="text" ngModel name="yearPublisher" class="form-control" id="yearPublisher"
+            <label for="yearOfPublisher">Year of publisher</label>
+            <input type="text" ngModel name="yearOfPublisher" class="form-control" id="yearOfPublisher"
                    placeholder="year of publisher">
           </div>
           <div class="form-group">
@@ -110,8 +116,13 @@
             <input type="text" ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" required>
           </div>
           <div class="form-group">
-            <label for="authors">Authors</label>
-            <input type="text" ngModel name="authors" class="form-control" id="authors" placeholder="authors" required>
+            <label>Authors</label>
+            <select multiple class="form-control" ngModel name="authors">
+              <option *ngFor="let author of authors" [ngValue]="author">
+                {{author.firstName}}
+                {{author.secondName}}
+              </option>
+            </select>
           </div>
           <div class="modal-footer">
             <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>
@@ -140,7 +151,7 @@
           </div>
           <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">
           <div class="form-group">
-            <label for="bookYearPublisher">Year of publisher</label>
+            <label for="yearOfPublisher">Year of publisher</label>
             <input type="text" ngModel="{{editBook?.yearPublisher}}" name="yearOfPublisher" class="form-control"
                    id="bookYearPublisher"
                    placeholder="year of publisher">
@@ -155,10 +166,20 @@
             <input type="text" ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn"
                    placeholder="isbn">
           </div>
+          <div class="form-group">
+            <label>Authors</label>
+            <select multiple class="form-control" ngModel name="authors">
+              <option *ngFor="let author of authors" [ngValue]="author">
+                {{author.firstName}}
+                {{author.secondName}}
+              </option>
+            </select>
+          </div>
 
           <div class="modal-footer">
-            <button (click)="updateBook(editForm.value)" class="btn btn-success">Save changes</button>
-            <button class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button (click)="updateBook(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes
+            </button>
+            <button class="btn btn" data-dismiss="modal">Close</button>
             <button (click)="deleteBook(editBook.id)" class="btn btn-danger" data-dismiss="modal">Delete</button>
           </div>
         </form>
