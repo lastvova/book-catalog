@@ -26,7 +26,6 @@ export class BookComponent implements OnInit {
 
   ngOnInit() {
     this.getBooks();
-    this.getAuthors();
   }
 
   public getAuthors(): void {
@@ -114,6 +113,7 @@ export class BookComponent implements OnInit {
     }
     if (mode === 'edit') {
       this.editBook = book;
+      this.getAuthors();
       button.setAttribute('data-target', '#updateBookModal');
     }
     if (mode === 'delete') {
