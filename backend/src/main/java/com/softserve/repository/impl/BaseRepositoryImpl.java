@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
+import com.softserve.util.OutputSql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -98,6 +99,16 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected boolean isInvalidEntityId(T entity) {
         LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), entity);
         return false;
+    }
+
+    public List<T> getAllByParams(OutputSql params) {
+        return params.getQuery(entityManager, basicClass).getResultList();
+    }
+
+    @Override
+    public Long countRecordsInTable() {
+        return (Long) entityManager.createQuery("select count(*) from " + basicClass.getName())
+                .getSingleResult();
     }
 }
 

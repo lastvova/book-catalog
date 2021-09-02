@@ -1,5 +1,7 @@
 package com.softserve.service;
 
+import com.softserve.util.OutputSql;
+
 import java.util.List;
 
 public interface BaseService<T, I> {
@@ -14,4 +16,5 @@ public interface BaseService<T, I> {
 
     boolean delete(I id);
 
+    List<T> getAllByParams(OutputSql params);
 }

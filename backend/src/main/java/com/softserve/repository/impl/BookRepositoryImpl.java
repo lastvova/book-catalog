@@ -8,15 +8,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 
 @Repository
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRepositoryImpl.class);
+    private static final String GET_ALL_BOOKS = "select id, \n " +
+            "       name,\n" +
+            "       year_publisher,\n" +
+            "       isbn,\n" +
+            "       publisher,\n" +
+            "       created_date,\n" +
+            "       (select ifnull(round(avg(r.rating),2),0) from reviews r where r.book_id = b.id) as rating \n" +
+            "from books b";
 
     @Override
     public Book getById(BigInteger id) {
@@ -35,9 +45,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     public List<Book> getAll() {
         LOGGER.debug("{}.getAll", basicClass.getName());
-        return entityManager.createQuery("select b from Book b " +
-                        "join fetch b.authors", Book.class)
-                .getResultList();
+        Query query = entityManager.createNativeQuery(GET_ALL_BOOKS,Book.class);
+        List<Book> books = query.getResultList();
+        return books;
     }
 
     @Override

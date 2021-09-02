@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyVetoException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -84,6 +85,15 @@ public class GlobalExceptionHandler {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
         errorInfo.setErrorMessage("Cannot add or update entity, some fields are wrong");
+        LOGGER.error(exception.getMessage());
+        return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ErrorInfo> noSuchElementExceptionHandler(HttpServletRequest request, NoSuchElementException exception){
+        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
+        errorInfo.setUrl(request.getRequestURL().toString());
+        errorInfo.setErrorMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }

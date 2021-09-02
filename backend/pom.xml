@@ -171,6 +171,7 @@
                         <phase>validate</phase>
                         <goals><goal>copy-resources</goal></goals>
                         <configuration>
+<!--                            TODO target change to general(working directory or something else)-->
                             <outputDirectory>target/classes/resources/</outputDirectory >
                             <resources>
                                 <resource>
@@ -190,7 +191,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <webResources>
                         <resource>
-                            <directory>../backend/target</directory>
+                            <directory>..\backend\target</directory>
                         </resource>
                     </webResources>
                 </configuration>

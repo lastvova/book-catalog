@@ -4,6 +4,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
+import com.softserve.util.OutputSql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,9 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("{}.inInvalidEntity({})", this.getClass().getName(), entity);
         return Objects.isNull(entity);
+    }
+
+    public List<T> getAllByParams(OutputSql params){
+        return baseRepository.getAllByParams(params);
     }
 }

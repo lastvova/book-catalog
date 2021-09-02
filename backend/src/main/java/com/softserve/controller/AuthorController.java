@@ -8,6 +8,7 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.AuthorService;
+import com.softserve.util.OutputSql;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
@@ -96,5 +98,20 @@ public class AuthorController {
 
     private boolean isInvalidAuthor(AuthorDTO authorDTO) {
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<AuthorDTO>> getAllByParams(@RequestParam String sortingField,
+                                                          @RequestParam String sortingOrder,
+                                                          @RequestParam Integer currentPage,
+                                                          @RequestParam Integer maxResult){
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        OutputSql params = new OutputSql();
+        params.setSortingField(sortingField);
+        params.setSortingOrder(sortingOrder);
+        params.setCurrentPage(currentPage);
+        params.setRecordsPerPage(maxResult);
+        List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAllByParams(params));
+        return ResponseEntity.status(HttpStatus.OK).body(authors);
     }
 }
