@@ -8,7 +8,7 @@ export class Book {
   //TODO change to bigint or string
   isbn: number;
   rating: number;
-  authors: Author[]
+  authors: Author[];
 
   constructor(id: number, name: string, publisher: string, yearPublisher: number, isbn: number, rating: number, authors: Author[]) {
     this.id = id;

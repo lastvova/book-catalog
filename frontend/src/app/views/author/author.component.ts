@@ -12,6 +12,7 @@ import {NgForm} from "@angular/forms";
 export class AuthorComponent implements OnInit {
 
   public authors: Author[] = [];
+  public detailAuthor: Author | undefined;
   //@ts-ignore
   public editAuthor: Author;
   //@ts-ignore
@@ -93,6 +94,7 @@ export class AuthorComponent implements OnInit {
       button.setAttribute('data-target', '#deleteAuthorModal');
     }
     if (mode === 'detail') {
+      this.detailAuthor = author;
       button.setAttribute('data-target', '#detailAuthorModal');
     }
     //@ts-ignore

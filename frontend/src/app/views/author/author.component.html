@@ -16,9 +16,9 @@
                   Authors on page
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropDownPagination">
+                  <a class="dropdown-item" href="">5</a>
                   <a class="dropdown-item" href="">10</a>
-                  <a class="dropdown-item" href="">25</a>
-                  <a class="dropdown-item" href="">50</a>
+                  <a class="dropdown-item" href="">20</a>
                 </div>
               </div>
               <div>
@@ -42,7 +42,6 @@
                 <th id="tableId">ID</th>
                 <th id="tableName">Name</th>
                 <th id="tableSecondName">Second Name</th>
-                <th id="tableBooks">Books</th>
                 </thead>
                 <tbody>
                 <tr *ngFor="let author of authors">
@@ -54,13 +53,14 @@
                   <td>{{author.id}}</td>
                   <td>{{author.firstName}}</td>
                   <td>{{author.secondName}}</td>
-                  <td>{{author.books}}</td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a (click)="onOpenModal('edit', author)" class="btn btn-info btn-sm rounded-top"
+                      <a (click)="onOpenModal('edit', author)" class="btn btn-success btn-sm rounded-top"
                          data-placement="top" title="Edit"><em class="fa fa-info"></em></a>
                       <a (click)="onOpenModal('delete', author)" class="btn btn-danger btn-sm rounded-bottom"
                          data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                      <a (click)="onOpenModal('detail',author)" class="btn btn-info btn-sm rounded-top"
+                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
                     </div>
                   </td>
                 </tr>
@@ -119,15 +119,18 @@
         <form #editForm="ngForm">
           <div class="form-group">
             <label for="updateAuthorName">Name</label>
-            <input type="text" ngModel="{{editAuthor?.firstName}}"  name="firstName" class="form-control" id="updateAuthorName" placeholder="name" required>
+            <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" class="form-control"
+                   id="updateAuthorName" placeholder="name" required>
           </div>
-          <input type="hidden" ngModel="{{editAuthor?.id}}"  name="id" class="form-control" id="id" placeholder="Email">
+          <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control" id="id" placeholder="Email">
           <div class="form-group">
             <label for="updateAuthorSecondName">Second name</label>
-            <input type="text" ngModel="{{editAuthor?.secondName}}"  name="secondName" class="form-control" id="updateAuthorSecondName" placeholder="second name" required>
+            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" class="form-control"
+                   id="updateAuthorSecondName" placeholder="second name" required>
           </div>
           <div class="modal-footer">
-            <button (click)="updateAuthor(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes</button>
+            <button (click)="updateAuthor(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes
+            </button>
             <button class="btn btn-danger" data-dismiss="modal">Close</button>
             <button (click)="deleteAuthor(editAuthor.id)" class="btn btn-danger" data-dismiss="modal">Delete</button>
           </div>
@@ -178,6 +181,26 @@
         <div class="modal-footer">
           <button class="btn btn-success" data-dismiss="modal">Search</button>
           <button class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detailAuthorModal" tabindex="-1" role="dialog" aria-labelledby="detailAuthorModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">{{deletedAuthor?.firstName}}</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <div>Name: {{detailAuthor?.firstName}}</div>
+        <div>Second name: {{detailAuthor?.secondName}}</div>
+        <div>Books: <a *ngFor="let book of detailAuthor?.books">
+          {{book.name}}
+        </a>
         </div>
       </div>
     </div>

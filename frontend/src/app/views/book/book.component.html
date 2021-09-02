@@ -15,9 +15,9 @@
                   page
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropDownPagination">
+                  <a class="dropdown-item" href="#">5</a>
                   <a class="dropdown-item" href="#">10</a>
-                  <a class="dropdown-item" href="#">25</a>
-                  <a class="dropdown-item" href="#">50</a>
+                  <a class="dropdown-item" href="#">20</a>
                 </div>
               </div>
               <div>
@@ -63,15 +63,17 @@
                     <div
                       *ngFor="let author of book.authors">
                       {{author.firstName}}
-                      {{author.secondName}}/
+                      {{author.secondName}},
                     </div>
                   </td>
                   <td>
                     <div class="btn-group" role="group">
-                      <a (click)="onOpenModal('edit',book)" class="btn btn-info btn-sm rounded-top"
-                         data-placement="top" title="Edit"><em class="fa fa-info"></em></a>
+                      <a (click)="onOpenModal('edit',book)" class="btn btn-success btn-sm rounded-top"
+                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
                       <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
                          data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                      <a (click)="onOpenModal('detail',book)" class="btn btn-info btn-sm rounded-bottom"
+                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
                     </div>
                   </td>
                 </tr>
@@ -168,7 +170,7 @@
           </div>
           <div class="form-group">
             <label>Authors</label>
-            <select multiple class="form-control" ngModel name="authors">
+            <select multiple class="form-control" ngModel="{{editBook?.authors}}" name="authors">
               <option *ngFor="let author of authors" [ngValue]="author">
                 {{author.firstName}}
                 {{author.secondName}}
@@ -249,6 +251,30 @@
         <div class="modal-footer">
           <button class="btn btn-success" data-dismiss="modal">Search</button>
           <button class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="detailBookModal" tabindex="-1" role="dialog" aria-labelledby="detailBookModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H4 class="modal-title">{{detailBook?.name}}</H4>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <div>Name: {{detailBook?.name}}</div>
+        <div>ISBN: {{detailBook?.isbn}}</div>
+        <div>Publisher: {{detailBook?.publisher}}</div>
+        <div>Year of publisher: {{detailBook?.yearPublisher}}</div>
+        <div>Rating: {{detailBook?.rating}}</div>
+        <div>Authors:<a  *ngFor="let author of detailBook?.authors">
+            {{author.firstName}}
+            {{author.secondName}},
+        </a>
         </div>
       </div>
     </div>

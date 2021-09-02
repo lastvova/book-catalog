@@ -16,6 +16,7 @@ export class BookComponent implements OnInit {
 
   public books: Book[] = [];
   public authors: Author[] = [];
+  public detailBook: Book | undefined;
   // @ts-ignore
   public editBook: Book;
   // @ts-ignore: Object is possibly 'null'
@@ -119,6 +120,10 @@ export class BookComponent implements OnInit {
     if (mode === 'delete') {
       this.deletedBook = book;
       button.setAttribute('data-target', '#deleteBookModal');
+    }
+    if (mode === 'detail') {
+      this.detailBook = book;
+      button.setAttribute('data-target', '#detailBookModal')
     }
     // @ts-ignore
     container.appendChild(button);
