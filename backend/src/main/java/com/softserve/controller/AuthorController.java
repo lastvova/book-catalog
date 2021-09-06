@@ -9,6 +9,8 @@ import com.softserve.mapper.AuthorMapper;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.AuthorService;
 import com.softserve.util.OutputSql;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,13 +106,13 @@ public class AuthorController {
     public ResponseEntity<List<AuthorDTO>> getAllByParams(@RequestParam String sortingField,
                                                           @RequestParam String sortingOrder,
                                                           @RequestParam Integer currentPage,
-                                                          @RequestParam Integer maxResult){
+                                                          @RequestParam Integer maxResult) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
         OutputSql params = new OutputSql();
-        params.setSortingField(sortingField);
-        params.setSortingOrder(sortingOrder);
-        params.setCurrentPage(currentPage);
-        params.setRecordsPerPage(maxResult);
+        PaginationParameters paginationParameters = new PaginationParameters(currentPage, maxResult);
+        SortingParameters sortingParameters = new SortingParameters(sortingField, sortingOrder);
+        params.setPaginationParams(paginationParameters);
+        params.setSortingParameters(sortingParameters);
         List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAllByParams(params));
         return ResponseEntity.status(HttpStatus.OK).body(authors);
     }

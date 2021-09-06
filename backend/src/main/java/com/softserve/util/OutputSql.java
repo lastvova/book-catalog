@@ -1,77 +1,55 @@
 package com.softserve.util;
 
-import com.softserve.enums.FieldType;
+import com.softserve.enums.FilteringOperator;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.List;
 
 @Getter
 @Setter
 public class OutputSql {
-    private Integer currentPage;
-    private Integer recordsPerPage;
-    private Integer startFrom;
-    private Integer totalRecords;
-    private Integer totalPages;
 
-    private String sortingField;
-    private String sortingOrder;
+    private SortingParameters sortingParameters;
+    private List<FilteringParameters> filteringParams;
+    private PaginationParameters paginationParams;
 
-    private String filteringField;
-    private String filteringValue;
-    private String filteringOperator;
-
-    public Query getQuery(EntityManager entityManager, Class entityClass) {
-        Query query = entityManager.createNativeQuery(buildSql(entityClass.getSimpleName()), entityClass);
-        query.setMaxResults(recordsPerPage);
-        query.setFirstResult(startFrom);
+    //в абстрактний метод baseRepo
+    public Query getQuery(EntityManager entityManager, Class entityClass, Integer totalRecords) {
+        Query query = entityManager.createNativeQuery(buildSql(entityClass.getSimpleName(), totalRecords), entityClass);
+        query.setParameter("sortingField", sortingParameters.getField());
+        query.setParameter("sortingOrder", sortingParameters.getOrder());
+        query.setParameter("recordsPerPage", paginationParams.getRecordsPerPage());
+        query.setParameter("startFrom", paginationParams.getStartFrom());
+        if (CollectionUtils.isNotEmpty(filteringParams)) {
+            for (FilteringParameters params : filteringParams) {
+                query.setParameter(params.getField().substring(params.getField().indexOf("_") + 1), params.getValue());
+            }
+        }
         return query;
     }
 
-    private String buildSql(String entityName) {
-        validatePaging();
-        validateSortingParams(sortingField, sortingOrder);
+    private String buildSql(String entityName, Integer totalRecords) {
+        String and = " and ";
+
         String sql = "select * from " + entityName + "s as e ";
-        if (!StringUtils.isBlank(filteringField)) {
-            sql += " where e." + filteringField + " = " + filteringValue + " ";
+        if (CollectionUtils.isNotEmpty(filteringParams)) {
+            sql += " where ";
+            for (FilteringParameters params : filteringParams) {
+                sql += " e." + params.getField().substring(params.getField().indexOf("_") + 1);
+                if (params.getOperator().equalsIgnoreCase(FilteringOperator.CONTAINS.toString())) {
+                    sql += " LIKE :" + params.getValue() + and;
+                } else if (params.getOperator().equalsIgnoreCase(FilteringOperator.NOT_EQUALS.toString())) {
+                    sql += " != :" + params.getValue() + and;
+                } else sql += " = :" + params.getValue() + and;
+            }
+            sql = sql.substring(0, and.length());
         }
-        if (!StringUtils.isBlank(sortingField)) {
-            sql += " order by e." + sortingField + " " + sortingOrder;
-        }
+
+        sql += sortingParameters.buildOrderPartOfQuery() + paginationParams.buildPaginationPartOfQuery(totalRecords);
         return sql;
-    }
-
-
-    private void validateSortingParams(String field, String order) {
-        if (StringUtils.isBlank(field) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, field)) {
-            field = FieldType.ENTITY_CREATED_DATE.toString();
-        }
-        sortingField = field.substring(field.indexOf("_") + 1).toLowerCase(Locale.ROOT);
-        if (!StringUtils.isBlank(order) && order.equals("DESC")) {
-            sortingOrder = "DESC";
-        } else sortingOrder = "ASC";
-    }
-
-
-    private void validatePaging() {
-//        if (Objects.isNull(currentPage)) {
-//            setCurrentPage(1);
-//        }
-////        тримати в такому форматі який приходить
-//        if (Objects.isNull(recordsPerPage)) {
-//            setRecordsPerPage(5);
-//        }
-        totalPages = (totalRecords % recordsPerPage) == 0 ? totalRecords / recordsPerPage : totalRecords / recordsPerPage + 1;
-        startFrom = currentPage * recordsPerPage - recordsPerPage;
-        if (totalRecords <= startFrom) {
-            throw new NoSuchElementException("Wrong input value for pagination, no such elements");
-        }
     }
 }
