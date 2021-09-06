@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> illegalStateExceptionHandler(HttpServletRequest request, IllegalStateException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage("Cannot add or update entity, some fields are wrong");
+        errorInfo.setErrorMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }

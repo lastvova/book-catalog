@@ -17,7 +17,6 @@ public class OutputSql {
     private List<FilteringParameters> filteringParams;
     private PaginationParameters paginationParams;
 
-    //в абстрактний метод baseRepo
     public Query getQuery(EntityManager entityManager, Class entityClass, Integer totalRecords) {
         Query query = entityManager.createNativeQuery(buildSql(entityClass.getSimpleName(), totalRecords), entityClass);
         query.setParameter("sortingField", sortingParameters.getField());
@@ -26,7 +25,7 @@ public class OutputSql {
         query.setParameter("startFrom", paginationParams.getStartFrom());
         if (CollectionUtils.isNotEmpty(filteringParams)) {
             for (FilteringParameters params : filteringParams) {
-                query.setParameter(params.getField().substring(params.getField().indexOf("_") + 1), params.getValue());
+                query.setParameter(params.getField(), params.getValue());
             }
         }
         return query;
@@ -35,18 +34,20 @@ public class OutputSql {
     private String buildSql(String entityName, Integer totalRecords) {
         String and = " and ";
 
-        String sql = "select * from " + entityName + "s as e ";
+        String sql = "select * from " + entityName + "s as " + entityName;
         if (CollectionUtils.isNotEmpty(filteringParams)) {
-            sql += " where ";
+            sql +=" where ";
             for (FilteringParameters params : filteringParams) {
-                sql += " e." + params.getField().substring(params.getField().indexOf("_") + 1);
+
+                sql += entityName + "." + params.getField();
+
                 if (params.getOperator().equalsIgnoreCase(FilteringOperator.CONTAINS.toString())) {
-                    sql += " LIKE :" + params.getValue() + and;
+                    sql += " LIKE concat('%', :" + params.getField() + ",'%')" + and;
                 } else if (params.getOperator().equalsIgnoreCase(FilteringOperator.NOT_EQUALS.toString())) {
-                    sql += " != :" + params.getValue() + and;
-                } else sql += " = :" + params.getValue() + and;
+                    sql += " != :" + params.getField() + "" + and;
+                } else sql += " = :" + params.getField() + "" + and;
             }
-            sql = sql.substring(0, and.length());
+            sql = sql.substring(0, sql.length() - and.length());
         }
 
         sql += sortingParameters.buildOrderPartOfQuery() + paginationParams.buildPaginationPartOfQuery(totalRecords);

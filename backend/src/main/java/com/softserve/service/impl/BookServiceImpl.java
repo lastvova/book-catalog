@@ -28,11 +28,6 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     }
 
     @Override
-    public List<Book> getBooksBySearchingParams(String searchBy, String name) {//TODO
-        return null;
-    }
-
-    @Override
     public boolean isInvalidEntity(Book book) {
         LOGGER.debug("{}.isInvalidEntity({})", this.getClass().getName(), book);
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())

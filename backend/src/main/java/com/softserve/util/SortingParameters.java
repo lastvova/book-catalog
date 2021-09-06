@@ -24,7 +24,7 @@ public class SortingParameters {
     }
 
     public String buildOrderPartOfQuery(){
-        return "order by e.:sortingField :sortingOrder ";
+        return " order by :sortingField :sortingOrder ";
     }
 
 }

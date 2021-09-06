@@ -102,7 +102,10 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     public List<T> getAllByParams(OutputSql params) {
-        return params.getQuery(entityManager, basicClass, Math.toIntExact(countRecordsInTable())).getResultList();
+        return params.getQuery(entityManager,
+                        basicClass,
+                        Math.toIntExact(countRecordsInTable()))
+                .getResultList();
     }
 
     @Override
