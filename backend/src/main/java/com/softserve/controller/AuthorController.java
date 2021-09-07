@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/authors")
+@RequestMapping(value = "/api/authors")
 public class AuthorController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);

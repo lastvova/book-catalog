@@ -5,7 +5,6 @@ export class Book {
   name: string;
   yearPublisher: number;
   publisher: string;
-  //TODO change to bigint or string
   isbn: number;
   rating: number;
   authors: Author[];

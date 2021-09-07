@@ -32,9 +32,6 @@ public class PaginationParameters {
     public String buildPaginationPartOfQuery(Integer totalRecords) {
         this.totalRecords = totalRecords;
         this.totalPages = (totalRecords % recordsPerPage) == 0 ? totalRecords / recordsPerPage : totalRecords / recordsPerPage + 1;
-        if (currentPage > totalPages) {
-            this.currentPage = totalPages;
-        }
         this.startFrom = currentPage * recordsPerPage - recordsPerPage;
         if (totalRecords <= startFrom) {
             throw new NoSuchElementException("Wrong input value for pagination, no such elements");

@@ -42,9 +42,9 @@ public class DBConfig {
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setDatabase(Database.MYSQL);
-        adapter.setGenerateDdl(true);
-        adapter.setShowSql(true);
+//        adapter.setDatabase(Database.MYSQL);
+//        adapter.setGenerateDdl(true);
+//        adapter.setShowSql(true);
         return adapter;
     }
 

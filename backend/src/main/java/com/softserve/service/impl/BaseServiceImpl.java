@@ -82,6 +82,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
         return Objects.isNull(entity);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public List<T> getAllByParams(OutputSql params){
         return baseRepository.getAllByParams(params);
     }

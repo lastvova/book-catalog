@@ -12,6 +12,7 @@ public class SortingParameters {
 
     private String field;
     private String order;
+    private final String SQL = " order by :sortingField :sortingOrder ";
 
     public SortingParameters(String inputField, String inputOrder) {
         if (StringUtils.isBlank(inputField) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, inputField)) {
@@ -24,7 +25,7 @@ public class SortingParameters {
     }
 
     public String buildOrderPartOfQuery(){
-        return " order by :sortingField :sortingOrder ";
+        return SQL;
     }
 
 }

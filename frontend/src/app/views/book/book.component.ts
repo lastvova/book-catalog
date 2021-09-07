@@ -3,9 +3,10 @@ import {Book} from "../../model/Book";
 import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {NgForm} from "@angular/forms";
+import {FormControl, NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
+import {FilterParameters} from "../../model/FilterParameters";
 
 @Component({
   selector: 'app-book',
@@ -14,6 +15,8 @@ import {AuthorService} from "../../service/author.service";
 })
 export class BookComponent implements OnInit {
 
+  toppings = new FormControl();
+
   public books: Book[] = [];
   public authors: Author[] = [];
   public detailBook: Book | undefined;
@@ -21,6 +24,7 @@ export class BookComponent implements OnInit {
   public editBook: Book;
   // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
+  public filterParameters?: FilterParameters;
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -103,6 +107,17 @@ export class BookComponent implements OnInit {
     )
   }
 
+  public filterBooks(filter: FilterParameters): void {
+    this.bookService.filterBooks(filter).subscribe(
+      (response: Book[])=>{
+        this.books = response;
+      },
+      (error: HttpErrorResponse) =>{
+        alert(error.message);
+      }
+    )
+  }
+
   public onOpenModal(mode: string, book: Book): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
@@ -110,6 +125,7 @@ export class BookComponent implements OnInit {
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
+      this.getAuthors()
       button.setAttribute('data-target', '#createBookModal');
     }
     if (mode === 'edit') {

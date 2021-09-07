@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/reviews")
+@RequestMapping(value = "/api/reviews")
 public class ReviewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);

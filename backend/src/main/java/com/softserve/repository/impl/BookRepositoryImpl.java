@@ -45,9 +45,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         List<Book> books = entityManager
                 .createNativeQuery(GET_ALL_BOOKS, Book.class)
                 .getResultList();
-//        Query query = entityManager.createNativeQuery(GET_ALL_BOOKS, Book.class);
-//        List<Book> books = query.getResultList();
-        books.stream().forEach(book -> book.getAuthors().size());
+        books.forEach(book -> book.getAuthors().size());
         return books;
     }
 

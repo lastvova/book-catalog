@@ -157,6 +157,13 @@
             <version>3.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.softserve</groupId>
+            <artifactId>frontend</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -171,8 +178,7 @@
                         <phase>validate</phase>
                         <goals><goal>copy-resources</goal></goals>
                         <configuration>
-<!--                            TODO target change to general(working directory or something else)-->
-                            <outputDirectory>target/classes/resources/</outputDirectory >
+                            <outputDirectory>${project.build.directory}/classes/resources/</outputDirectory >
                             <resources>
                                 <resource>
                                     <directory>../frontend/dist/frontend</directory>
@@ -189,11 +195,11 @@
                 <version>3.2.2</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <webResources>
-                        <resource>
-                            <directory>..\backend\target</directory>
-                        </resource>
-                    </webResources>
+<!--                    <webResources>-->
+<!--                        <resource>-->
+<!--                            <directory>..\backend\target</directory>-->
+<!--                        </resource>-->
+<!--                    </webResources>-->
                 </configuration>
             </plugin>
         </plugins>

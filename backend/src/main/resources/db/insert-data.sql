@@ -28,7 +28,7 @@ values (1, 1),
        (5, 7),
        (5, 8),
        (6, 10),
-       (5, 10),
+       (5, 9),
        (4, 5);
 
 INSERT INTO reviews(commenter_name, comment, rating, book_id)

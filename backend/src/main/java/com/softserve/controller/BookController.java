@@ -6,6 +6,10 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
+import com.softserve.util.FilteringParameters;
+import com.softserve.util.OutputSql;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,11 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/books")
+@RequestMapping(value = "/api/books")
 public class BookController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
@@ -95,6 +100,27 @@ public class BookController {
         }
         List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(null);//TODO
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<BookDTO>> getAllByParams(@RequestParam String sortingField,
+                                                        @RequestParam String sortingOrder,
+                                                        @RequestParam Integer currentPage,
+                                                        @RequestParam Integer maxResult,
+                                                        @RequestParam String filteringField,
+                                                        @RequestParam String filteringOperator,
+                                                        @RequestParam String filteringValue) {
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        OutputSql params = new OutputSql();
+        PaginationParameters paginationParameters = new PaginationParameters(currentPage, maxResult);
+        SortingParameters sortingParameters = new SortingParameters(sortingField, sortingOrder);
+        FilteringParameters filteringParameters = new FilteringParameters(filteringField, filteringValue, filteringOperator);
+        params.setFilteringParams(Arrays.asList(filteringParameters));
+        params.setPaginationParams(paginationParameters);
+        params.setSortingParameters(sortingParameters);
+        List<BookDTO> books = bookMapper.convertToDtoListWithAuthors(bookService.getAllByParams(params));
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+
     }
 
     private boolean isInvalidBook(BookDTO bookDTO) {
