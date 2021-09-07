@@ -194,12 +194,8 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
+                    <warName>book-catalog</warName>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-<!--                    <webResources>-->
-<!--                        <resource>-->
-<!--                            <directory>..\backend\target</directory>-->
-<!--                        </resource>-->
-<!--                    </webResources>-->
                 </configuration>
             </plugin>
         </plugins>
