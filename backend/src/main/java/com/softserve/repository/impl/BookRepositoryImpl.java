@@ -23,7 +23,8 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
             "       a.*\n" +
             "from books b\n" +
             "         left join authors_books ab on b.id = ab.book_id\n" +
-            "         left join authors a on ab.author_id = a.id;";
+            "         left join authors a on ab.author_id = a.id " +
+            "group by b.id;";
 
     @Override
     public Book getById(BigInteger id) {
