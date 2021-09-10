@@ -18,13 +18,12 @@ import java.util.Objects;
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRepositoryImpl.class);
-    private static final String GET_ALL_BOOKS = "select b.*,\n" +
-            "       (select ifnull(round(avg(r.rating),2),0) from reviews r where r.book_id = b.id) as rating,\n" +
-            "       a.*\n" +
-            "from books b\n" +
-            "         left join authors_books ab on b.id = ab.book_id\n" +
-            "         left join authors a on ab.author_id = a.id " +
-            "group by b.id;";
+    private static final String GET_ALL_BOOKS = "SELECT b.* , a.* \n" +
+            "FROM books AS b \n" +
+            "         LEFT JOIN authors_books AS ab ON b.id = ab.book_id\n" +
+            "         LEFT JOIN authors AS a ON ab.author_id = a.id " +
+            "GROUP BY b.id;";
+    private static final String DELETE_BOOKS_BY_IDS = "DELETE FROM books WHERE id IN :ids";
 
     @Override
     public Book getById(BigInteger id) {
@@ -53,6 +52,8 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     public boolean deleteBooks(List<Integer> ids) {
         LOGGER.debug("{}.deleteBooks({})", basicClass.getName(), ids);
+        entityManager.createQuery(DELETE_BOOKS_BY_IDS)
+                .setParameter("ids", ids);
         return false;
     }
 
