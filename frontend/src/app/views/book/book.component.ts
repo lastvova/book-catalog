@@ -25,6 +25,7 @@ export class BookComponent implements OnInit {
   // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
   public filterParameters?: FilterParameters;
+  public selectedAuthors?: Author[];
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }

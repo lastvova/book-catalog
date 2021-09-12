@@ -3,24 +3,15 @@
     <div class="content">
       <div class="container-fluid" id="main-container">
         <div class="row">
-          <div class="col-6">
+          <div class="col-4">
             <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>
             <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>
           </div>
-          <div class="col-6">
+          <div class="col-8">
             <div class="d-flex justify-content-end align-items-end">
-              <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropDownPagination"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                  Authors on page
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropDownPagination">
-                  <a class="dropdown-item" href="">5</a>
-                  <a class="dropdown-item" href="">10</a>
-                  <a class="dropdown-item" href="">20</a>
-                </div>
-              </div>
+              <mat-paginator [length]="authors.length" [pageSize]="10" [pageSizeOptions]="[5,10,20]"
+                             aria-label="Select page">
+              </mat-paginator>
               <div>
                 <button class="btn btn-info" data-toggle="modal" data-target="#searchAuthorModal">SEARCH</button>
               </div>
@@ -30,8 +21,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header card-header-warning">
-              <h4 class="card-title">Authors</h4>
-              <p id="availableAuthors">Available authors</p>
+              <h1 class="card-title">Authors</h1>
             </div>
             <div class="card-body table-responsive">
               <table class="table table-hover" aria-describedby="availableAuthors">
@@ -56,11 +46,11 @@
                   <td>
                     <div class="btn-group" role="group">
                       <a (click)="onOpenModal('edit', author)" class="btn btn-success btn-sm rounded-top"
-                         data-placement="top" title="Edit"><em class="fa fa-info"></em></a>
-                      <a (click)="onOpenModal('delete', author)" class="btn btn-danger btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
                       <a (click)="onOpenModal('detail',author)" class="btn btn-info btn-sm rounded-top"
                          data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
+                      <a (click)="onOpenModal('delete', author)" class="btn btn-danger btn-sm rounded-bottom"
+                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
                     </div>
                   </td>
                 </tr>
@@ -81,7 +71,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Create Author</H4>
+        <H2 class="modal-title">Create Author</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
@@ -112,7 +102,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Update Author{{editAuthor?.firstName}}</H4>
+        <H2 class="modal-title">Edit {{editAuthor?.firstName}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
@@ -145,11 +135,11 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Delete Author</H4>
+        <H2 class="modal-title">Delete {{deletedAuthor?.firstName}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete author {{deletedAuthor?.firstName}}?</p>
+        <p>Are you sure you want to delete {{deletedAuthor?.firstName}} {{deletedAuthor?.secondName}} ?</p>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           <button (click)="deleteAuthor(deletedAuthor.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
@@ -192,7 +182,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">{{deletedAuthor?.firstName}}</H4>
+        <H2 class="modal-title">Details {{detailAuthor?.firstName}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">

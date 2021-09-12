@@ -9,16 +9,10 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end align-items-end">
-              <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropDownPagination"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="Books on page">Books on
-                  page
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropDownPagination">
-                  <a class="dropdown-item" href="#">5</a>
-                  <a class="dropdown-item" href="#">10</a>
-                  <a class="dropdown-item" href="#">20</a>
-                </div>
+              <div>
+                <mat-paginator [length]="books.length" [pageSize]="10" [pageSizeOptions]="[5,10,20]"
+                               aria-label="Select page">
+                </mat-paginator>
               </div>
               <div>
                 <button class="btn btn-info" data-toggle="modal" data-target="#searchBook">SEARCH</button>
@@ -29,8 +23,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header card-header-warning">
-              <h4 class="card-title">Books</h4>
-              <p id="availableBooks">Available books</p>
+              <h1 class="card-title">Books</h1>
             </div>
             <div class="card-body table-responsive">
               <table class="table table-hover table-striped" aria-describedby="availableBooks">
@@ -38,12 +31,11 @@
                 <th id="checkBox">
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
-                <th id="tableId">ID</th>
                 <th id="tableName">Name</th>
                 <th id="tablePublisher">Publisher</th>
                 <th id="tableYearOfPublisher">Year of publisher</th>
                 <th id="tableIsbn">ISBN</th>
-                <th id="tableRating">rating</th>
+                <th id="tableRating">Rating</th>
                 <th id="tableAuthors">Authors</th>
                 </thead>
                 <tbody>
@@ -53,7 +45,6 @@
                       <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">
                     </div>
                   </td>
-                  <td>{{book.id}}</td>
                   <td>{{book.name}}</td>
                   <td>{{book.publisher}}</td>
                   <td>{{book.yearPublisher}}</td>
@@ -70,10 +61,11 @@
                     <div class="btn-group" role="group">
                       <a (click)="onOpenModal('edit',book)" class="btn btn-success btn-sm rounded-top"
                          data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
-                      <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
                       <a (click)="onOpenModal('detail',book)" class="btn btn-info btn-sm rounded-bottom"
                          data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
+                      <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
+                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+
                     </div>
                   </td>
                 </tr>
@@ -94,7 +86,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Create Book</H4>
+        <H2 class="modal-title">Create Book</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
@@ -117,19 +109,9 @@
             <label for="isbn">Publisher</label>
             <input type="text" ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" required>
           </div>
-<!--          <div>-->
-<!--            <mat-form-field appearance="fill">-->
-<!--              <mat-label>Authors</mat-label>-->
-<!--              <mat-select [formControl]="toppings" multiple>-->
-<!--                <mat-select-trigger>-->
-<!--                  {{authors.values() ? toppings.value[0] : ''}}-->
-<!--                  <span *ngIf="authors.values()> 1" class="example-additional-selection">-->
-<!--                    (+{{}}-->
-<!--                  </span>-->
-<!--                </mat-select-trigger>-->
-<!--              </mat-select>-->
-<!--            </mat-form-field>-->
-<!--          </div>-->
+          <div>
+            123
+          </div>
           <div class="form-group">
             <label>Authors</label>
             <select multiple class="form-control" ngModel name="authors">
@@ -154,7 +136,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Update Book {{editBook?.name}}</H4>
+        <H2 class="modal-title"> Edit {{editBook?.name}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
@@ -208,11 +190,11 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">Delete Book</H4>
+        <H2 class="modal-title">Delete {{deletedBook?.name}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete book {{deletedBook?.name}}</p>
+        <p>Are you sure you want to delete {{deletedBook?.name}}</p>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           <button (click)="deleteBook(deletedBook.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
@@ -275,7 +257,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <H4 class="modal-title">{{detailBook?.name}}</H4>
+        <H2 class="modal-title">{{detailBook?.name}}</H2>
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
