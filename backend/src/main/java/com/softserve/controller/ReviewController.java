@@ -6,6 +6,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
+import com.softserve.util.OutputSql;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,9 +42,9 @@ public class ReviewController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ReviewDTO>> getAll() {
+    public ResponseEntity<List<ReviewDTO>> getAll(@ModelAttribute("params") OutputSql params) {
         LOGGER.debug("{}.getALl()", this.getClass().getName());
-        List<ReviewDTO> reviewDTOS = reviewMapper.convertToDtoList(reviewService.getAll());
+        List<ReviewDTO> reviewDTOS = reviewMapper.convertToDtoList(reviewService.getAll(params));
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTOS);
     }
 

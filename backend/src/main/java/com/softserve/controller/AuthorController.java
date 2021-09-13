@@ -8,9 +8,11 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.AuthorService;
+import com.softserve.util.FilteringParameters;
 import com.softserve.util.OutputSql;
 import com.softserve.util.PaginationParameters;
 import com.softserve.util.SortingParameters;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,28 +39,51 @@ import java.util.Objects;
 public class AuthorController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
-    private final AuthorService service;
+    private final AuthorService authorService;
     private final AuthorMapper authorMapper;
     private final BookMapper bookMapper;
 
     @Autowired
-    public AuthorController(AuthorService service, AuthorMapper mapper, BookMapper bookMapper) {
-        this.service = service;
+    public AuthorController(AuthorService authorService, AuthorMapper mapper, BookMapper bookMapper) {
+        this.authorService = authorService;
         this.authorMapper = mapper;
         this.bookMapper = bookMapper;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<AuthorDTO>> getAll() {
+    public ResponseEntity<List<AuthorDTO>> getAllWithParameters(@RequestParam(required = false) String sortingField,
+                                                                @RequestParam(required = false) String sortingOrder,
+                                                                @RequestParam(required = false, defaultValue = "1") Integer currentPage,
+                                                                @RequestParam(required = false, defaultValue = "5") Integer recordsPerPage) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAll());
+        OutputSql params = new OutputSql();
+        params.setPaginationParams(new PaginationParameters(currentPage, recordsPerPage));
+        params.setSortingParameters(new SortingParameters(sortingField, sortingOrder));
+        List<AuthorDTO> authors = authorMapper.convertToDtoList(authorService.getAll(params));
+        return ResponseEntity.status(HttpStatus.OK).body(authors);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<AuthorDTO>> getAllWithFilterParameters(@RequestParam(required = false) String sortingField,
+                                                                      @RequestParam(required = false) String sortingOrder,
+                                                                      @RequestParam(required = false, defaultValue = "1") Integer currentPage,
+                                                                      @RequestParam(required = false, defaultValue = "5") Integer recordsPerPage,
+                                                                      @RequestParam String filteringField,
+                                                                      @RequestParam String filteringOperator,
+                                                                      @RequestParam String filteringValue) {
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        OutputSql params = new OutputSql();
+        params.setPaginationParams(new PaginationParameters(currentPage, recordsPerPage));
+        params.setSortingParameters(new SortingParameters(sortingField, sortingOrder));
+        params.setFilteringParams(Collections.singletonList(new FilteringParameters(filteringField, filteringValue, filteringOperator)));
+        List<AuthorDTO> authors = authorMapper.convertToDtoList(authorService.getAll(params));
         return ResponseEntity.status(HttpStatus.OK).body(authors);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> get(@PathVariable BigInteger id) {
         LOGGER.debug("{}.get({})", this.getClass().getName(), id);
-        AuthorDTO authorDTO = authorMapper.convertToDto(service.getById(id));
+        AuthorDTO authorDTO = authorMapper.convertToDto(authorService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
@@ -67,7 +93,7 @@ public class AuthorController {
         if (!Objects.isNull(authorDTO.getId()) || isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
-        Author author = service.create(authorMapper.convertToEntity(authorDTO));
+        Author author = authorService.create(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
 
@@ -80,40 +106,35 @@ public class AuthorController {
         if (isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in update method ");
         }
-        service.update(authorMapper.convertToEntity(authorDTO));
+        authorService.update(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
         LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
-        service.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was delete");
+        authorService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was deleted");
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
+        LOGGER.debug("{}.bulkDelete()", this.getClass().getName());
+        if(CollectionUtils.isEmpty(ids)){
+            throw new IllegalStateException("Empty collection with ids");
+        }
+        authorService.delete(null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable BigInteger id) {
         LOGGER.debug("{}.getBooksByAuthor({})", this.getClass().getName(), id);
-        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(service.getBooksByAuthorId(id));
+        List<BookDTO> bookDTOS = bookMapper.convertToDtoListWithAuthors(authorService.getBooksByAuthorId(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTOS);
     }
 
     private boolean isInvalidAuthor(AuthorDTO authorDTO) {
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
-    }
-
-    @GetMapping("/getAll")
-    public ResponseEntity<List<AuthorDTO>> getAllByParams(@RequestParam String sortingField,
-                                                          @RequestParam String sortingOrder,
-                                                          @RequestParam Integer currentPage,
-                                                          @RequestParam Integer maxResult) {
-        LOGGER.debug("{}.getAll()", this.getClass().getName());
-        OutputSql params = new OutputSql();
-        PaginationParameters paginationParameters = new PaginationParameters(currentPage, maxResult);
-        SortingParameters sortingParameters = new SortingParameters(sortingField, sortingOrder);
-        params.setPaginationParams(paginationParameters);
-        params.setSortingParameters(sortingParameters);
-        List<AuthorDTO> authors = authorMapper.convertToDtoList(service.getAllByParams(params));
-        return ResponseEntity.status(HttpStatus.OK).body(authors);
     }
 }
