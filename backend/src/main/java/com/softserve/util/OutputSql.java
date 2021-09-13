@@ -22,13 +22,13 @@ public class OutputSql {
 
     public Query getQuery(EntityManager entityManager, Class entityClass, Integer totalRecords) {
         Query query = entityManager.createNativeQuery(buildSql(entityClass.getSimpleName(), totalRecords), entityClass);
-        query.setParameter("sortingField", entityClass.getSimpleName() + "." + sortingParameters.getField());
-        query.setParameter("sortingOrder", sortingParameters.getOrder());
+        query.setParameter("sortingField", entityClass.getSimpleName() + "." + sortingParameters.getSortingField());
+        query.setParameter("sortingOrder", sortingParameters.getSortingOrder());
         query.setParameter("recordsPerPage", paginationParams.getRecordsPerPage());
         query.setParameter("startFrom", paginationParams.getStartFrom());
         if (CollectionUtils.isNotEmpty(filteringParams)) {
             for (FilteringParameters params : filteringParams) {
-                query.setParameter(params.getField(), params.getValue());
+                query.setParameter(params.getFilteringField(), params.getFilteringValue());
             }
         }
         return query;
@@ -36,8 +36,9 @@ public class OutputSql {
 
     private String buildSql(String entityName, Integer totalRecords) {
         String and = " and ";
+        String groupById = " group by " + entityName + ".id ";
         String sql = "select * from " + entityName + "s as " + entityName;
-        calculateStartFromParameter(paginationParams,totalRecords);
+        calculateStartFromParameter(paginationParams, totalRecords);
 
         if (!StringUtils.isBlank(joinedEntity)) {
             sql += joinedEntity;
@@ -46,22 +47,22 @@ public class OutputSql {
             sql += " where ";
             for (FilteringParameters params : filteringParams) {
 
-                sql += entityName + "." + params.getField();
+                sql += entityName + "." + params.getFilteringField();
 
-                if (params.getOperator().equalsIgnoreCase(FilteringOperator.CONTAINS.toString())) {
-                    sql += " LIKE concat('%', :" + params.getField() + ",'%')" + and;
-                } else if (params.getOperator().equalsIgnoreCase(FilteringOperator.NOT_EQUALS.toString())) {
-                    sql += " != :" + params.getField() + "" + and;
-                } else sql += " = :" + params.getField() + "" + and;
+                if (params.getFilteringOperator().equalsIgnoreCase(FilteringOperator.CONTAINS.toString())) {
+                    sql += " LIKE concat('%', :" + params.getFilteringField() + ",'%')" + and;
+                } else if (params.getFilteringOperator().equalsIgnoreCase(FilteringOperator.NOT_EQUALS.toString())) {
+                    sql += " != :" + params.getFilteringField() + "" + and;
+                } else sql += " = :" + params.getFilteringField() + "" + and;
             }
             sql = sql.substring(0, sql.length() - and.length());
         }
 
-        sql += SortingParameters.SORTING_PART_OF_QUERY + PaginationParameters.PAGINATION_PART_OF_QUERY;
+        sql += groupById + SortingParameters.SORTING_PART_OF_QUERY + PaginationParameters.PAGINATION_PART_OF_QUERY;
         return sql;
     }
 
-    private void calculateStartFromParameter(PaginationParameters parameters, Integer totalRecords){
+    private void calculateStartFromParameter(PaginationParameters parameters, Integer totalRecords) {
         parameters.setTotalPages((totalRecords % parameters.getRecordsPerPage()) == 0 ?
                 totalRecords / parameters.getRecordsPerPage() :
                 totalRecords / parameters.getRecordsPerPage() + 1);

@@ -11,16 +11,16 @@ import org.apache.commons.lang3.StringUtils;
 public class SortingParameters {
 
     public static final String SORTING_PART_OF_QUERY = " order by :sortingField :sortingOrder ";
-    private String field;
-    private String order;
+    private String sortingField;
+    private String sortingOrder;
 
     public SortingParameters(String inputField, String inputOrder) {
         if (StringUtils.isBlank(inputField) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, inputField)) {
             inputField = FieldType.ENTITY_CREATED_DATE.toString();
         }
-        this.field = inputField.substring(inputField.indexOf("_") + 1);
+        this.sortingField = inputField.substring(inputField.indexOf("_") + 1);
         if (!StringUtils.isBlank(inputOrder) && inputOrder.equals("DESC")) {
-            this.order = "DESC";
-        } else this.order = "ASC";
+            this.sortingOrder = "DESC";
+        } else this.sortingOrder = "ASC";
     }
 }

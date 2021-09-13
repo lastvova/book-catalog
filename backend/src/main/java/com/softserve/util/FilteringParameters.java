@@ -11,22 +11,22 @@ import org.apache.commons.lang3.StringUtils;
 @Setter
 public class FilteringParameters {
 
-    private String field;
-    private String value;
-    private String operator;
+    private String filteringField;
+    private String filteringValue;
+    private String filteringOperator;
 
-    public FilteringParameters(String inputField, String value, String operator) {
-        if (StringUtils.isBlank(inputField) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, inputField)) {
+    public FilteringParameters(String filteringField, String filteringValue, String filteringOperator) {
+        if (StringUtils.isBlank(filteringField) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, filteringField)) {
             throw new IllegalStateException("Wrong input field for filtering");
         }
-        this.field = inputField.substring(inputField.indexOf("_") + 1);
-        if (StringUtils.isBlank(value)) {
+        this.filteringField = filteringField.substring(filteringField.indexOf("_") + 1);
+        if (StringUtils.isBlank(filteringValue)) {
             throw new IllegalStateException("Wrong input value for filtering");
         }
-        this.value = value;
-        if (StringUtils.isBlank(operator) || !EnumUtils.isValidEnumIgnoreCase(FilteringOperator.class, operator)) {
+        this.filteringValue = filteringValue;
+        if (StringUtils.isBlank(filteringOperator) || !EnumUtils.isValidEnumIgnoreCase(FilteringOperator.class, filteringOperator)) {
             throw new IllegalStateException("Wrong input operator for filtering");
         }
-        this.operator = operator;
+        this.filteringOperator = filteringOperator;
     }
 }
