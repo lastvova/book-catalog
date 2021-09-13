@@ -3,13 +3,13 @@ package com.softserve.util;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Getter
 @Setter
 public class PaginationParameters {
 
+    public static final String PAGINATION_PART_OF_QUERY = "limit :recordsPerPage offset :startFrom";
     private Integer currentPage;
     private Integer recordsPerPage;
     private Integer startFrom;
@@ -27,15 +27,5 @@ public class PaginationParameters {
         } else {
             this.recordsPerPage = recordsPerPage;
         }
-    }
-
-    public String buildPaginationPartOfQuery(Integer totalRecords) {
-        this.totalRecords = totalRecords;
-        this.totalPages = (totalRecords % recordsPerPage) == 0 ? totalRecords / recordsPerPage : totalRecords / recordsPerPage + 1;
-        this.startFrom = currentPage * recordsPerPage - recordsPerPage;
-        if (totalRecords <= startFrom) {
-            throw new NoSuchElementException("Wrong input value for pagination, no such elements");
-        }
-        return "limit :recordsPerPage offset :startFrom";
     }
 }

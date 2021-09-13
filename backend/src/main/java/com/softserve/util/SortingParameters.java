@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 @Setter
 public class SortingParameters {
 
+    public static final String SORTING_PART_OF_QUERY = " order by :sortingField :sortingOrder ";
     private String field;
     private String order;
-    private final String SQL = " order by :sortingField :sortingOrder ";
 
     public SortingParameters(String inputField, String inputOrder) {
         if (StringUtils.isBlank(inputField) || !EnumUtils.isValidEnumIgnoreCase(FieldType.class, inputField)) {
@@ -23,9 +23,4 @@ public class SortingParameters {
             this.order = "DESC";
         } else this.order = "ASC";
     }
-
-    public String buildOrderPartOfQuery(){
-        return SQL;
-    }
-
 }
