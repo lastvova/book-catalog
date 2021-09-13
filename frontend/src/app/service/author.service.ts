@@ -32,4 +32,8 @@ export class AuthorService {
   public deleteAuthor(authorId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/api/authors/${authorId}`);
   }
+
+  public getAuthorsWithPagination(currentPage: number, recordsPerPage: number): Observable<Author[]> {
+    return this.http.get<Author[]>(`${this.apiServerUrl}/api/authors?currentPage=${currentPage}&recordsPerPage=${recordsPerPage}`);
+  }
 }

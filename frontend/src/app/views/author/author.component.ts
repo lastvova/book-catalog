@@ -3,6 +3,7 @@ import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-author',
@@ -102,4 +103,13 @@ export class AuthorComponent implements OnInit {
     button.click();
   }
 
+  public onPageChange(event: PageEvent) {
+    this.authorService.getAuthorsWithPagination(event.pageIndex+1, event.pageSize).subscribe(
+      (response: Author[]) => {
+        this.authors = response;
+      }, (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
 }

@@ -9,8 +9,8 @@
           </div>
           <div class="col-8">
             <div class="d-flex justify-content-end align-items-end">
-              <mat-paginator [length]="authors.length" [pageSize]="10" [pageSizeOptions]="[5,10,20]"
-                             aria-label="Select page">
+              <mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+                             (page)="onPageChange($event)" aria-label="Select page">
               </mat-paginator>
               <div>
                 <button class="btn btn-info" data-toggle="modal" data-target="#searchAuthorModal">SEARCH</button>
