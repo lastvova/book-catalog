@@ -8,7 +8,7 @@ public interface BaseService<T, I> {
 
     T getById(I id);
 
-    List<T> getAll();
+    List<T> getAll(OutputSql params);
 
     T create(T entity);
 
@@ -16,5 +16,4 @@ public interface BaseService<T, I> {
 
     boolean delete(I id);
 
-    List<T> getAllByParams(OutputSql params);
 }

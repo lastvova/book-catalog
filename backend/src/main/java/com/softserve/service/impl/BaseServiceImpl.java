@@ -42,9 +42,9 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> getAll() {
+    public List<T> getAll(OutputSql params) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        return baseRepository.getAll();
+        return baseRepository.getAll(params);
     }
 
     @Override
@@ -80,10 +80,5 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("{}.inInvalidEntity({})", this.getClass().getName(), entity);
         return Objects.isNull(entity);
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public List<T> getAllByParams(OutputSql params){
-        return baseRepository.getAllByParams(params);
     }
 }

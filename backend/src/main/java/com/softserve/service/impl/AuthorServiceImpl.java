@@ -35,7 +35,7 @@ public class AuthorServiceImpl extends BaseServiceImpl<Author, BigInteger> imple
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong author id");
         }
-        return repository.getBooksByAuthorId(id);
+        return null;//TODO
     }
 
     @Override
