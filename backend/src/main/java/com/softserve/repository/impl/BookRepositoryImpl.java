@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Book;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
+import com.softserve.util.OutputSql;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,12 +19,9 @@ import java.util.Objects;
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRepositoryImpl.class);
-    private static final String GET_ALL_BOOKS = "SELECT b.* , a.* \n" +
-            "FROM books AS b \n" +
-            "         LEFT JOIN authors_books AS ab ON b.id = ab.book_id\n" +
-            "         LEFT JOIN authors AS a ON ab.author_id = a.id " +
-            "GROUP BY b.id;";
     private static final String DELETE_BOOKS_BY_IDS = "DELETE FROM books WHERE id IN :ids";
+    private static final String joinAuthors = " LEFT JOIN authors_books AS ab ON book.id = ab.book_id " +
+            " LEFT JOIN authors a ON ab.author_id = a.id ";
 
     @Override
     public Book getById(BigInteger id) {
@@ -37,16 +35,6 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         }
         book.getAuthors().size();
         return book;
-    }
-
-    @Override
-    public List<Book> getAll() {
-        LOGGER.debug("{}.getAll", basicClass.getName());
-        List<Book> books = entityManager
-                .createNativeQuery(GET_ALL_BOOKS, Book.class)
-                .getResultList();
-        books.forEach(book -> book.getAuthors().size());
-        return books;
     }
 
     @Override
@@ -70,6 +58,15 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     protected boolean isInvalidEntityId(Book book) {
         LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), book);
         return Objects.isNull(book.getId());
+    }
+
+    @Override
+    public List<Book> getAll(OutputSql params) {
+        LOGGER.debug("{}.getAll", basicClass.getName());
+        params.setJoinedEntity(joinAuthors);
+        List<Book> books = super.getAll(params);
+        books.forEach(book -> book.getAuthors().size());
+        return books;
     }
 
     private boolean isInValidYearOfPublisher(Book book) {

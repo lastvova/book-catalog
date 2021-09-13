@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Author;
-import com.softserve.entity.Book;
 import com.softserve.exception.DeleteAuthorWithBooksException;
 import com.softserve.repository.AuthorRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -19,20 +18,6 @@ import java.util.Objects;
 public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger> implements AuthorRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorRepositoryImpl.class);
-
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Book> getBooksByAuthorId(BigInteger id) {
-        LOGGER.debug("{}.getBooksByAuthorId({})", basicClass.getName(), id);
-        if (Objects.isNull(id)) {
-            throw new IllegalStateException("Wrong id");
-        }
-        return entityManager.createQuery("select b from Book b " +
-                        "join b.authors a " +
-                        "where a.id = :authorId", Book.class)
-                .setParameter("authorId", id)
-                .getResultList();
-    }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

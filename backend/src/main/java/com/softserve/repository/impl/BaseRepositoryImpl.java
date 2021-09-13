@@ -44,10 +44,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> getAll() {
+    public List<T> getAll(OutputSql params) {
         LOGGER.debug("{}.getAll", basicClass.getName());
-        return entityManager
-                .createQuery("from " + basicClass.getName(), basicClass)
+        return params.getQuery(entityManager,
+                        basicClass,
+                        Math.toIntExact(countRecordsInTable()))
                 .getResultList();
     }
 
@@ -99,13 +100,6 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected boolean isInvalidEntityId(T entity) {
         LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), entity);
         return false;
-    }
-
-    public List<T> getAllByParams(OutputSql params) {
-        return params.getQuery(entityManager,
-                        basicClass,
-                        Math.toIntExact(countRecordsInTable()))
-                .getResultList();
     }
 
     @Override
