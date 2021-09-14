@@ -3,6 +3,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Author} from "../model/Author";
+import {DataWithTotalRecords} from "../model/DataWithTotalRecords";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class AuthorService {
   constructor(private http: HttpClient) {
   }
 
-  public getAuthors(): Observable<Author[]> {
-    return this.http.get<Author[]>(`${this.apiServerUrl}/api/authors`);
+  public getAuthors(): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors`);
   }
 
   public getAuthor(authorId: number): Observable<Author> {
@@ -33,7 +34,7 @@ export class AuthorService {
     return this.http.delete<void>(`${this.apiServerUrl}/api/authors/${authorId}`);
   }
 
-  public getAuthorsWithPagination(currentPage: number, recordsPerPage: number): Observable<Author[]> {
-    return this.http.get<Author[]>(`${this.apiServerUrl}/api/authors?currentPage=${currentPage}&recordsPerPage=${recordsPerPage}`);
+  public getAuthorsWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors?currentPage=${currentPage}&recordsPerPage=${recordsPerPage}`);
   }
 }

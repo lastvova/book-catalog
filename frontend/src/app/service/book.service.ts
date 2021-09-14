@@ -4,6 +4,8 @@ import {Observable} from "rxjs";
 import {Book} from "../model/Book";
 import {environment} from "../../environments/environment";
 import {FilterParameters} from "../model/FilterParameters";
+import {Author} from "../model/Author";
+import {DataWithTotalRecords} from "../model/DataWithTotalRecords";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,8 @@ export class BookService {
   constructor(private http: HttpClient) {
   }
 
-  public getBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiServerUrl}/api/books`);
+  public getBooks(): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`);
   }
 
   public getBook(bookId: number): Observable<Book> {
@@ -34,8 +36,12 @@ export class BookService {
     return this.http.delete<void>(`${this.apiServerUrl}/api/books/${bookId}`);
   }
 
-  public filterBooks(filter: FilterParameters): Observable<Book[]> {
-    return this.http.get<Book[]>(`${this.apiServerUrl}/books?filteringField=${filter.filteringField}
+  public filterBooks(filter: FilterParameters): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/books?filteringField=${filter.filteringField}
     &filteringValue=${filter.filteringValue}&filteringOperator=${filter.filteringOperator}`)
+  }
+
+  public getBooksWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books?currentPage=${currentPage}&recordsPerPage=${recordsPerPage}`);
   }
 }

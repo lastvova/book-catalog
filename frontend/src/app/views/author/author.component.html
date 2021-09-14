@@ -9,7 +9,7 @@
           </div>
           <div class="col-8">
             <div class="d-flex justify-content-end align-items-end">
-              <mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+              <mat-paginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
                              (page)="onPageChange($event)" aria-label="Select page">
               </mat-paginator>
               <div>

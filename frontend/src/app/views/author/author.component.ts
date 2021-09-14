@@ -4,6 +4,7 @@ import {AuthorService} from "../../service/author.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
 import {PageEvent} from "@angular/material/paginator";
+import {DataWithTotalRecords} from "../../model/DataWithTotalRecords";
 
 @Component({
   selector: 'app-author',
@@ -18,6 +19,7 @@ export class AuthorComponent implements OnInit {
   public editAuthor: Author;
   //@ts-ignore
   public deletedAuthor: Author;
+  public totalRecords?: number;
 
   constructor(private authorService: AuthorService) {
   }
@@ -28,8 +30,9 @@ export class AuthorComponent implements OnInit {
 
   public getAuthors(): void {
     this.authorService.getAuthors().subscribe(
-      (response: Author[]) => {
-        this.authors = response;
+      (response: DataWithTotalRecords) => {
+        this.authors = response.data;
+        this.totalRecords = response.totalRecords;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -105,8 +108,9 @@ export class AuthorComponent implements OnInit {
 
   public onPageChange(event: PageEvent) {
     this.authorService.getAuthorsWithPagination(event.pageIndex+1, event.pageSize).subscribe(
-      (response: Author[]) => {
-        this.authors = response;
+      (response: DataWithTotalRecords) => {
+        this.authors = response.data;
+        this.totalRecords = response.totalRecords;
       }, (error: HttpErrorResponse) => {
         alert(error.message);
       }

@@ -7,6 +7,8 @@ import {FormControl, NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {FilterParameters} from "../../model/FilterParameters";
+import {PageEvent} from "@angular/material/paginator";
+import {DataWithTotalRecords} from "../../model/DataWithTotalRecords";
 
 @Component({
   selector: 'app-book',
@@ -26,6 +28,7 @@ export class BookComponent implements OnInit {
   public deletedBook: Book;
   public filterParameters?: FilterParameters;
   public selectedAuthors?: Author[];
+  public totalRecords?: number;
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -36,8 +39,8 @@ export class BookComponent implements OnInit {
 
   public getAuthors(): void {
     this.authorService.getAuthors().subscribe(
-      (response: Author[]) => {
-        this.authors = response;
+      (response: DataWithTotalRecords) => {
+        this.authors = response.data;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -47,8 +50,9 @@ export class BookComponent implements OnInit {
 
   public getBooks(): void {
     this.bookService.getBooks().subscribe(
-      (response: Book[]) => {
-        this.books = response;
+      (response: DataWithTotalRecords) => {
+        this.books = response.data;
+        this.totalRecords = response.totalRecords;
       },
       (error: HttpErrorResponse) => {
         alert(error.message)
@@ -110,8 +114,9 @@ export class BookComponent implements OnInit {
 
   public filterBooks(filter: FilterParameters): void {
     this.bookService.filterBooks(filter).subscribe(
-      (response: Book[])=>{
-        this.books = response;
+      (response: DataWithTotalRecords) => {
+        this.books = response.data;
+        this.totalRecords = response.totalRecords;
       },
       (error: HttpErrorResponse) =>{
         alert(error.message);
@@ -145,5 +150,16 @@ export class BookComponent implements OnInit {
     // @ts-ignore
     container.appendChild(button);
     button.click();
+  }
+
+  public onPageChange(event: PageEvent) {
+    this.bookService.getBooksWithPagination(event.pageIndex+1, event.pageSize).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.books = response.data;
+        this.totalRecords = response.totalRecords;
+      }, (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
   }
 }
