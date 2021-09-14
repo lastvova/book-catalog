@@ -9,6 +9,11 @@ import java.util.List;
 @Setter
 public class SearchResult<T> {
 
-    private PaginationParameters paginationParams;
+    private Long totalRecords;
     private List<T> data;
+
+    public SearchResult(Long totalRecords, List<T> data) {
+        this.totalRecords = totalRecords;
+        this.data = data;
+    }
 }

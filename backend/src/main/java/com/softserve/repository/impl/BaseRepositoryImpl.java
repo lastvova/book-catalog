@@ -4,6 +4,7 @@ package com.softserve.repository.impl;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.util.OutputSql;
+import com.softserve.util.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -44,12 +45,14 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> getAll(OutputSql params) {
+    public SearchResult<T> getAll(OutputSql params) {
         LOGGER.debug("{}.getAll", basicClass.getName());
-        return params.getQuery(entityManager,
+        Long totalRecords = countRecordsInTable();
+        List<T> result = params.getQuery(entityManager,
                         basicClass,
-                        Math.toIntExact(countRecordsInTable()))
+                        Math.toIntExact(totalRecords))
                 .getResultList();
+        return new SearchResult<>(totalRecords, result);
     }
 
     @Override

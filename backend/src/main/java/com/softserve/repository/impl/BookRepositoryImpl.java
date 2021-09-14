@@ -4,6 +4,7 @@ import com.softserve.entity.Book;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.util.OutputSql;
+import com.softserve.util.SearchResult;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,11 +62,11 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     @Override
-    public List<Book> getAll(OutputSql params) {
+    public SearchResult<Book> getAll(OutputSql params) {
         LOGGER.debug("{}.getAll", basicClass.getName());
         params.setJoinedEntity(joinAuthors);
-        List<Book> books = super.getAll(params);
-        books.forEach(book -> book.getAuthors().size());
+        SearchResult<Book> books = super.getAll(params);
+        books.getData().forEach(book -> book.getAuthors().size());
         return books;
     }
 

@@ -1,14 +1,13 @@
 package com.softserve.repository;
 
 import com.softserve.util.OutputSql;
-
-import java.util.List;
+import com.softserve.util.SearchResult;
 
 public interface BaseRepository<T, I> {
 
     T getById(I id);
 
-    List<T> getAll(OutputSql params);
+    SearchResult<T> getAll(OutputSql params);
 
     T create(T entity);
 

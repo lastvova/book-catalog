@@ -7,6 +7,9 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
 import com.softserve.util.OutputSql;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SearchResult;
+import com.softserve.util.SortingParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +45,13 @@ public class ReviewController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ReviewDTO>> getAll(@ModelAttribute("params") OutputSql params) {
+    public ResponseEntity<SearchResult<ReviewDTO>> getAll(@ModelAttribute("paginationParameters") PaginationParameters paginationParameters,
+                                                          @ModelAttribute("sortingParameters") SortingParameters sortingParameters) {
+        OutputSql params = new OutputSql();
+        params.setPaginationParams(paginationParameters);
+        params.setSortingParameters(sortingParameters);
         LOGGER.debug("{}.getALl()", this.getClass().getName());
-        List<ReviewDTO> reviewDTOS = reviewMapper.convertToDtoList(reviewService.getAll(params));
-        return ResponseEntity.status(HttpStatus.OK).body(reviewDTOS);
+        return ResponseEntity.status(HttpStatus.OK).body(getResult(params));
     }
 
     @GetMapping("/{id}")
@@ -67,7 +73,7 @@ public class ReviewController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ReviewDTO> update(@PathVariable BigInteger id, @RequestBody ReviewDTO reviewDTO) {
-        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id,reviewDTO);
+        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, reviewDTO);
         if (!Objects.equals(id, reviewDTO.getId())) {
             throw new EntityNotFoundException("Review id not equals provided id");
         }
@@ -89,5 +95,11 @@ public class ReviewController {
     private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
         return Objects.isNull(reviewDTO) || StringUtils.isBlank(reviewDTO.getCommenterName())
                 || StringUtils.isBlank(reviewDTO.getComment());
+    }
+
+    private SearchResult<ReviewDTO> getResult(OutputSql params) {
+        SearchResult<Review> resultFromService = reviewService.getAll(params);
+        List<ReviewDTO> reviews = reviewMapper.convertToDtoList(resultFromService.getData());
+        return new SearchResult<>(resultFromService.getTotalRecords(), reviews);
     }
 }

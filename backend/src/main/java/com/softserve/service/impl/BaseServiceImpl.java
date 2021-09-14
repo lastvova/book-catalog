@@ -5,6 +5,7 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
 import com.softserve.util.OutputSql;
+import com.softserve.util.SearchResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -42,7 +42,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<T> getAll(OutputSql params) {
+    public SearchResult<T> getAll(OutputSql params) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
         return baseRepository.getAll(params);
     }
