@@ -14,11 +14,50 @@
                                (page)="onPageChange($event)" aria-label="Select page">
                 </mat-paginator>
               </div>
-              <div>
-                <button class="btn btn-info" data-toggle="modal" data-target="#searchBook">SEARCH</button>
-              </div>
             </div>
           </div>
+        </div>
+        <div>
+          <mat-expansion-panel hideToggle>
+
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Filter by:
+              </mat-panel-title>
+              <mat-panel-description>
+                Parameters for filtering
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+              <form #filterForm="ngForm" (ngSubmit)="filterBooks(filterForm.value)">
+                <label>Select field: </label>
+                <mat-form-field appearance="fill">
+                  <mat-label>Field</mat-label>
+                  <mat-select ngModel name="filteringField">
+                    <mat-option *ngFor="let type of fieldTypes" [value]="type">
+                      {{FieldType2LabelMapping[type]}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <label>Select operator: </label>
+                <mat-form-field appearance="fill">
+                  <mat-label>Operator:</mat-label>
+                  <mat-select ngModel name="filteringOperator">
+                    <mat-option *ngFor="let operator of filterOperators" [value]="operator">
+                      {{FilterOperator2LabelMapping[operator]}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <label>Input value: </label>
+                <mat-form-field appearance="fill">
+                  <mat-label>Input</mat-label>
+                  <input matInput ngModel name="filteringValue">
+                </mat-form-field>
+                <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
+              </form>
+            </div>
+
+          </mat-expansion-panel>
         </div>
         <div class="col-12">
           <div class="card">
@@ -109,17 +148,16 @@
             <label for="isbn">Publisher</label>
             <input type="text" ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" required>
           </div>
-          <div>
-            123
-          </div>
           <div class="form-group">
-            <label>Authors</label>
-            <select multiple class="form-control" ngModel name="authors">
-              <option *ngFor="let author of authors" [ngValue]="author">
-                {{author.firstName}}
-                {{author.secondName}}
-              </option>
-            </select>
+            <mat-form-field appearance="fill">
+              <mat-label>Authors</mat-label>
+              <mat-select multiple ngModel name="authors">
+                <mat-option *ngFor="let author of authors" [value]="author">
+                  {{author.firstName}}
+                  {{author.secondName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
           <div class="modal-footer">
             <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>
@@ -164,13 +202,15 @@
                    placeholder="isbn">
           </div>
           <div class="form-group">
-            <label>Authors</label>
-            <select multiple class="form-control" ngModel="{{editBook?.authors}}" name="authors">
-              <option *ngFor="let author of authors" [ngValue]="author">
-                {{author.firstName}}
-                {{author.secondName}}
-              </option>
-            </select>
+            <mat-form-field appearance="fill">
+              <mat-label>Authors</mat-label>
+              <mat-select multiple ngModel name="authors">
+                <mat-option *ngFor="let author of authors" [value]="author">
+                  {{author.firstName}}
+                  {{author.secondName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
 
           <div class="modal-footer">

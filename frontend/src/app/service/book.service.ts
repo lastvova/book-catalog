@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Book} from "../model/Book";
 import {environment} from "../../environments/environment";
-import {FilterParameters} from "../model/FilterParameters";
+import {FilterParameters} from "../model/parameters/FilterParameters";
 import {Author} from "../model/Author";
 import {DataWithTotalRecords} from "../model/DataWithTotalRecords";
 
@@ -37,8 +37,7 @@ export class BookService {
   }
 
   public filterBooks(filter: FilterParameters): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/books?filteringField=${filter.filteringField}
-    &filteringValue=${filter.filteringValue}&filteringOperator=${filter.filteringOperator}`)
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books/filter?filteringField=${filter.filteringField}&filteringValue=${filter.filteringValue}&filteringOperator=${filter.filteringOperator}`)
   }
 
   public getBooksWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {

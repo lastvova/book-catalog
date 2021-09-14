@@ -6,9 +6,11 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {FormControl, NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
-import {FilterParameters} from "../../model/FilterParameters";
+import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/DataWithTotalRecords";
+import {FieldTypeEnum, FieldType2LabelMapping} from "../../enum/FieldTypeEnum";
+import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 
 @Component({
   selector: 'app-book',
@@ -29,6 +31,12 @@ export class BookComponent implements OnInit {
   public filterParameters?: FilterParameters;
   public selectedAuthors?: Author[];
   public totalRecords?: number;
+
+  public FieldType2LabelMapping = FieldType2LabelMapping;
+  public fieldTypes = Object.values(FieldTypeEnum);
+
+  public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
+  public filterOperators = Object.values(FilterOperatorEnum);
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -115,6 +123,7 @@ export class BookComponent implements OnInit {
   public filterBooks(filter: FilterParameters): void {
     this.bookService.filterBooks(filter).subscribe(
       (response: DataWithTotalRecords) => {
+        this.books = [];
         this.books = response.data;
         this.totalRecords = response.totalRecords;
       },
@@ -162,4 +171,5 @@ export class BookComponent implements OnInit {
       }
     )
   }
+
 }
