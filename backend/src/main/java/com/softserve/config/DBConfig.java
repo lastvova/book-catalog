@@ -9,7 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -41,11 +40,7 @@ public class DBConfig {
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
-        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-//        adapter.setDatabase(Database.MYSQL);
-//        adapter.setGenerateDdl(true);
-//        adapter.setShowSql(true);
-        return adapter;
+        return new HibernateJpaVendorAdapter();
     }
 
     @Bean("entityManagerFactory")

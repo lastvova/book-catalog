@@ -3,7 +3,6 @@ package com.softserve.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,7 +49,7 @@ public class Book implements Serializable {
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 
-//    @Formula(value = "(select ifnull(round(avg(r.rating), 2),0) from reviews r where r.book_id = id)")
+    @Column(name = "rating", insertable = false, updatable = false)
     private BigDecimal rating;
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)

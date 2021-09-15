@@ -46,10 +46,23 @@ CREATE TRIGGER count_rating
     ON reviews
     FOR EACH ROW
 BEGIN
-    DECLARE avg_rating DECIMAL(3,2);
-    SELECT avg(rating) INTO avg_rating FROM reviews WHERE book_id = new.book_id;
+    DECLARE avg_rating_for_book DECIMAL(3, 2);
+    SELECT avg(rating) INTO avg_rating_for_book FROM reviews WHERE book_id = NEW.book_id;
+
     UPDATE books AS b
-    SET b.rating = avg_rating WHERE b.id = NEW.book_id;
+    SET b.rating = avg_rating_for_book
+    WHERE b.id = NEW.book_id;
+
+    UPDATE authors AS a
+        INNER JOIN authors_books AS ab ON a.id = ab.author_id
+    SET a.rating = (SELECT AVG(b.rating)
+                    FROM books AS b
+                    WHERE b.id IN (select book_id
+                                   from authors_books ab1
+                                   where ab1.author_id in (SELECT author_id
+                                                           FROM authors_books AS ab
+                                                           WHERE ab.book_id = NEW.book_id)))
+    WHERE a.id IN (SELECT author_id FROM authors_books AS ab WHERE ab.book_id = NEW.book_id);
 END//
 DELIMITER ;
 

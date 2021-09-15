@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -34,8 +35,11 @@ public class Author implements Serializable {
     @Column(name = "second_name", length = 128)
     private String secondName;
 
-    @Column(name = "created_date", insertable = false,updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
+
+    @Column(name = "rating", insertable = false, updatable = false)
+    private BigDecimal rating;
 
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books = new HashSet<>();
