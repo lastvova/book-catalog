@@ -9,15 +9,15 @@ import com.softserve.mapper.AuthorMapper;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.AuthorService;
 import com.softserve.util.FilteringParameters;
-import com.softserve.util.OutputSql;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SearchResult;
-import com.softserve.util.SortingParameters;
+import com.softserve.util.PaginationAndSortingParameters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,32 +50,26 @@ public class AuthorController {
         this.bookMapper = bookMapper;
     }
 
-    @GetMapping("")
-    public ResponseEntity<SearchResult<AuthorDTO>> getAllWithParameters(@RequestParam(required = false) String sortingField,
-                                                                        @RequestParam(required = false) String sortingOrder,
-                                                                        @RequestParam(required = false, defaultValue = "1") Integer currentPage,
-                                                                        @RequestParam(required = false, defaultValue = "5") Integer recordsPerPage) {
+    @RequestMapping("")
+    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false, defaultValue = "createdDate") String sortBy,
+                                                  @RequestParam(required = false, defaultValue = "ASC") String order,
+                                                  @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(required = false, defaultValue = "5") Integer size,
+                                                  @RequestParam(required = false) String filterBy,
+                                                  @RequestParam(required = false) String filterValue) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        OutputSql params = new OutputSql();
-        params.setPaginationParams(new PaginationParameters(currentPage, recordsPerPage));
-        params.setSortingParameters(new SortingParameters(sortingField, sortingOrder));
-        return ResponseEntity.status(HttpStatus.OK).body(getResult(params));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<SearchResult<AuthorDTO>> getAllWithFilterParameters(@RequestParam(required = false) String sortingField,
-                                                                              @RequestParam(required = false) String sortingOrder,
-                                                                              @RequestParam(required = false, defaultValue = "1") Integer currentPage,
-                                                                              @RequestParam(required = false, defaultValue = "5") Integer recordsPerPage,
-                                                                              @RequestParam String filteringField,
-                                                                              @RequestParam String filteringOperator,
-                                                                              @RequestParam String filteringValue) {
-        LOGGER.debug("{}.getAll()", this.getClass().getName());
-        OutputSql params = new OutputSql();
-        params.setPaginationParams(new PaginationParameters(currentPage, recordsPerPage));
-        params.setSortingParameters(new SortingParameters(sortingField, sortingOrder));
-        params.setFilteringParams(Collections.singletonList(new FilteringParameters(filteringField, filteringValue, filteringOperator)));
-        return ResponseEntity.status(HttpStatus.OK).body(getResult(params));
+        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
+        paginationAndSortingParameters.setPageSize(size);
+        paginationAndSortingParameters.setPageNumber(page);
+        paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
+        paginationAndSortingParameters.setSortBy(sortBy);
+        FilteringParameters filteringParameters = new FilteringParameters();
+        filteringParameters.setFilterBy(filterBy);
+        filteringParameters.setFilterValue(filterValue);
+        Page<Author> result = authorService.getAll(paginationAndSortingParameters, filteringParameters);
+        List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
+        Page<AuthorDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK).body(finalResult);
     }
 
     @GetMapping("/{id}")
@@ -137,9 +130,4 @@ public class AuthorController {
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
     }
 
-    private SearchResult<AuthorDTO> getResult(OutputSql params) {
-        SearchResult<Author> resultFromService = authorService.getAll(params);
-        List<AuthorDTO> authors = authorMapper.convertToDtoList(resultFromService.getData());
-        return new SearchResult<>(resultFromService.getTotalRecords(), authors);
-    }
 }

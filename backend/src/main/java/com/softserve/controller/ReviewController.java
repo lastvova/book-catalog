@@ -6,24 +6,25 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
-import com.softserve.util.OutputSql;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SearchResult;
-import com.softserve.util.SortingParameters;
+import com.softserve.util.FilteringParameters;
+import com.softserve.util.PaginationAndSortingParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
@@ -44,14 +45,26 @@ public class ReviewController {
         this.reviewMapper = mapper;
     }
 
-    @GetMapping("")
-    public ResponseEntity<SearchResult<ReviewDTO>> getAll(@ModelAttribute("paginationParameters") PaginationParameters paginationParameters,
-                                                          @ModelAttribute("sortingParameters") SortingParameters sortingParameters) {
-        OutputSql params = new OutputSql();
-        params.setPaginationParams(paginationParameters);
-        params.setSortingParameters(sortingParameters);
-        LOGGER.debug("{}.getALl()", this.getClass().getName());
-        return ResponseEntity.status(HttpStatus.OK).body(getResult(params));
+    @RequestMapping("")
+    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false,defaultValue = "createdDate") String orderBy,
+                                                  @RequestParam(required = false,defaultValue = "ASC") String order,
+                                                  @RequestParam(required = false, defaultValue = "0") Integer page,
+                                                  @RequestParam(required = false, defaultValue = "5") Integer size,
+                                                  @RequestParam(required = false) String filterBy,
+                                                  @RequestParam(required = false) String filterValue) {
+        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
+        paginationAndSortingParameters.setPageSize(size);
+        paginationAndSortingParameters.setPageNumber(page);
+        paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
+        paginationAndSortingParameters.setSortBy(orderBy);
+        FilteringParameters filteringParameters = new FilteringParameters();
+        filteringParameters.setFilterBy(filterBy);
+        filteringParameters.setFilterValue(filterValue);
+        Page<Review> result = reviewService.getAll(paginationAndSortingParameters, filteringParameters);
+        List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
+        Page<ReviewDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK).body(finalResult);
     }
 
     @GetMapping("/{id}")
@@ -95,11 +108,5 @@ public class ReviewController {
     private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
         return Objects.isNull(reviewDTO) || StringUtils.isBlank(reviewDTO.getCommenterName())
                 || StringUtils.isBlank(reviewDTO.getComment());
-    }
-
-    private SearchResult<ReviewDTO> getResult(OutputSql params) {
-        SearchResult<Review> resultFromService = reviewService.getAll(params);
-        List<ReviewDTO> reviews = reviewMapper.convertToDtoList(resultFromService.getData());
-        return new SearchResult<>(resultFromService.getTotalRecords(), reviews);
     }
 }

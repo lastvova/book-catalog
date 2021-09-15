@@ -97,4 +97,13 @@ public class GlobalExceptionHandler {
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInfo> illegalArgumentExceptionHandler(HttpServletRequest request, IllegalArgumentException exception){
+        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
+        errorInfo.setUrl(request.getRequestURL().toString());
+        errorInfo.setErrorMessage(exception.getMessage());
+        LOGGER.error(exception.getMessage());
+        return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
+    }
 }
