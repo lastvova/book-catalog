@@ -3,17 +3,31 @@ package com.softserve.repository.impl;
 
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
-import com.softserve.util.OutputSql;
-import com.softserve.util.SearchResult;
+import com.softserve.util.FilteringParameters;
+import com.softserve.util.PaginationAndSortingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,12 +39,14 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     @PersistenceContext
     protected EntityManager entityManager;
+    protected CriteriaBuilder criteriaBuilder;
 
     @SuppressWarnings("unchecked")
     protected BaseRepositoryImpl() {
         basicClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
+
     }
 
     @Override
@@ -40,19 +56,12 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong id");
         }
-        return entityManager.find(basicClass, id);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public SearchResult<T> getAll(OutputSql params) {
-        LOGGER.debug("{}.getAll", basicClass.getName());
-        Long totalRecords = countRecordsInTable();
-        List<T> result = params.getQuery(entityManager,
-                        basicClass,
-                        Math.toIntExact(totalRecords))
-                .getResultList();
-        return new SearchResult<>(totalRecords, result);
+        criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(basicClass);
+        Root<T> root = criteriaQuery.from(basicClass);
+        criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("id"), id));
+        TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
+        return query.getSingleResult();
     }
 
     @Override
@@ -95,6 +104,64 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         return true;
     }
 
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters,
+                          FilteringParameters filteringParameters) {
+        LOGGER.debug("{}.getAll", basicClass.getName());
+        criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(basicClass);
+        Root<T> root = criteriaQuery.from(basicClass);
+        Predicate predicate = getPredicate(filteringParameters, root);
+        criteriaQuery.where(predicate);
+        setOrder(paginationAndSortingParameters, criteriaQuery, root);
+
+        TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(paginationAndSortingParameters.getPageNumber() * paginationAndSortingParameters.getPageSize());
+        typedQuery.setMaxResults(paginationAndSortingParameters.getPageSize());
+
+        Pageable pageable = getPageable(paginationAndSortingParameters);
+
+        long entityCount = getEntityCount(predicate);
+
+        return new PageImpl<>(typedQuery.getResultList(), pageable, entityCount);
+    }
+
+    private Predicate getPredicate(FilteringParameters filteringParameters,
+                                   Root<T> entityRoot) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (Objects.nonNull(filteringParameters.getFilterBy())) {
+            predicates.add(
+                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy()
+                            .substring(filteringParameters.getFilterBy().indexOf("_") + 1)), "%"
+                            + filteringParameters.getFilterValue() + "%")
+            );
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    }
+
+    private void setOrder(PaginationAndSortingParameters paginationAndSortingParameters,
+                          CriteriaQuery<T> criteriaQuery,
+                          Root<T> entityRoot) {
+        if (paginationAndSortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy().substring(paginationAndSortingParameters.getSortBy().indexOf("_") + 1))));
+        } else {
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy().substring(paginationAndSortingParameters.getSortBy().indexOf("_") + 1))));
+        }
+    }
+
+    private Pageable getPageable(PaginationAndSortingParameters paginationAndSortingParameters) {
+        Sort sort = Sort.by(paginationAndSortingParameters.getSortDirection(), paginationAndSortingParameters.getSortBy());
+        return PageRequest.of(paginationAndSortingParameters.getPageNumber(), paginationAndSortingParameters.getPageSize(), sort);
+    }
+
+    private long getEntityCount(Predicate predicate) {
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<T> countRoot = countQuery.from(basicClass);
+        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
+        return entityManager.createQuery(countQuery).getSingleResult();
+    }
+
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("{}.isInvalidEntity({})", basicClass.getName(), entity);
         return Objects.isNull(entity);
@@ -103,12 +170,6 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected boolean isInvalidEntityId(T entity) {
         LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), entity);
         return false;
-    }
-
-    @Override
-    public Long countRecordsInTable() {
-        return (Long) entityManager.createQuery("select count(*) from " + basicClass.getName())
-                .getSingleResult();
     }
 }
 

@@ -4,11 +4,12 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
-import com.softserve.util.OutputSql;
-import com.softserve.util.SearchResult;
+import com.softserve.util.FilteringParameters;
+import com.softserve.util.PaginationAndSortingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,16 +36,16 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
         }
         T entity = baseRepository.getById(id);
         if (Objects.isNull(entity)) {
-            throw new EntityNotFoundException("Not found entity with id: " + id.toString());
+            throw new EntityNotFoundException("Not found entity with id: " + id);
         }
         return entity;
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public SearchResult<T> getAll(OutputSql params) {
+    public Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters, FilteringParameters filteringParameters) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        return baseRepository.getAll(params);
+        return baseRepository.getAll(paginationAndSortingParameters, filteringParameters);
     }
 
     @Override

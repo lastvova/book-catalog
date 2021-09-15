@@ -1,13 +1,14 @@
 package com.softserve.repository;
 
-import com.softserve.util.OutputSql;
-import com.softserve.util.SearchResult;
+import com.softserve.util.FilteringParameters;
+import com.softserve.util.PaginationAndSortingParameters;
+import org.springframework.data.domain.Page;
 
 public interface BaseRepository<T, I> {
 
     T getById(I id);
 
-    SearchResult<T> getAll(OutputSql params);
+    Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters, FilteringParameters filteringParameters);
 
     T create(T entity);
 
@@ -15,5 +16,4 @@ public interface BaseRepository<T, I> {
 
     boolean delete(I id);
 
-    Long countRecordsInTable();
 }
