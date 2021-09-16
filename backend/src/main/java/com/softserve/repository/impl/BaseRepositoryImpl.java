@@ -21,12 +21,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -132,9 +129,8 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         List<Predicate> predicates = new ArrayList<>();
         if (Objects.nonNull(filteringParameters.getFilterBy())) {
             predicates.add(
-                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy()
-                            .substring(filteringParameters.getFilterBy().indexOf("_") + 1)), "%"
-                            + filteringParameters.getFilterValue() + "%")
+                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy()),
+                            "%" + filteringParameters.getFilterValue() + "%")
             );
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -144,9 +140,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
                           CriteriaQuery<T> criteriaQuery,
                           Root<T> entityRoot) {
         if (paginationAndSortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy().substring(paginationAndSortingParameters.getSortBy().indexOf("_") + 1))));
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy())));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy().substring(paginationAndSortingParameters.getSortBy().indexOf("_") + 1))));
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy())));
         }
     }
 

@@ -1,6 +1,6 @@
-export class DataWithTotalRecords{
+export class DataWithTotalRecords {
   data: any;
-  totalRecords:number;
+  pageable: number;
 
   constructor(data: any, totalRecords: number) {
     this.data = data;
