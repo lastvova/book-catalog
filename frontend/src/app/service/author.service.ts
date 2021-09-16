@@ -3,7 +3,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Author} from "../model/Author";
-import {DataWithTotalRecords} from "../model/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../model/parameters/DataWithTotalRecords";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,6 @@ export class AuthorService {
   }
 
   public getAuthorsWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors?currentPage=${currentPage}&recordsPerPage=${recordsPerPage}`);
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors?page=${currentPage}&size=${recordsPerPage}`);
   }
 }

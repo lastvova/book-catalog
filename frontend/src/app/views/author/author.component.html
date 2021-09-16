@@ -32,6 +32,7 @@
                 <th id="tableId">ID</th>
                 <th id="tableName">Name</th>
                 <th id="tableSecondName">Second Name</th>
+                <th id="tableRating">Rating</th>
                 </thead>
                 <tbody>
                 <tr *ngFor="let author of authors">
@@ -43,6 +44,7 @@
                   <td>{{author.id}}</td>
                   <td>{{author.firstName}}</td>
                   <td>{{author.secondName}}</td>
+                  <td>{{author.rating}}</td>
                   <td>
                     <div class="btn-group" role="group">
                       <a (click)="onOpenModal('edit', author)" class="btn btn-success btn-sm rounded-top"

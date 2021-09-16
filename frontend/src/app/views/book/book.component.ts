@@ -8,7 +8,7 @@ import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {PageEvent} from "@angular/material/paginator";
-import {DataWithTotalRecords} from "../../model/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../../model/parameters/DataWithTotalRecords";
 import {FieldTypeEnum, FieldType2LabelMapping} from "../../enum/FieldTypeEnum";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 
@@ -48,7 +48,7 @@ export class BookComponent implements OnInit {
   public getAuthors(): void {
     this.authorService.getAuthors().subscribe(
       (response: DataWithTotalRecords) => {
-        this.authors = response.data;
+        this.authors = response.content;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -59,8 +59,8 @@ export class BookComponent implements OnInit {
   public getBooks(): void {
     this.bookService.getBooks().subscribe(
       (response: DataWithTotalRecords) => {
-        this.books = response.data;
-        this.totalRecords = response.totalRecords;
+        this.books = response.content;
+        this.totalRecords = response.totalElements;
       },
       (error: HttpErrorResponse) => {
         alert(error.message)
@@ -124,8 +124,8 @@ export class BookComponent implements OnInit {
     this.bookService.filterBooks(filter).subscribe(
       (response: DataWithTotalRecords) => {
         this.books = [];
-        this.books = response.data;
-        this.totalRecords = response.totalRecords;
+        this.books = response.content;
+        this.totalRecords = response.totalElements;
       },
       (error: HttpErrorResponse) =>{
         alert(error.message);
@@ -162,10 +162,10 @@ export class BookComponent implements OnInit {
   }
 
   public onPageChange(event: PageEvent) {
-    this.bookService.getBooksWithPagination(event.pageIndex+1, event.pageSize).subscribe(
+    this.bookService.getBooksWithPagination(event.pageIndex, event.pageSize).subscribe(
       (response: DataWithTotalRecords) => {
-        this.books = response.data;
-        this.totalRecords = response.totalRecords;
+        this.books = response.content;
+        this.totalRecords = response.totalElements;
       }, (error: HttpErrorResponse) => {
         alert(error.message);
       }

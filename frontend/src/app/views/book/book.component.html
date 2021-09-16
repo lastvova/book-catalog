@@ -39,15 +39,6 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
-                <label>Select operator: </label>
-                <mat-form-field appearance="fill">
-                  <mat-label>Operator:</mat-label>
-                  <mat-select ngModel name="filteringOperator" required>
-                    <mat-option *ngFor="let operator of filterOperators" [value]="operator">
-                      {{FilterOperator2LabelMapping[operator]}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
                 <label>Input value: </label>
                 <mat-form-field appearance="fill">
                   <mat-label>Input</mat-label>
