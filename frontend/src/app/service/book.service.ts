@@ -4,8 +4,9 @@ import {Observable} from "rxjs";
 import {Book} from "../model/Book";
 import {environment} from "../../environments/environment";
 import {FilterParameters} from "../model/parameters/FilterParameters";
-import {Author} from "../model/Author";
-import {DataWithTotalRecords} from "../model/parameters/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
+import {SortingParameters} from "../model/parameters/SortingParameters";
+import {PaginationParameters} from "../model/parameters/PaginationParameters";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,20 @@ export class BookService {
   constructor(private http: HttpClient) {
   }
 
-  public getBooks(): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`);
+  public getBooks(sortParameters: SortingParameters, pageParameters: PaginationParameters, filterParameters: FilterParameters): Observable<DataWithTotalRecords> {
+    let requestUrl = '';
+    if (pageParameters === undefined || pageParameters.currentPage === undefined || pageParameters.recordsPerPage === undefined) {
+      requestUrl = requestUrl.concat('?page=1&size=5');
+    } else {
+      requestUrl = requestUrl.concat(`?page=${pageParameters.currentPage}&size=${pageParameters.recordsPerPage}`);
+    }
+    if (sortParameters?.sortBy != null) {
+      requestUrl = requestUrl.concat(`&sortBy=${sortParameters.sortBy}&order=${sortParameters.sortOrder}`);
+    }
+    if (filterParameters?.filterBy != null && filterParameters.filterValue != null) {
+      requestUrl = requestUrl.concat(`&filterBy=${filterParameters.filterBy}&filterValue=${filterParameters.filterValue}`);
+    }
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books` + requestUrl);
   }
 
   public getBook(bookId: number): Observable<Book> {
@@ -36,11 +49,4 @@ export class BookService {
     return this.http.delete<void>(`${this.apiServerUrl}/api/books/${bookId}`);
   }
 
-  public filterBooks(filter: FilterParameters): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books?filterBy=${filter.filteringField}&filterValue=${filter.filteringValue}`)
-  }
-
-  public getBooksWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books?page=${currentPage}&size=${recordsPerPage}`);
-  }
 }

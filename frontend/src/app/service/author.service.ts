@@ -3,7 +3,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Author} from "../model/Author";
-import {DataWithTotalRecords} from "../model/parameters/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
 
 @Injectable({
   providedIn: 'root'

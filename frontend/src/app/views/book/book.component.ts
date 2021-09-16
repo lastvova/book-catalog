@@ -8,9 +8,11 @@ import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {PageEvent} from "@angular/material/paginator";
-import {DataWithTotalRecords} from "../../model/parameters/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {FieldTypeEnum, FieldType2LabelMapping} from "../../enum/FieldTypeEnum";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
+import {SortingParameters} from "../../model/parameters/SortingParameters";
+import {PaginationParameters} from "../../model/parameters/PaginationParameters";
 
 @Component({
   selector: 'app-book',
@@ -28,15 +30,22 @@ export class BookComponent implements OnInit {
   public editBook: Book;
   // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
-  public filterParameters?: FilterParameters;
   public selectedAuthors?: Author[];
+
   public totalRecords?: number;
+  // @ts-ignore: Object is possibly 'null'
+  public pageParameters: PaginationParameters = new PaginationParameters();
+  // @ts-ignore: Object is possibly 'null'
+  public sortParameters: SortingParameters = new SortingParameters();
+  // @ts-ignore: Object is possibly 'null'
+  public filterParameters: FilterParameters = new FilterParameters();
 
   public FieldType2LabelMapping = FieldType2LabelMapping;
   public fieldTypes = Object.values(FieldTypeEnum);
 
   public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
   public filterOperators = Object.values(FilterOperatorEnum);
+
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -57,13 +66,16 @@ export class BookComponent implements OnInit {
   }
 
   public getBooks(): void {
-    this.bookService.getBooks().subscribe(
+    this.bookService.getBooks(this.sortParameters, this.pageParameters, this.filterParameters).subscribe(
       (response: DataWithTotalRecords) => {
+        this.books = [];
         this.books = response.content;
         this.totalRecords = response.totalElements;
+        this.pageParameters.currentPage = response.number;
+        this.pageParameters.recordsPerPage = response.size;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message)
+        alert(error.message);
       }
     )
   }
@@ -121,16 +133,9 @@ export class BookComponent implements OnInit {
   }
 
   public filterBooks(filter: FilterParameters): void {
-    this.bookService.filterBooks(filter).subscribe(
-      (response: DataWithTotalRecords) => {
-        this.books = [];
-        this.books = response.content;
-        this.totalRecords = response.totalElements;
-      },
-      (error: HttpErrorResponse) =>{
-        alert(error.message);
-      }
-    )
+    this.filterParameters.filterBy = filter.filterBy;
+    this.filterParameters.filterValue = filter.filterValue;
+    this.getBooks()
   }
 
   public onOpenModal(mode: string, book: Book): void {
@@ -162,14 +167,20 @@ export class BookComponent implements OnInit {
   }
 
   public onPageChange(event: PageEvent) {
-    this.bookService.getBooksWithPagination(event.pageIndex, event.pageSize).subscribe(
-      (response: DataWithTotalRecords) => {
-        this.books = response.content;
-        this.totalRecords = response.totalElements;
-      }, (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+    this.pageParameters.currentPage = event.pageIndex;
+    this.pageParameters.recordsPerPage = event.pageSize;
+    this.getBooks()
+  }
+
+  public sortByColumn(sortBy: string) {
+    this.sortParameters.sortBy = sortBy;
+    this.sortParameters.reverse = !this.sortParameters.reverse;
+    if (this.sortParameters.reverse) {
+      this.sortParameters.sortOrder = 'ASC'
+    } else {
+      this.sortParameters.sortOrder = 'DESC'
+    }
+    this.getBooks();
   }
 
 }

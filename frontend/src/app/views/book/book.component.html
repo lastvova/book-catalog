@@ -33,7 +33,7 @@
                 <label>Select field: </label>
                 <mat-form-field appearance="fill">
                   <mat-label>Field</mat-label>
-                  <mat-select ngModel name="filteringField" required>
+                  <mat-select ngModel name="filterBy" required>
                     <mat-option *ngFor="let type of fieldTypes" [value]="type">
                       {{FieldType2LabelMapping[type]}}
                     </mat-option>
@@ -42,7 +42,7 @@
                 <label>Input value: </label>
                 <mat-form-field appearance="fill">
                   <mat-label>Input</mat-label>
-                  <input matInput ngModel name="filteringValue" required>
+                  <input matInput ngModel name="filterValue" required>
                 </mat-form-field>
                 <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
               </form>
@@ -61,11 +61,33 @@
                 <th id="checkBox">
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
-                <th id="tableName">Name</th>
-                <th id="tablePublisher">Publisher</th>
-                <th id="tableYearOfPublisher">Year of publisher</th>
-                <th id="tableIsbn">ISBN</th>
-                <th id="tableRating">Rating</th>
+                <th (click)="sortByColumn('name')" id="tableName">Name
+                  <em *ngIf="sortParameters.sortBy === 'name' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="sortParameters.sortBy != 'name'" class="fa fa-sort"></em>
+                  <em *ngIf="sortParameters.sortBy === 'name' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                </th>
+                <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher
+                  <em *ngIf="sortParameters.sortBy === 'publisher' && sortParameters.reverse"
+                      class="fa fa-sort-asc"></em>
+                  <em *ngIf="sortParameters.sortBy != 'publisher'" class="fa fa-sort"></em>
+                  <em *ngIf="sortParameters.sortBy === 'publisher' && !sortParameters.reverse"
+                      class="fa fa-sort-desc"></em></th>
+                <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher
+                  <em *ngIf="sortParameters.sortBy === 'yearPublisher' && sortParameters.reverse"
+                      class="fa fa-sort-asc"></em>
+                  <em *ngIf="sortParameters.sortBy != 'yearPublisher'" class="fa fa-sort"></em>
+                  <em *ngIf="sortParameters.sortBy === 'yearPublisher' && !sortParameters.reverse"
+                      class="fa fa-sort-desc"></em></th>
+                <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN
+                  <em *ngIf="sortParameters.sortBy === 'isbn' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="sortParameters.sortBy != 'isbn'" class="fa fa-sort"></em>
+                  <em *ngIf="sortParameters.sortBy === 'isbn' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                </th>
+                <th (click)="sortByColumn('rating')" id="tableRating">Rating
+                  <em *ngIf="sortParameters.sortBy === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="sortParameters.sortBy != 'rating'" class="fa fa-sort"></em>
+                  <em *ngIf="sortParameters.sortBy === 'rating' && !sortParameters.reverse"
+                      class="fa fa-sort-desc"></em></th>
                 <th id="tableAuthors">Authors</th>
                 </thead>
                 <tbody>

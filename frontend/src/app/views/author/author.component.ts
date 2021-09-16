@@ -4,7 +4,7 @@ import {AuthorService} from "../../service/author.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
 import {PageEvent} from "@angular/material/paginator";
-import {DataWithTotalRecords} from "../../model/parameters/DataWithTotalRecords";
+import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 
 @Component({
   selector: 'app-author',
