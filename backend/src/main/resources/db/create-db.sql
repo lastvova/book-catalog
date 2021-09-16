@@ -9,6 +9,7 @@ CREATE TABLE authors
     id           BIGINT UNSIGNED AUTO_INCREMENT,
     first_name   VARCHAR(128) NOT NULL,
     second_name  VARCHAR(128),
+    rating         DECIMAL(3, 2) DEFAULT 0.00,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT authors_pk PRIMARY KEY (id)
 );
