@@ -1,12 +1,12 @@
 export class FilterParameters{
-  filteringField: string;
-  filteringValue: string;
+  filterBy: string;
+  filterValue: string;
   filteringOperator?: string;
 
 
   constructor(filteringField: string, filteringValue: string, filteringOperator: string) {
-    this.filteringField = filteringField;
-    this.filteringValue = filteringValue;
+    this.filterBy = filteringField;
+    this.filterValue = filteringValue;
     this.filteringOperator = filteringOperator;
   }
 }

@@ -4,12 +4,12 @@ import {PageableSort} from "./PageableSort";
 export class DataWithTotalRecords {
   content: any[];
   pageable: Pageable;
+  sort: PageableSort;
   last: boolean;
   totalPages: number;
   totalElements: number;
   size: number;
   number: number;
-  sort: PageableSort;
   first: boolean;
   numberOfElements: number;
   empty: boolean;
