@@ -2,6 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.ReviewDTO;
 import com.softserve.entity.Review;
+import com.softserve.enums.EntityFields;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
@@ -46,8 +47,8 @@ public class ReviewController {
     }
 
     @RequestMapping("")
-    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false,defaultValue = "createdDate") String orderBy,
-                                                  @RequestParam(required = false,defaultValue = "ASC") String order,
+    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false, defaultValue = "createdDate") String orderBy,
+                                                  @RequestParam(required = false, defaultValue = "ASC") String order,
                                                   @RequestParam(required = false, defaultValue = "0") Integer page,
                                                   @RequestParam(required = false, defaultValue = "5") Integer size,
                                                   @RequestParam(required = false) String filterBy,
@@ -59,7 +60,9 @@ public class ReviewController {
         paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
         paginationAndSortingParameters.setSortBy(orderBy);
         FilteringParameters filteringParameters = new FilteringParameters();
-        filteringParameters.setFilterBy(filterBy);
+        if (Objects.nonNull(filterBy)) {
+            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
+        }
         filteringParameters.setFilterValue(filterValue);
         Page<Review> result = reviewService.getAll(paginationAndSortingParameters, filteringParameters);
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());

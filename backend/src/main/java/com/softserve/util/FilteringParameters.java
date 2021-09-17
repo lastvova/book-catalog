@@ -1,5 +1,6 @@
 package com.softserve.util;
 
+import com.softserve.enums.EntityFields;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class FilteringParameters {
 
-    private String filterBy;
+    private EntityFields filterBy;
     private String filterValue;
 
 }

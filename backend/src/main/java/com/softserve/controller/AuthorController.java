@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.AuthorDTO;
 import com.softserve.dto.BookDTO;
 import com.softserve.entity.Author;
+import com.softserve.enums.EntityFields;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
@@ -64,7 +65,9 @@ public class AuthorController {
         paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
         paginationAndSortingParameters.setSortBy(sortBy);
         FilteringParameters filteringParameters = new FilteringParameters();
-        filteringParameters.setFilterBy(filterBy);
+        if(Objects.nonNull(filterBy)){
+            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
+        }
         filteringParameters.setFilterValue(filterValue);
         Page<Author> result = authorService.getAll(paginationAndSortingParameters, filteringParameters);
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());

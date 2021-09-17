@@ -127,12 +127,33 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     private Predicate getPredicate(FilteringParameters filteringParameters,
                                    Root<T> entityRoot) {
         List<Predicate> predicates = new ArrayList<>();
-        if (Objects.nonNull(filteringParameters.getFilterBy())) {
+        if (Objects.nonNull(filteringParameters.getFilterBy())
+                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("string")) {
             predicates.add(
-                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy()),
+                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy().fieldName),
                             "%" + filteringParameters.getFilterValue() + "%")
             );
         }
+        if (Objects.nonNull(filteringParameters.getFilterBy())
+                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("integer")) {
+            predicates.add(
+                    criteriaBuilder.equal(entityRoot.get(filteringParameters.getFilterBy().fieldName),
+                            filteringParameters.getFilterValue())
+            );
+        }
+        if (Objects.nonNull(filteringParameters.getFilterBy())
+                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("decimal")) {
+            predicates.add(
+                    criteriaBuilder.or(
+                            criteriaBuilder.equal(entityRoot.get(filteringParameters.getFilterBy().fieldName),
+                                    Double.parseDouble(filteringParameters.getFilterValue())),
+                            criteriaBuilder.and(
+                                    criteriaBuilder.lt(entityRoot.get(filteringParameters.getFilterBy().fieldName),
+                                            Double.parseDouble(filteringParameters.getFilterValue()) + 1),
+                                    criteriaBuilder.gt(entityRoot.get(filteringParameters.getFilterBy().fieldName),
+                                            Double.parseDouble(filteringParameters.getFilterValue())))));
+        }
+
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
