@@ -50,24 +50,16 @@ public class BookController {
     }
 
     @RequestMapping("")
-    public ResponseEntity<Page<BookDTO>> getAll(@RequestParam(required = false, defaultValue = "createdDate") String sortBy,
-                                                @RequestParam(required = false, defaultValue = "ASC") String order,
-                                                @RequestParam(required = false, defaultValue = "0") Integer page,
-                                                @RequestParam(required = false, defaultValue = "5") Integer size,
+    public ResponseEntity<Page<BookDTO>> getAll(@RequestParam(required = false) String sortBy,
+                                                @RequestParam(required = false) String order,
+                                                @RequestParam Integer page,
+                                                @RequestParam Integer size,
                                                 @RequestParam(required = false) String filterBy,
                                                 @RequestParam(required = false) String filterValue) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
-        paginationAndSortingParameters.setPageSize(size);
-        paginationAndSortingParameters.setPageNumber(page);
-        paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
-        paginationAndSortingParameters.setSortBy(sortBy);
-        FilteringParameters filteringParameters = new FilteringParameters();
-        if(Objects.nonNull(filterBy)){
-            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-        }
-        filteringParameters.setFilterValue(filterValue);
-        Page<Book> result = bookService.getAll(paginationAndSortingParameters, filteringParameters);
+
+        Page<Book> result = bookService.getAll(setPageParameters(sortBy, order, page, size),
+                setFilterParameters(filterBy, filterValue));
         List<BookDTO> dtos = bookMapper.convertToDtoListWithAuthors(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
@@ -133,5 +125,29 @@ public class BookController {
         }
         return bookDTO.getYearPublisher() < 0
                 || bookDTO.getYearPublisher() > LocalDate.now().getYear();
+    }
+
+    private PaginationAndSortingParameters setPageParameters(String sortBy, String order, Integer page, Integer size) {
+        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
+        paginationAndSortingParameters.setPageSize(size);
+        paginationAndSortingParameters.setPageNumber(page);
+        if (Objects.nonNull(order)) {
+            paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
+        }
+        if (Objects.nonNull(sortBy)) {
+            paginationAndSortingParameters.setSortBy(sortBy);
+        }
+        return paginationAndSortingParameters;
+    }
+
+    private FilteringParameters setFilterParameters(String filterBy, String filterValue) {
+        FilteringParameters filteringParameters = new FilteringParameters();
+        if (Objects.nonNull(filterBy)) {
+            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
+        }
+        if (Objects.nonNull(filterValue)) {
+            filteringParameters.setFilterValue(filterValue);
+        }
+        return filteringParameters;
     }
 }

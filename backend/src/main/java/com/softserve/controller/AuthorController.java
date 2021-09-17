@@ -52,24 +52,15 @@ public class AuthorController {
     }
 
     @RequestMapping("")
-    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false, defaultValue = "createdDate") String sortBy,
-                                                  @RequestParam(required = false, defaultValue = "ASC") String order,
-                                                  @RequestParam(required = false, defaultValue = "0") Integer page,
-                                                  @RequestParam(required = false, defaultValue = "5") Integer size,
+    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false) String sortBy,
+                                                  @RequestParam(required = false) String order,
+                                                  @RequestParam Integer page,
+                                                  @RequestParam Integer size,
                                                   @RequestParam(required = false) String filterBy,
                                                   @RequestParam(required = false) String filterValue) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
-        paginationAndSortingParameters.setPageSize(size);
-        paginationAndSortingParameters.setPageNumber(page);
-        paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
-        paginationAndSortingParameters.setSortBy(sortBy);
-        FilteringParameters filteringParameters = new FilteringParameters();
-        if(Objects.nonNull(filterBy)){
-            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-        }
-        filteringParameters.setFilterValue(filterValue);
-        Page<Author> result = authorService.getAll(paginationAndSortingParameters, filteringParameters);
+        Page<Author> result = authorService.getAll(setPageParameters(sortBy, order, page, size),
+                setFilterParameters(filterBy, filterValue));
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
         Page<AuthorDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
@@ -133,4 +124,27 @@ public class AuthorController {
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
     }
 
+    private PaginationAndSortingParameters setPageParameters(String sortBy, String order, Integer page, Integer size) {
+        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
+        paginationAndSortingParameters.setPageSize(size);
+        paginationAndSortingParameters.setPageNumber(page);
+        if (Objects.nonNull(order)) {
+            paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
+        }
+        if (Objects.nonNull(sortBy)) {
+            paginationAndSortingParameters.setSortBy(sortBy);
+        }
+        return paginationAndSortingParameters;
+    }
+
+    private FilteringParameters setFilterParameters(String filterBy, String filterValue) {
+        FilteringParameters filteringParameters = new FilteringParameters();
+        if (Objects.nonNull(filterBy)) {
+            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
+        }
+        if (Objects.nonNull(filterValue)) {
+            filteringParameters.setFilterValue(filterValue);
+        }
+        return filteringParameters;
+    }
 }

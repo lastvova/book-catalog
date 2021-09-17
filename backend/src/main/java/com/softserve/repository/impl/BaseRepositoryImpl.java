@@ -161,9 +161,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
                           CriteriaQuery<T> criteriaQuery,
                           Root<T> entityRoot) {
         if (paginationAndSortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy())),
+                    criteriaBuilder.asc(entityRoot.get("createdDate")));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy())),
+                    criteriaBuilder.desc(entityRoot.get("createdDate")));
         }
     }
 

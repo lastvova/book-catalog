@@ -8,9 +8,10 @@ import org.springframework.data.domain.Sort;
 @Setter
 public class PaginationAndSortingParameters {
 
+//    Criteria api starting pagination from 0
     private int pageNumber = 0;
     private int pageSize = 5;
-    private Sort.Direction sortDirection = Sort.Direction.ASC;
-    private String sortBy = "cratedDate";
+    private Sort.Direction sortDirection = Sort.Direction.DESC;
+    private String sortBy = "rating";
 
 }
