@@ -20,7 +20,7 @@ export class BookService {
   public getBooks(sortParameters: SortingParameters, pageParameters: PaginationParameters, filterParameters: FilterParameters): Observable<DataWithTotalRecords> {
     let requestUrl = '';
     if (pageParameters === undefined || pageParameters.currentPage === undefined || pageParameters.recordsPerPage === undefined) {
-      requestUrl = requestUrl.concat('?page=1&size=5');
+      requestUrl = requestUrl.concat('?page=0&size=5');
     } else {
       requestUrl = requestUrl.concat(`?page=${pageParameters.currentPage}&size=${pageParameters.recordsPerPage}`);
     }
