@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, Optional, ViewChild} from '@angular/core';
 import {Book} from "../../model/Book";
 import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
@@ -137,7 +137,7 @@ export class BookComponent implements OnInit {
   public filterBooks(filter: FilterParameters): void {
     this.filterParameters.filterBy = filter.filterBy;
     this.filterParameters.filterValue = filter.filterValue;
-    this.matPaginator.pageIndex=0;
+    this.matPaginator.pageIndex = 0;
     this.pageParameters.currentPage = 0;
     this.getBooks()
   }
@@ -187,4 +187,15 @@ export class BookComponent implements OnInit {
     this.getBooks();
   }
 
+  public resetForm(filterForm: NgForm) {
+    // this.sortParameters.;
+    filterForm.reset();
+    // @ts-ignore
+    this.filterParameters.filterValue = null ;
+    // @ts-ignore
+    this.filterParameters.filterBy = null;
+    this.pageParameters.recordsPerPage = this.matPaginator.pageSize;
+    this.pageParameters.currentPage = 0;
+    this.getBooks();
+  }
 }
