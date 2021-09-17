@@ -30,50 +30,41 @@
             </mat-expansion-panel-header>
             <div>
               <form #filterForm="ngForm" (ngSubmit)="filterBooks(filterForm.value)">
-                <label>Field: </label>
-                <mat-form-field appearance="fill">
-                  <mat-label>Field</mat-label>
-                  <mat-select ngModel name="filterBy" required>
-                    <mat-option *ngFor="let type of fieldTypes" [value]="type">
-                      {{FieldType2LabelMapping[type]}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <label>Value: </label>
+                <label>Name: </label>
                 <mat-form-field appearance="fill">
                   <input matInput ngModel name="filterValue" required>
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_NAME}}" name="filterBy">-->
+                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_NAME}}" name="filterBy">
                 </mat-form-field>
 
-<!--                <label>publisher: </label>-->
-<!--                <mat-form-field appearance="fill">-->
-<!--                  <input matInput ngModel name="filterValue" required>-->
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_PUBLISHER}}" name="filterBy">-->
-<!--                </mat-form-field>-->
+                <label>publisher: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="filterValue" required>
+                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_PUBLISHER}}" name="filterBy">
+                </mat-form-field>
 
-<!--                <label>year: </label>-->
-<!--                <mat-form-field appearance="fill">-->
-<!--                  <input matInput ngModel name="filterValue" required>-->
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_YEAR_PUBLISHER}}" name="filterBy">-->
-<!--                </mat-form-field>-->
+                <label>year: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="filterValue" required>
+                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_YEAR_PUBLISHER}}" name="filterBy">
+                </mat-form-field>
 
-<!--                <label>isbn: </label>-->
-<!--                <mat-form-field appearance="fill">-->
-<!--                  <input matInput ngModel name="filterValue" required>-->
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_ISBN}}" name="filterBy">-->
-<!--                </mat-form-field>-->
+                <label>isbn: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="filterValue" required>
+                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_ISBN}}" name="filterBy">
+                </mat-form-field>
 
-<!--                <label>rating: </label>-->
-<!--                <mat-form-field appearance="fill">-->
-<!--                  <input matInput ngModel name="filterValue" required>-->
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.RATING}}" name="filterBy">-->
-<!--                </mat-form-field>-->
+                <label>rating: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="filterValue" required>
+                  <input hidden ngModel="{{FieldType2LabelMapping.RATING}}" name="filterBy">
+                </mat-form-field>
 
-<!--                <label>author: </label>-->
-<!--                <mat-form-field appearance="fill">-->
-<!--                  <input matInput ngModel name="filterValue" required>-->
-<!--                  <input hidden ngModel="{{FieldType2LabelMapping.AUTHOR_ID}}" name="filterBy">-->
-<!--                </mat-form-field>-->
+                <label>author: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="filterValue" required>
+                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_AUTHOR}}" name="filterBy">
+                </mat-form-field>
 
                 <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
                 <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>

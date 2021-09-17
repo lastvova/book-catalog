@@ -1,4 +1,4 @@
-import {Component, OnInit, Optional, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Book} from "../../model/Book";
 import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
@@ -9,7 +9,7 @@ import {AuthorService} from "../../service/author.service";
 import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {FieldTypeEnum, FieldType2LabelMapping} from "../../enum/FieldTypeEnum";
+import {BookFieldType, BookFieldType2LabelMapping} from "../../enum/BookFieldType";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PaginationParameters} from "../../model/parameters/PaginationParameters";
@@ -40,8 +40,8 @@ export class BookComponent implements OnInit {
   // @ts-ignore: Object is possibly 'null'
   public filterParameters: FilterParameters = new FilterParameters();
 
-  public FieldType2LabelMapping = FieldType2LabelMapping;
-  public fieldTypes = Object.values(FieldTypeEnum);
+  public FieldType2LabelMapping = BookFieldType2LabelMapping;
+  public fieldTypes = Object.values(BookFieldType);
 
   public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
   public filterOperators = Object.values(FilterOperatorEnum);
@@ -57,7 +57,8 @@ export class BookComponent implements OnInit {
   }
 
   public getAuthors(): void {
-    this.authorService.getAuthors().subscribe(
+    let allAuthors: PaginationParameters = new PaginationParameters(0, 1000000);
+    this.authorService.getAuthors(this.sortParameters, allAuthors, this.filterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
       },
@@ -191,7 +192,7 @@ export class BookComponent implements OnInit {
     // this.sortParameters.;
     filterForm.reset();
     // @ts-ignore
-    this.filterParameters.filterValue = null ;
+    this.filterParameters.filterValue = null;
     // @ts-ignore
     this.filterParameters.filterBy = null;
     this.pageParameters.recordsPerPage = this.matPaginator.pageSize;
