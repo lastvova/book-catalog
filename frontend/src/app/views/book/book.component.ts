@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Book} from "../../model/Book";
 import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
@@ -7,7 +7,7 @@ import {FormControl, NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {FilterParameters} from "../../model/parameters/FilterParameters";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {FieldTypeEnum, FieldType2LabelMapping} from "../../enum/FieldTypeEnum";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
@@ -46,6 +46,8 @@ export class BookComponent implements OnInit {
   public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
   public filterOperators = Object.values(FilterOperatorEnum);
 
+  // @ts-ignore: Object is possibly 'null'
+  @ViewChild('matPaginator') matPaginator: MatPaginator;
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -135,6 +137,8 @@ export class BookComponent implements OnInit {
   public filterBooks(filter: FilterParameters): void {
     this.filterParameters.filterBy = filter.filterBy;
     this.filterParameters.filterValue = filter.filterValue;
+    this.matPaginator.pageIndex=0;
+    this.pageParameters.currentPage = 0;
     this.getBooks()
   }
 
