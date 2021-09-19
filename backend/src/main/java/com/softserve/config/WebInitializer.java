@@ -1,9 +1,7 @@
-package com.softserve.app;
+package com.softserve.config;
 
-import com.softserve.config.RootConfig;
-import com.softserve.config.WebConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-//TODO move this class to the config package
+
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {

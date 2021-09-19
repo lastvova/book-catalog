@@ -2,16 +2,13 @@ package com.softserve.util;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Sort;
 
 @Getter
 @Setter
-public class PaginationAndSortingParameters {
+public class PaginationParameters {
 
 //    Criteria api starting pagination from 0
     private int pageNumber = 0;
     private int pageSize = 5;
-    private Sort.Direction sortDirection = Sort.Direction.DESC;
-    private String sortBy = "rating";
 
 }

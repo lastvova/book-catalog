@@ -1,7 +1,6 @@
 package com.softserve.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -9,7 +8,6 @@ import java.math.BigInteger;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class AuthorDTO {
 
     private BigInteger id;
