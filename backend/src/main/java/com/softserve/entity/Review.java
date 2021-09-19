@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+//TODO redundant annotation
 @NoArgsConstructor
 @Entity
 @Table(name = "reviews")
@@ -38,9 +39,11 @@ public class Review implements Serializable {
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
+    //TODO nullable false?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 
+    //TODO Lazy is default
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id",
             foreignKey = @ForeignKey(name = "reviews_book_id_fk"))

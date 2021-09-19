@@ -95,6 +95,7 @@ public class ReviewController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review was deleted");
     }
 
+    //TODO I suppose it should be review and not author
     private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
         if (isMethodCreate) {
             return Objects.isNull(reviewDTO) || Objects.nonNull(reviewDTO.getId()) || StringUtils.isBlank(reviewDTO.getCommenterName())

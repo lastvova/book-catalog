@@ -48,10 +48,13 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
+    //TODO move transaction management to the service layer
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
         LOGGER.debug("{}.getById({})", basicClass.getName(), id);
+        //TODO should be part of validating methods
         if (Objects.isNull(id)) {
+            //TODO inappropriate exception type
             throw new IllegalStateException("Wrong id");
         }
         criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -103,6 +106,13 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
+    //TODO you are already managing transactions at the service layer!!!
+    //    @Override
+    //    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    //    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters) {
+    //        LOGGER.debug("{}.getAll()", this.getClass().getName());
+    //        return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
+    //    }
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                           FilteringParameters filteringParameters) {
@@ -128,6 +138,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     private Predicate getPredicate(FilteringParameters filteringParameters,
                                    Root<T> entityRoot) {
         List<Predicate> predicates = new ArrayList<>();
+        //TODO avoid using Objects.nonNull method within the application, replace all existing places with != operator
+        // API Note:
+        // This method exists to be used as a java.util.function.Predicate, filter(Objects::nonNull)
         if (Objects.nonNull(filteringParameters.getFilterBy())
                 && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("string")) {
             predicates.add(
@@ -187,6 +200,8 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         return Objects.isNull(entity);
     }
 
+    //TODO all implementations of this method only check whether the ID is not null
+    // this logic should be part of the isInvalidEntity method
     protected boolean isInvalidEntityId(T entity) {
         LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), entity);
         return false;

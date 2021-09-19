@@ -15,6 +15,7 @@ public interface ReviewMapper {
 
     ReviewDTO convertToDto(Review review);
 
+    //TODO unused method
     List<Review> convertToEntityList(List<ReviewDTO> reviews);
 
     List<ReviewDTO> convertToDtoList(List<Review> reviews);

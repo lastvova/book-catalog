@@ -20,6 +20,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+//TODO redundant annotation
 @NoArgsConstructor
 @Entity
 @Table(name = "authors")
@@ -35,9 +36,11 @@ public class Author implements Serializable {
     @Column(name = "second_name", length = 128)
     private String secondName;
 
+    //TODO nullable false?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 
+    //TODO nullable false?
     @Column(name = "rating", insertable = false, updatable = false)
     private BigDecimal rating;
 

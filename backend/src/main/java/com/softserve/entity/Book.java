@@ -24,6 +24,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+//TODO redundant annotation
 @NoArgsConstructor
 @Entity
 @Table(name = "books")
@@ -37,6 +38,7 @@ public class Book implements Serializable {
     @Column(name = "name", length = 128, nullable = false)
     private String name;
 
+    //TODO length?
     @Column(name = "year_publisher")
     private Integer yearPublisher;
 
@@ -46,12 +48,15 @@ public class Book implements Serializable {
     @Column(name = "publisher", length = 256)
     private String publisher;
 
+    //TODO nullable false?
     @Column(name = "created_date", insertable = false, updatable = false)
     private LocalDateTime createdDate;
 
+    //TODO nullable false?
     @Column(name = "rating", insertable = false, updatable = false)
     private BigDecimal rating;
 
+    //TODO Lazy is default
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "authors_books",
             joinColumns = @JoinColumn(name = "book_id"),

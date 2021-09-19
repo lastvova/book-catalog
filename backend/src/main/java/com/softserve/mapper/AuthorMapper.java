@@ -13,6 +13,7 @@ public interface AuthorMapper {
 
     AuthorDTO convertToDto(Author author);
 
+    //TODO unused method
     List<Author> convertToEntityList(List<AuthorDTO> authors);
 
     List<AuthorDTO> convertToDtoList(List<Author> authors);
