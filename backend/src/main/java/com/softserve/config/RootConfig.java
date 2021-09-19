@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @ComponentScan(basePackages = "com.softserve", excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class),
+		//TODO redundant filter, there are no Controller-annotated classes
         @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class)
 })
 @EnableTransactionManagement

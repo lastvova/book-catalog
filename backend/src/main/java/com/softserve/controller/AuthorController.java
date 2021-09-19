@@ -51,6 +51,7 @@ public class AuthorController {
         this.bookMapper = bookMapper;
     }
 
+    //TODO should be GetMapping, RequestMapping is already defined on the class level
     @RequestMapping("")
     public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false) String sortBy,
                                                   @RequestParam(required = false) String order,
@@ -58,6 +59,7 @@ public class AuthorController {
                                                   @RequestParam Integer size,
                                                   @RequestParam(required = false) String filterBy,
                                                   @RequestParam(required = false) String filterValue) {
+        //TODO LOGGER is already configured for the current class
         LOGGER.debug("{}.getAll()", this.getClass().getName());
         Page<Author> result = authorService.getAll(setPageParameters(sortBy, order, page, size),
                 setFilterParameters(filterBy, filterValue));
@@ -73,9 +75,11 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.OK).body(authorDTO);
     }
 
+    //TODO no need for ("")
     @PostMapping("")
     public ResponseEntity<AuthorDTO> create(@RequestBody AuthorDTO authorDTO) {
         LOGGER.debug("{}.create({})", this.getClass().getName(), authorDTO);
+        //TODO !Objects.isNull(authorDTO.getId()) could be extracted to the isInvalidAuthor method, Objects.nonNull() could be used instead
         if (!Objects.isNull(authorDTO.getId()) || isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
@@ -83,6 +87,7 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
 
+    //TODO redundant id parameter, authorDTO already comprises the ID
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable BigInteger id, @RequestBody AuthorDTO authorDTO) {
         LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, authorDTO);
@@ -103,6 +108,7 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was deleted");
     }
 
+    //TODO no need for (""), this action is not currently working
     @DeleteMapping("")
     public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
         LOGGER.debug("{}.bulkDelete()", this.getClass().getName());
@@ -113,6 +119,7 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 
+    //TODO could be replaced by getAll using filters
     @GetMapping("/{id}/books")
     public ResponseEntity<List<BookDTO>> getBooksByAuthor(@PathVariable BigInteger id) {
         LOGGER.debug("{}.getBooksByAuthor({})", this.getClass().getName(), id);
@@ -124,10 +131,12 @@ public class AuthorController {
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
     }
 
+    //TODO this logic must be extracted to an abstract controller, so that all existing controllers extend it
     private PaginationAndSortingParameters setPageParameters(String sortBy, String order, Integer page, Integer size) {
         PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
         paginationAndSortingParameters.setPageSize(size);
         paginationAndSortingParameters.setPageNumber(page);
+        //TODO keep pagination and sorting parameters apart, create a separate class (POJO)
         if (Objects.nonNull(order)) {
             paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
         }
@@ -137,11 +146,13 @@ public class AuthorController {
         return paginationAndSortingParameters;
     }
 
+    //TODO this logic must be extracted to an abstract controller, so that all existing controllers extend it
     private FilteringParameters setFilterParameters(String filterBy, String filterValue) {
         FilteringParameters filteringParameters = new FilteringParameters();
         if (Objects.nonNull(filterBy)) {
             filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
         }
+        //TODO if this input parameter is coming as null, the filterValue class variable will be null as well, hence, what's the idea behind this logic?
         if (Objects.nonNull(filterValue)) {
             filteringParameters.setFilterValue(filterValue);
         }
