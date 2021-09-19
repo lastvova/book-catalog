@@ -35,6 +35,7 @@ public class AuthorController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
+    private boolean isMethodCreate = false;
 
     @Autowired
     public AuthorController(AuthorService authorService, AuthorMapper mapper) {
@@ -49,7 +50,8 @@ public class AuthorController extends BaseController {
                                                   @RequestParam Integer size,
                                                   @RequestParam(required = false) String filterBy,
                                                   @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("getAll()");
+        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterBy={}, filterValue={})",
+                page, size, sortBy, order, filterBy, filterValue);
         Page<Author> result = authorService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
@@ -67,9 +69,11 @@ public class AuthorController extends BaseController {
     @PostMapping
     public ResponseEntity<AuthorDTO> create(@RequestBody AuthorDTO authorDTO) {
         LOGGER.debug("create({})", authorDTO);
+        isMethodCreate = true;
         if (isInvalidAuthor(authorDTO)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
+        isMethodCreate = false;
         Author author = authorService.create(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
@@ -91,7 +95,7 @@ public class AuthorController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was deleted");
     }
 
-    //TODO no need for (""), this action is not currently working
+    //TODO this action is not currently working
     @DeleteMapping
     public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
         LOGGER.debug("bulkDelete()");
@@ -103,7 +107,7 @@ public class AuthorController extends BaseController {
     }
 
     private boolean isInvalidAuthor(AuthorDTO authorDTO) {
-        if (this.getClass().getEnclosingMethod().getName().equals("create")) {
+        if (isMethodCreate) {
             return Objects.isNull(authorDTO) || Objects.nonNull(authorDTO.getId()) || StringUtils.isBlank(authorDTO.getFirstName());
         }
         return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());

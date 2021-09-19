@@ -34,6 +34,7 @@ public class ReviewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
+    private Boolean isMethodCreate = false;
 
     @Autowired
     public ReviewController(ReviewService service, ReviewMapper mapper) {
@@ -48,7 +49,8 @@ public class ReviewController extends BaseController {
                                                   @RequestParam Integer size,
                                                   @RequestParam(required = false) String filterBy,
                                                   @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("getAll()");
+        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterBy={}, filterValue={})",
+                page, size, sortBy, order, filterBy, filterValue);
         Page<Review> result = reviewService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
@@ -66,9 +68,11 @@ public class ReviewController extends BaseController {
     @PostMapping
     public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("create({})", reviewDTO);
+        isMethodCreate = true;
         if (isInvalidAuthor(reviewDTO)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
+        isMethodCreate = false;
         Review review = reviewService.create(reviewMapper.convertToEntity(reviewDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewMapper.convertToDto(review));
     }
@@ -92,7 +96,7 @@ public class ReviewController extends BaseController {
     }
 
     private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
-        if (this.getClass().getEnclosingMethod().getName().equals("create")) {
+        if (isMethodCreate) {
             return Objects.isNull(reviewDTO) || Objects.nonNull(reviewDTO.getId()) || StringUtils.isBlank(reviewDTO.getCommenterName())
                     || StringUtils.isBlank(reviewDTO.getComment());
         }

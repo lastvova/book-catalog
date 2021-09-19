@@ -36,6 +36,7 @@ public class BookController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
     private final BookMapper bookMapper;
+    private boolean isMethodCreate = false;
 
     @Autowired
     public BookController(BookService bookService, BookMapper bookMapper) {
@@ -51,7 +52,8 @@ public class BookController extends BaseController {
                                                 @RequestParam Integer size,
                                                 @RequestParam(required = false) String filterBy,
                                                 @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("getAll()");
+        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterBy={}, filterValue={})",
+                page, size, sortBy, order, filterBy, filterValue);
 
         Page<Book> result = bookService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
@@ -70,9 +72,11 @@ public class BookController extends BaseController {
     @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
         LOGGER.debug("create({})", bookDTO);
+        isMethodCreate = true;
         if (isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in save method");
         }
+        isMethodCreate = false;
         Book book = bookService.create(bookMapper.convertToEntity(bookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
@@ -105,7 +109,7 @@ public class BookController extends BaseController {
     }
 
     private boolean isInvalidBook(BookDTO bookDTO) {
-        if (this.getClass().getEnclosingMethod().getName().equals("create")) {
+        if (isMethodCreate) {
             return Objects.isNull(bookDTO) || Objects.nonNull(bookDTO.getId()) || StringUtils.isBlank(bookDTO.getName())
                     || Objects.isNull(bookDTO.getIsbn())
                     || CollectionUtils.isEmpty(bookDTO.getAuthors())
