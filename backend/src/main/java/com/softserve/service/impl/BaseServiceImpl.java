@@ -31,7 +31,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
-        LOGGER.debug("{}.getById({})", this.getClass().getName(), id);
+        LOGGER.debug("getById({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong entity id");
         }
@@ -45,14 +45,14 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters) {
-        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        LOGGER.debug("getAll()");
         return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T create(T entity) {
-        LOGGER.debug("{}.create({})", this.getClass().getName(), entity);
+        LOGGER.debug("create({})", entity);
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in save method :" + entity);
         }
@@ -62,7 +62,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public T update(T entity) {
-        LOGGER.debug("{}.update({})", this.getClass().getName(), entity);
+        LOGGER.debug("update({})", entity);
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in update method :" + entity);
         }
@@ -72,7 +72,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(I id) {
-        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
+        LOGGER.debug("delete({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong entity id");
         }
@@ -80,7 +80,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     }
 
     protected boolean isInvalidEntity(T entity) {
-        LOGGER.debug("{}.inInvalidEntity({})", this.getClass().getName(), entity);
+        LOGGER.debug("inInvalidEntity({})", entity);
         return Objects.isNull(entity);
     }
 }

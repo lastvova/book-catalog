@@ -22,7 +22,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean hasBooks(BigInteger id) {
-        LOGGER.debug("{}.hasBooks({})", basicClass.getName(), id);
+        LOGGER.debug("hasBooks({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong author id");
         }
@@ -37,7 +37,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(BigInteger id) {
-        LOGGER.debug("{}.delete({})", basicClass.getName(), id);
+        LOGGER.debug("delete({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong author id");
         }
@@ -54,19 +54,19 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
 
     @Override
     public boolean deleteAuthors(List<Integer> ids) { //TODO
-        LOGGER.debug("{}.deleteAuthors({})", basicClass.getName(), ids);
+        LOGGER.debug("deleteAuthors({})", ids);
         return false;
     }
 
     @Override
     public boolean isInvalidEntity(Author author) {
-        LOGGER.debug("{}.isInvalidEntity({})", basicClass.getName(), author);
+        LOGGER.debug("isInvalidEntity({})", author);
         return super.isInvalidEntity(author) || StringUtils.isBlank(author.getFirstName());
     }
 
     @Override
     protected boolean isInvalidEntityId(Author author) {
-        LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), author);
+        LOGGER.debug("isInvalidEntityId({})", author);
         return Objects.isNull(author.getId());
     }
 }

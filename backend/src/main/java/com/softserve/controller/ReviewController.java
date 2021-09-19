@@ -34,7 +34,7 @@ public class ReviewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
-    private Boolean isMethodCreate = false;
+    private boolean isMethodCreate = false;
 
     @Autowired
     public ReviewController(ReviewService service, ReviewMapper mapper) {
@@ -69,7 +69,7 @@ public class ReviewController extends BaseController {
     public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("create({})", reviewDTO);
         isMethodCreate = true;
-        if (isInvalidAuthor(reviewDTO)) {
+        if (isInvalidReview(reviewDTO)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
         isMethodCreate = false;
@@ -80,7 +80,7 @@ public class ReviewController extends BaseController {
     @PutMapping
     public ResponseEntity<ReviewDTO> update(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("update(dto = {})", reviewDTO);
-        if (isInvalidAuthor(reviewDTO)) {
+        if (isInvalidReview(reviewDTO)) {
             throw new WrongEntityException("Wrong review in update method ");
         }
         Review review = reviewMapper.convertToEntity(reviewDTO);
@@ -95,8 +95,7 @@ public class ReviewController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review was deleted");
     }
 
-    //TODO I suppose it should be review and not author
-    private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
+    private boolean isInvalidReview(ReviewDTO reviewDTO) {
         if (isMethodCreate) {
             return Objects.isNull(reviewDTO) || Objects.nonNull(reviewDTO.getId()) || StringUtils.isBlank(reviewDTO.getCommenterName())
                     || StringUtils.isBlank(reviewDTO.getComment());

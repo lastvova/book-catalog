@@ -1,7 +1,6 @@
 package com.softserve.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -20,8 +19,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//TODO redundant annotation
-@NoArgsConstructor
 @Entity
 @Table(name = "reviews")
 public class Review implements Serializable {
@@ -39,11 +36,9 @@ public class Review implements Serializable {
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
-    //TODO nullable false?
-    @Column(name = "created_date", insertable = false, updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdDate;
 
-    //TODO Lazy is default
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id",
             foreignKey = @ForeignKey(name = "reviews_book_id_fk"))

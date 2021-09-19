@@ -13,6 +13,5 @@ public interface BookMapper {
 
     BookDTO convertToDto(Book book);
 
-    //TODO isn't WithAuthors part odd here? convertToDto also returns authors, doesn't it?
-    List<BookDTO> convertToDtoListWithAuthors(List<Book> books);
+    List<BookDTO> convertToDtoList(List<Book> books);
 }

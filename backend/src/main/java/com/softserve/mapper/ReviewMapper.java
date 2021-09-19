@@ -10,13 +10,10 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    @Mapping(target = "book", source = "bookDTO")
+    @Mapping(target = "book", source = "book")
     Review convertToEntity(ReviewDTO reviewDTO);
 
     ReviewDTO convertToDto(Review review);
-
-    //TODO unused method
-    List<Review> convertToEntityList(List<ReviewDTO> reviews);
 
     List<ReviewDTO> convertToDtoList(List<Review> reviews);
 }

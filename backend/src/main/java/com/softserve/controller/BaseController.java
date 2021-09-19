@@ -4,7 +4,6 @@ import com.softserve.enums.EntityFields;
 import com.softserve.util.FilteringParameters;
 import com.softserve.util.PaginationParameters;
 import com.softserve.util.SortingParameters;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 
 import java.util.Objects;
@@ -31,11 +30,10 @@ public abstract class BaseController {
 
     protected FilteringParameters setFilterParameters(String filterBy, String filterValue) {
         FilteringParameters filteringParameters = new FilteringParameters();
-        if (StringUtils.isBlank(filterBy) || StringUtils.isBlank(filterValue)) {
-            throw new IllegalArgumentException("Wrong filter parameters");
+        if (Objects.nonNull(filterBy) || Objects.nonNull(filterValue)) {
+            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
+            filteringParameters.setFilterValue(filterValue);
         }
-        filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-        filteringParameters.setFilterValue(filterValue);
         return filteringParameters;
     }
 }

@@ -57,7 +57,7 @@ public class BookController extends BaseController {
 
         Page<Book> result = bookService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
-        List<BookDTO> dtos = bookMapper.convertToDtoListWithAuthors(result.getContent());
+        List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
     }

@@ -45,8 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(WrongEntityException.class)
-    //TODO incorrect method name
-    public ResponseEntity<ErrorInfo> entityNotFoundExceptionHandler(
+    public ResponseEntity<ErrorInfo> wrongEntityExceptionHandler(
             HttpServletRequest request,
             WrongEntityException exception) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST);

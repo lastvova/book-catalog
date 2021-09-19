@@ -25,7 +25,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     public Book getById(BigInteger id) {
-        LOGGER.debug("{}.getById({})", basicClass.getName(), id);
+        LOGGER.debug("getById({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong book id");
         }
@@ -40,7 +40,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     public Page<Book> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                              FilteringParameters filteringParameters) {
-        LOGGER.debug("{}.getAll", basicClass.getName());
+        LOGGER.debug("getAll");
         Page<Book> books = super.getAll(paginationParameters, sortingParameters, filteringParameters);
         books.getContent().forEach(book -> book.getAuthors().size());
         return books;
@@ -49,13 +49,13 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     //TODO
     @Override
     public boolean deleteBooks(List<Integer> ids) {
-        LOGGER.debug("{}.deleteBooks({})", basicClass.getName(), ids);
+        LOGGER.debug("deleteBooks({})", ids);
         return false;
     }
 
     @Override
     protected boolean isInvalidEntity(Book book) {
-        LOGGER.debug("{}.isInvalidEntity({})", basicClass.getName(), book);
+        LOGGER.debug("isInvalidEntity({})", book);
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
                 || Objects.isNull(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
@@ -64,7 +64,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     protected boolean isInvalidEntityId(Book book) {
-        LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), book);
+        LOGGER.debug("isInvalidEntityId({})", book);
         return Objects.isNull(book.getId());
     }
 

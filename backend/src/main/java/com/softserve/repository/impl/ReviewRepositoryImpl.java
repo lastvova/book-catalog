@@ -17,7 +17,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
 
     @Override
     protected boolean isInvalidEntity(Review review) {
-        LOGGER.debug("In isInvalidEntity method with input value: [{}] of {}", review, basicClass.getName());
+        LOGGER.debug("isInvalidEntityId({})", review);
         return super.isInvalidEntity(review) || StringUtils.isBlank(review.getComment())
                 || StringUtils.isBlank(review.getCommenterName())
                 || Objects.isNull(review.getBook()) || Objects.isNull(review.getRating())

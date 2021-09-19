@@ -1,7 +1,6 @@
 package com.softserve.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -20,8 +19,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-//TODO redundant annotation
-@NoArgsConstructor
 @Entity
 @Table(name = "authors")
 public class Author implements Serializable {
@@ -36,12 +33,10 @@ public class Author implements Serializable {
     @Column(name = "second_name", length = 128)
     private String secondName;
 
-    //TODO nullable false?
-    @Column(name = "created_date", insertable = false, updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false, nullable = false)
     private LocalDateTime createdDate;
 
-    //TODO nullable false?
-    @Column(name = "rating", insertable = false, updatable = false)
+    @Column(name = "rating", insertable = false, updatable = false, nullable = false)
     private BigDecimal rating;
 
     @ManyToMany(mappedBy = "authors")

@@ -13,6 +13,5 @@ public class ReviewDTO {
     private String commenterName;
     private String comment;
     private Integer rating;
-    //TODO try to avoid DTO suffix in class variables, on the other side it's okay to use it with local variables
-    private BookDTO bookDTO;
+    private BookDTO book;
 }
