@@ -1,6 +1,8 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Author;
 import com.softserve.entity.Book;
+import com.softserve.enums.EntityFields;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.util.FilteringParameters;
@@ -13,10 +15,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
@@ -39,8 +45,15 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     public Page<Book> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
-                             FilteringParameters filteringParameters) {
+                             List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll");
+        Optional<FilteringParameters> parameters = filteringParameters.stream()
+                .filter(p -> p.getFilterBy().equals(EntityFields.BOOK_AUTHOR))
+                .findFirst();
+        if (parameters.isPresent()) {
+            filteringParameters.remove(parameters.get());
+            addPredicateFotFilteringByAuthor(parameters.get());
+        }
         Page<Book> books = super.getAll(paginationParameters, sortingParameters, filteringParameters);
         books.getContent().forEach(book -> book.getAuthors().size());
         return books;
@@ -74,5 +87,16 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         }
         return book.getYearPublisher() < 0
                 || book.getYearPublisher() > LocalDate.now().getYear();
+    }
+
+    private void addPredicateFotFilteringByAuthor(FilteringParameters filteringParameters) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
+        Root<Author> authors = query.from(Author.class);
+        super.addPredicates(criteriaBuilder.or(
+                criteriaBuilder.like(authors.get(EntityFields.AUTHOR_FIRST_NAME.fieldName),
+                        "%" + filteringParameters.getFilterValue() + "%"),
+                criteriaBuilder.like(authors.get(EntityFields.AUTHOR_SECOND_NAME.fieldName),
+                        "%" + filteringParameters.getFilterValue() + "%")));
     }
 }

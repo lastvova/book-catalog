@@ -1,10 +1,12 @@
 package com.softserve.controller;
 
+import com.softserve.dto.BookDTO;
 import com.softserve.dto.ReviewDTO;
 import com.softserve.entity.Review;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
+import com.softserve.util.FilteringParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +44,16 @@ public class ReviewController extends BaseController {
         this.reviewMapper = mapper;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                  @RequestParam(required = false) String order,
-                                                  @RequestParam Integer page,
-                                                  @RequestParam Integer size,
-                                                  @RequestParam(required = false) String filterBy,
-                                                  @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterBy={}, filterValue={})",
-                page, size, sortBy, order, filterBy, filterValue);
+                                                @RequestParam(required = false) String order,
+                                                @RequestParam Integer page,
+                                                @RequestParam Integer size,
+                                                @RequestBody List<FilteringParameters> filteringParameters) {
+        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
+                page, size, sortBy, order, filteringParameters);
         Page<Review> result = reviewService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
-                setFilterParameters(filterBy, filterValue));
+                filteringParameters);
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
         Page<ReviewDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
@@ -65,7 +66,7 @@ public class ReviewController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTO);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("create({})", reviewDTO);
         isMethodCreate = true;

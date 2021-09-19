@@ -5,11 +5,13 @@ import com.softserve.util.PaginationParameters;
 import com.softserve.util.SortingParameters;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface BaseRepository<T, I> {
 
     T getById(I id);
 
-    Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters);
+    Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, List<FilteringParameters> filteringParameters);
 
     T create(T entity);
 

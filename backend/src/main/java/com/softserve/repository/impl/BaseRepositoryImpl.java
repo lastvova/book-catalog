@@ -6,6 +6,7 @@ import com.softserve.repository.BaseRepository;
 import com.softserve.util.FilteringParameters;
 import com.softserve.util.PaginationParameters;
 import com.softserve.util.SortingParameters;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @PersistenceContext
     protected EntityManager entityManager;
     protected CriteriaBuilder criteriaBuilder;
+    protected List<Predicate> predicates;
 
     @SuppressWarnings("unchecked")
     protected BaseRepositoryImpl() {
@@ -48,14 +50,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
-    //TODO move transaction management to the service layer
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
-        LOGGER.debug("{}.getById({})", basicClass.getName(), id);
+        LOGGER.debug("getById({})", id);
         //TODO should be part of validating methods
         if (Objects.isNull(id)) {
-            //TODO inappropriate exception type
-            throw new IllegalStateException("Wrong id");
+            throw new IllegalArgumentException("Wrong id");
         }
         criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(basicClass);
@@ -68,7 +67,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public T create(T entity) {
-        LOGGER.debug("{}.create({})", basicClass.getName(), entity);
+        LOGGER.debug("create({})", entity);
         if (isInvalidEntity(entity)) {
             throw new WrongEntityException("Wrong entity in save method " + entity);
         }
@@ -79,7 +78,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public T update(T entity) {
-        LOGGER.debug("{}.update({})", basicClass.getName(), entity);
+        LOGGER.debug("update({})", entity);
         if (isInvalidEntityId(entity)) {
             throw new IllegalStateException("Wrong entity id");
         }
@@ -93,7 +92,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(I id) {
-        LOGGER.debug("{}.delete({})", basicClass.getName(), id);
+        LOGGER.debug("delete({})", id);
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong id in delete method");
         }
@@ -106,17 +105,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
-    //TODO you are already managing transactions at the service layer!!!
-    //    @Override
-    //    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    //    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters) {
-    //        LOGGER.debug("{}.getAll()", this.getClass().getName());
-    //        return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
-    //    }
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
-                          FilteringParameters filteringParameters) {
-        LOGGER.debug("{}.getAll", basicClass.getName());
+                          List<FilteringParameters> filteringParameters) {
+        LOGGER.debug("getAll");
         criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(basicClass);
         Root<T> root = criteriaQuery.from(basicClass);
@@ -135,39 +126,48 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         return new PageImpl<>(typedQuery.getResultList(), pageable, entityCount);
     }
 
-    private Predicate getPredicate(FilteringParameters filteringParameters,
-                                   Root<T> entityRoot) {
-        List<Predicate> predicates = new ArrayList<>();
-        //TODO avoid using Objects.nonNull method within the application, replace all existing places with != operator
-        // API Note:
-        // This method exists to be used as a java.util.function.Predicate, filter(Objects::nonNull)
-        if (Objects.nonNull(filteringParameters.getFilterBy())
-                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("string")) {
-            predicates.add(
-                    criteriaBuilder.like(entityRoot.get(filteringParameters.getFilterBy().fieldName),
-                            "%" + filteringParameters.getFilterValue() + "%")
-            );
+    protected void addPredicates(Predicate predicate) {
+        LOGGER.debug("addPredicates({})", predicate);
+        if (CollectionUtils.isEmpty(predicates)) {
+            predicates = new ArrayList<>();
         }
-        if (Objects.nonNull(filteringParameters.getFilterBy())
-                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("integer")) {
-            predicates.add(
-                    criteriaBuilder.equal(entityRoot.get(filteringParameters.getFilterBy().fieldName),
-                            filteringParameters.getFilterValue())
-            );
-        }
-        if (Objects.nonNull(filteringParameters.getFilterBy())
-                && filteringParameters.getFilterBy().fieldType.equalsIgnoreCase("decimal")) {
-            predicates.add(
-                    criteriaBuilder.or(
-                            criteriaBuilder.equal(entityRoot.get(filteringParameters.getFilterBy().fieldName),
-                                    Double.parseDouble(filteringParameters.getFilterValue())),
-                            criteriaBuilder.and(
-                                    criteriaBuilder.lt(entityRoot.get(filteringParameters.getFilterBy().fieldName),
-                                            Double.parseDouble(filteringParameters.getFilterValue()) + 1),
-                                    criteriaBuilder.gt(entityRoot.get(filteringParameters.getFilterBy().fieldName),
-                                            Double.parseDouble(filteringParameters.getFilterValue())))));
-        }
+        predicates.add(predicate);
+    }
 
+    private Predicate getPredicate(List<FilteringParameters> filteringParameters,
+                                   Root<T> entityRoot) {
+        if (CollectionUtils.isEmpty(predicates)) {
+            predicates = new ArrayList<>();
+        }
+        for (FilteringParameters parameter : filteringParameters) {
+            if (parameter.getFilterBy() != null
+                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("string")) {
+                predicates.add(
+                        criteriaBuilder.like(entityRoot.get(parameter.getFilterBy().fieldName),
+                                "%" + parameter.getFilterValue() + "%")
+                );
+            }
+            if (parameter.getFilterBy() != null
+                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("integer")) {
+                predicates.add(
+                        criteriaBuilder.equal(entityRoot.get(parameter.getFilterBy().fieldName),
+                                parameter.getFilterValue())
+                );
+            }
+            if (parameter.getFilterBy() != null
+                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("decimal")) {
+                predicates.add(
+                        criteriaBuilder.or(
+                                criteriaBuilder.equal(entityRoot.get(parameter.getFilterBy().fieldName),
+                                        Double.parseDouble(parameter.getFilterValue())),
+                                criteriaBuilder.and(
+                                        criteriaBuilder.lt(entityRoot.get(parameter.getFilterBy().fieldName),
+                                                Double.parseDouble(parameter.getFilterValue()) + 1),
+                                        criteriaBuilder.gt(entityRoot.get(parameter.getFilterBy().fieldName),
+                                                Double.parseDouble(parameter.getFilterValue())))));
+            }
+
+        }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
@@ -196,14 +196,14 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     protected boolean isInvalidEntity(T entity) {
-        LOGGER.debug("{}.isInvalidEntity({})", basicClass.getName(), entity);
+        LOGGER.debug("isInvalidEntity({})", entity);
         return Objects.isNull(entity);
     }
 
     //TODO all implementations of this method only check whether the ID is not null
     // this logic should be part of the isInvalidEntity method
     protected boolean isInvalidEntityId(T entity) {
-        LOGGER.debug("{}.isInvalidEntityId({})", basicClass.getName(), entity);
+        LOGGER.debug("isInvalidEntityId({})", entity);
         return false;
     }
 }

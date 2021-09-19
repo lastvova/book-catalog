@@ -5,6 +5,7 @@ import com.softserve.entity.Book;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
+import com.softserve.util.FilteringParameters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,18 +46,17 @@ public class BookController extends BaseController {
 
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<Page<BookDTO>> getAll(@RequestParam(required = false) String sortBy,
                                                 @RequestParam(required = false) String order,
                                                 @RequestParam Integer page,
                                                 @RequestParam Integer size,
-                                                @RequestParam(required = false) String filterBy,
-                                                @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterBy={}, filterValue={})",
-                page, size, sortBy, order, filterBy, filterValue);
+                                                @RequestBody List<FilteringParameters> filteringParameters) {
+        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
+                page, size, sortBy, order, filteringParameters);
 
         Page<Book> result = bookService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
-                setFilterParameters(filterBy, filterValue));
+                filteringParameters);
         List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
@@ -69,7 +69,7 @@ public class BookController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
         LOGGER.debug("create({})", bookDTO);
         isMethodCreate = true;
