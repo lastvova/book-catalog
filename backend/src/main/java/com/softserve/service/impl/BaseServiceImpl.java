@@ -5,7 +5,8 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
 import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,9 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters, FilteringParameters filteringParameters) {
+    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters) {
         LOGGER.debug("{}.getAll()", this.getClass().getName());
-        return baseRepository.getAll(paginationAndSortingParameters, filteringParameters);
+        return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
     }
 
     @Override

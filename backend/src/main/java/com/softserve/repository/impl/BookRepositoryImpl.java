@@ -4,7 +4,8 @@ import com.softserve.entity.Book;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,10 +38,10 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     @Override
-    public Page<Book> getAll(PaginationAndSortingParameters paginationAndSortingParameters,
+    public Page<Book> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                              FilteringParameters filteringParameters) {
         LOGGER.debug("{}.getAll", basicClass.getName());
-        Page<Book> books = super.getAll(paginationAndSortingParameters, filteringParameters);
+        Page<Book> books = super.getAll(paginationParameters, sortingParameters, filteringParameters);
         books.getContent().forEach(book -> book.getAuthors().size());
         return books;
     }

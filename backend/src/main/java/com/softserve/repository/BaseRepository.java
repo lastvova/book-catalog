@@ -1,14 +1,15 @@
 package com.softserve.repository;
 
 import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.springframework.data.domain.Page;
 
 public interface BaseRepository<T, I> {
 
     T getById(I id);
 
-    Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters, FilteringParameters filteringParameters);
+    Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, FilteringParameters filteringParameters);
 
     T create(T entity);
 

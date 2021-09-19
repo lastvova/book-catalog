@@ -2,13 +2,9 @@ package com.softserve.controller;
 
 import com.softserve.dto.BookDTO;
 import com.softserve.entity.Book;
-import com.softserve.enums.EntityFields;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +31,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/books")
-public class BookController {
+public class BookController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
@@ -49,16 +44,16 @@ public class BookController {
 
     }
 
-    @RequestMapping("")
+    @GetMapping
     public ResponseEntity<Page<BookDTO>> getAll(@RequestParam(required = false) String sortBy,
                                                 @RequestParam(required = false) String order,
                                                 @RequestParam Integer page,
                                                 @RequestParam Integer size,
                                                 @RequestParam(required = false) String filterBy,
                                                 @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("{}.getAll()", this.getClass().getName());
+        LOGGER.debug("getAll()");
 
-        Page<Book> result = bookService.getAll(setPageParameters(sortBy, order, page, size),
+        Page<Book> result = bookService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
         List<BookDTO> dtos = bookMapper.convertToDtoListWithAuthors(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
@@ -67,27 +62,24 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> get(@PathVariable BigInteger id) {
-        LOGGER.debug("{}.get({})", this.getClass().getName(), id);
+        LOGGER.debug("get({})", id);
         BookDTO bookDTO = bookMapper.convertToDto(bookService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(bookDTO);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
-        LOGGER.debug("{}.create({})", this.getClass().getName(), bookDTO);
-        if (!Objects.isNull(bookDTO.getId()) || isInvalidBook(bookDTO)) {
+        LOGGER.debug("create({})", bookDTO);
+        if (isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in save method");
         }
         Book book = bookService.create(bookMapper.convertToEntity(bookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> update(@PathVariable BigInteger id, @RequestBody BookDTO bookDTO) {
-        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, bookDTO);
-        if (!Objects.equals(id, bookDTO.getId())) {
-            throw new EntityNotFoundException("Book id not equals provided id");
-        }
+    @PutMapping
+    public ResponseEntity<BookDTO> update(@RequestBody BookDTO bookDTO) {
+        LOGGER.debug("update(dto = {})", bookDTO);
         if (isInvalidBook(bookDTO)) {
             throw new WrongEntityException("Wrong book in update method");
         }
@@ -97,14 +89,14 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
+        LOGGER.debug("delete({})", id);
         bookService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Book was deleted");
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
-        LOGGER.debug("{}.bulkDelete()", this.getClass().getName());
+        LOGGER.debug("bulkDelete({})", ids);
         if (CollectionUtils.isEmpty(ids)) {
             throw new IllegalStateException("Empty collection with ids");
         }
@@ -113,6 +105,12 @@ public class BookController {
     }
 
     private boolean isInvalidBook(BookDTO bookDTO) {
+        if (this.getClass().getEnclosingMethod().getName().equals("create")) {
+            return Objects.isNull(bookDTO) || Objects.nonNull(bookDTO.getId()) || StringUtils.isBlank(bookDTO.getName())
+                    || Objects.isNull(bookDTO.getIsbn())
+                    || CollectionUtils.isEmpty(bookDTO.getAuthors())
+                    || isInValidYearOfPublisher(bookDTO);
+        }
         return Objects.isNull(bookDTO) || StringUtils.isBlank(bookDTO.getName())
                 || Objects.isNull(bookDTO.getIsbn())
                 || CollectionUtils.isEmpty(bookDTO.getAuthors())
@@ -125,29 +123,5 @@ public class BookController {
         }
         return bookDTO.getYearPublisher() < 0
                 || bookDTO.getYearPublisher() > LocalDate.now().getYear();
-    }
-
-    private PaginationAndSortingParameters setPageParameters(String sortBy, String order, Integer page, Integer size) {
-        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
-        paginationAndSortingParameters.setPageSize(size);
-        paginationAndSortingParameters.setPageNumber(page);
-        if (Objects.nonNull(order)) {
-            paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
-        }
-        if (Objects.nonNull(sortBy)) {
-            paginationAndSortingParameters.setSortBy(sortBy);
-        }
-        return paginationAndSortingParameters;
-    }
-
-    private FilteringParameters setFilterParameters(String filterBy, String filterValue) {
-        FilteringParameters filteringParameters = new FilteringParameters();
-        if (Objects.nonNull(filterBy)) {
-            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-        }
-        if (Objects.nonNull(filterValue)) {
-            filteringParameters.setFilterValue(filterValue);
-        }
-        return filteringParameters;
     }
 }

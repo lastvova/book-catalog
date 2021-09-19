@@ -10,6 +10,7 @@ public enum EntityFields {
     BOOK_ISBN("Integer", "isbn"),
     BOOK_PUBLISHER("String","publisher"),
     BOOK_RATING("Decimal", "rating"),
+    BOOK_AUTHOR("String", "firstName_secondName"),
     REVIEW_COMMENTER_NAME("String","commenterName"),
     REVIEW_COMMENT("String","comment"),
     REVIEW_RATING("Decimal","rating");

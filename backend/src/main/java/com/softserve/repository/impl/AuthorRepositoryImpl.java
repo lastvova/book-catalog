@@ -41,7 +41,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (Objects.isNull(id)) {
             throw new IllegalStateException("Wrong author id");
         }
-        Author author = getById(id); // todo: why are you need this read?
+        Author author = getById(id);
         if (Objects.isNull(author)) {
             return false;
         }

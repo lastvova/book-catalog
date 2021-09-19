@@ -4,7 +4,8 @@ package com.softserve.repository.impl;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
+import com.softserve.util.PaginationParameters;
+import com.softserve.util.SortingParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -103,7 +104,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<T> getAll(PaginationAndSortingParameters paginationAndSortingParameters,
+    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                           FilteringParameters filteringParameters) {
         LOGGER.debug("{}.getAll", basicClass.getName());
         criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -111,13 +112,13 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         Root<T> root = criteriaQuery.from(basicClass);
         Predicate predicate = getPredicate(filteringParameters, root);
         criteriaQuery.where(predicate);
-        setOrder(paginationAndSortingParameters, criteriaQuery, root);
+        setOrder(sortingParameters, criteriaQuery, root);
 
         TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(paginationAndSortingParameters.getPageNumber() * paginationAndSortingParameters.getPageSize());
-        typedQuery.setMaxResults(paginationAndSortingParameters.getPageSize());
+        typedQuery.setFirstResult(paginationParameters.getPageNumber() * paginationParameters.getPageSize());
+        typedQuery.setMaxResults(paginationParameters.getPageSize());
 
-        Pageable pageable = getPageable(paginationAndSortingParameters);
+        Pageable pageable = getPageable(paginationParameters, sortingParameters);
 
         long entityCount = getEntityCount(predicate);
 
@@ -157,21 +158,21 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private void setOrder(PaginationAndSortingParameters paginationAndSortingParameters,
+    private void setOrder(SortingParameters sortingParameters,
                           CriteriaQuery<T> criteriaQuery,
                           Root<T> entityRoot) {
-        if (paginationAndSortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(paginationAndSortingParameters.getSortBy())),
+        if (sortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(sortingParameters.getSortBy())),
                     criteriaBuilder.asc(entityRoot.get("createdDate")));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(paginationAndSortingParameters.getSortBy())),
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(sortingParameters.getSortBy())),
                     criteriaBuilder.desc(entityRoot.get("createdDate")));
         }
     }
 
-    private Pageable getPageable(PaginationAndSortingParameters paginationAndSortingParameters) {
-        Sort sort = Sort.by(paginationAndSortingParameters.getSortDirection(), paginationAndSortingParameters.getSortBy());
-        return PageRequest.of(paginationAndSortingParameters.getPageNumber(), paginationAndSortingParameters.getPageSize(), sort);
+    private Pageable getPageable(PaginationParameters paginationParameters, SortingParameters sortingParameters) {
+        Sort sort = Sort.by(sortingParameters.getSortDirection(), sortingParameters.getSortBy());
+        return PageRequest.of(paginationParameters.getPageNumber(), paginationParameters.getPageSize(), sort);
     }
 
     private long getEntityCount(Predicate predicate) {

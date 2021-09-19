@@ -2,20 +2,15 @@ package com.softserve.controller;
 
 import com.softserve.dto.ReviewDTO;
 import com.softserve.entity.Review;
-import com.softserve.enums.EntityFields;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationAndSortingParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +29,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/reviews")
-public class ReviewController {
+public class ReviewController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
     private final ReviewService reviewService;
@@ -46,15 +41,15 @@ public class ReviewController {
         this.reviewMapper = mapper;
     }
 
-    @RequestMapping("")
+    @GetMapping
     public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false) String sortBy,
                                                   @RequestParam(required = false) String order,
                                                   @RequestParam Integer page,
                                                   @RequestParam Integer size,
                                                   @RequestParam(required = false) String filterBy,
                                                   @RequestParam(required = false) String filterValue) {
-        LOGGER.debug("{}.getAll()", this.getClass().getName());
-        Page<Review> result = reviewService.getAll(setPageParameters(sortBy, order, page, size),
+        LOGGER.debug("getAll()");
+        Page<Review> result = reviewService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
                 setFilterParameters(filterBy, filterValue));
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
         Page<ReviewDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
@@ -63,27 +58,24 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> get(@PathVariable BigInteger id) {
-        LOGGER.debug("{}.get({})", this.getClass().getName(), id);
+        LOGGER.debug("get({})", id);
         ReviewDTO reviewDTO = reviewMapper.convertToDto(reviewService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(reviewDTO);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
-        LOGGER.debug("{}.create({})", this.getClass().getName(), reviewDTO);
-        if (!Objects.isNull(reviewDTO.getId()) || isInvalidAuthor(reviewDTO)) {
+        LOGGER.debug("create({})", reviewDTO);
+        if (isInvalidAuthor(reviewDTO)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
         Review review = reviewService.create(reviewMapper.convertToEntity(reviewDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewMapper.convertToDto(review));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ReviewDTO> update(@PathVariable BigInteger id, @RequestBody ReviewDTO reviewDTO) {
-        LOGGER.debug("{}.update(id = {} dto = {})", this.getClass().getName(), id, reviewDTO);
-        if (!Objects.equals(id, reviewDTO.getId())) {
-            throw new EntityNotFoundException("Review id not equals provided id");
-        }
+    @PutMapping
+    public ResponseEntity<ReviewDTO> update(@RequestBody ReviewDTO reviewDTO) {
+        LOGGER.debug("update(dto = {})", reviewDTO);
         if (isInvalidAuthor(reviewDTO)) {
             throw new WrongEntityException("Wrong review in update method ");
         }
@@ -94,37 +86,17 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        LOGGER.debug("{}.delete({})", this.getClass().getName(), id);
+        LOGGER.debug("delete({})", id);
         reviewService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review was deleted");
     }
 
     private boolean isInvalidAuthor(ReviewDTO reviewDTO) {
+        if (this.getClass().getEnclosingMethod().getName().equals("create")) {
+            return Objects.isNull(reviewDTO) || Objects.nonNull(reviewDTO.getId()) || StringUtils.isBlank(reviewDTO.getCommenterName())
+                    || StringUtils.isBlank(reviewDTO.getComment());
+        }
         return Objects.isNull(reviewDTO) || StringUtils.isBlank(reviewDTO.getCommenterName())
                 || StringUtils.isBlank(reviewDTO.getComment());
-    }
-
-    private PaginationAndSortingParameters setPageParameters(String sortBy, String order, Integer page, Integer size) {
-        PaginationAndSortingParameters paginationAndSortingParameters = new PaginationAndSortingParameters();
-        paginationAndSortingParameters.setPageSize(size);
-        paginationAndSortingParameters.setPageNumber(page);
-        if (Objects.nonNull(order)) {
-            paginationAndSortingParameters.setSortDirection(Sort.Direction.fromString(order));
-        }
-        if (Objects.nonNull(sortBy)) {
-            paginationAndSortingParameters.setSortBy(sortBy);
-        }
-        return paginationAndSortingParameters;
-    }
-
-    private FilteringParameters setFilterParameters(String filterBy, String filterValue) {
-        FilteringParameters filteringParameters = new FilteringParameters();
-        if (Objects.nonNull(filterBy)) {
-            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-        }
-        if (Objects.nonNull(filterValue)) {
-            filteringParameters.setFilterValue(filterValue);
-        }
-        return filteringParameters;
     }
 }
