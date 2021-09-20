@@ -59,22 +59,24 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     public Predicate getPredicate(ListParams<?> params, Root<Author> authors) {
         List<Predicate> predicates = new ArrayList<>();
-        AuthorFilterParameters filterParameters = (AuthorFilterParameters) params.getPattern();
-        if (filterParameters.getFirstName() != null) {
-            predicates.add(
-                    criteriaBuilder.like(authors.get("firstName"),
-                            "%" + filterParameters.getFirstName() + "%")
-            );
-        }
-        if (filterParameters.getSecondName() != null) {
-            predicates.add(
-                    criteriaBuilder.like(authors.get("secondName"),
-                            "%" + filterParameters.getSecondName() + "%"));
-        }
-        if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
-            predicates.add(
-                    criteriaBuilder.between(authors.get("rating"),
-                            filterParameters.getFromRating(), filterParameters.getToRating()));
+        if (params.getPattern() != null) {
+            AuthorFilterParameters filterParameters = (AuthorFilterParameters) params.getPattern();
+            if (filterParameters.getFirstName() != null) {
+                predicates.add(
+                        criteriaBuilder.like(authors.get("firstName"),
+                                "%" + filterParameters.getFirstName() + "%")
+                );
+            }
+            if (filterParameters.getSecondName() != null) {
+                predicates.add(
+                        criteriaBuilder.like(authors.get("secondName"),
+                                "%" + filterParameters.getSecondName() + "%"));
+            }
+            if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+                predicates.add(
+                        criteriaBuilder.between(authors.get("rating"),
+                                filterParameters.getFromRating(), filterParameters.getToRating()));
+            }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }

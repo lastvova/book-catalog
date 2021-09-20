@@ -87,42 +87,44 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     public Predicate getPredicate(ListParams<?> params, Root<Book> books) {
         List<Predicate> predicates = new ArrayList<>();
-        BookFilterParameters filterParameters = (BookFilterParameters) params.getPattern();
-        if (filterParameters.getName() != null) {
-            predicates.add(
-                    criteriaBuilder.like(books.get("name"),
-                            "%" + filterParameters.getName() + "%")
-            );
-        }
-        if (filterParameters.getYearPublisher() != null) {
-            predicates.add(
-                    criteriaBuilder.equal(books.get("yearPublisher"), filterParameters.getYearPublisher()));
-        }
-        if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
-            predicates.add(
-                    criteriaBuilder.between(books.get("rating"),
-                            filterParameters.getFromRating(), filterParameters.getToRating()));
-        }
-        if (filterParameters.getIsbn() != null) {
-            predicates.add(
-                    criteriaBuilder.equal(books.get("isbn"), filterParameters.getIsbn())
-            );
-        }
-        if (filterParameters.getPublisher() != null) {
-            predicates.add(
-                    criteriaBuilder.like(books.get("publisher"),
-                            "%" + filterParameters.getPublisher() + "%")
-            );
-        }
-        if (filterParameters.getAuthorNameAndSecondName() != null) {
-            Join<Book, Author> authors = books.join("authors");
-            predicates.add(
-                    criteriaBuilder.or(
-                            criteriaBuilder.like(authors.get("firstName"),
-                                    "%" + filterParameters.getAuthorNameAndSecondName() + "%"),
-                            criteriaBuilder.like(authors.get("secondName"),
-                                    "%" + filterParameters.getAuthorNameAndSecondName() + "%"))
-            );
+        if (params.getPattern() != null) {
+            BookFilterParameters filterParameters = (BookFilterParameters) params.getPattern();
+            if (filterParameters.getName() != null) {
+                predicates.add(
+                        criteriaBuilder.like(books.get("name"),
+                                "%" + filterParameters.getName() + "%")
+                );
+            }
+            if (filterParameters.getYearPublisher() != null) {
+                predicates.add(
+                        criteriaBuilder.equal(books.get("yearPublisher"), filterParameters.getYearPublisher()));
+            }
+            if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+                predicates.add(
+                        criteriaBuilder.between(books.get("rating"),
+                                filterParameters.getFromRating(), filterParameters.getToRating()));
+            }
+            if (filterParameters.getIsbn() != null) {
+                predicates.add(
+                        criteriaBuilder.equal(books.get("isbn"), filterParameters.getIsbn())
+                );
+            }
+            if (filterParameters.getPublisher() != null) {
+                predicates.add(
+                        criteriaBuilder.like(books.get("publisher"),
+                                "%" + filterParameters.getPublisher() + "%")
+                );
+            }
+            if (filterParameters.getAuthorNameAndSecondName() != null) {
+                Join<Book, Author> authors = books.join("authors");
+                predicates.add(
+                        criteriaBuilder.or(
+                                criteriaBuilder.like(authors.get("firstName"),
+                                        "%" + filterParameters.getAuthorNameAndSecondName() + "%"),
+                                criteriaBuilder.like(authors.get("secondName"),
+                                        "%" + filterParameters.getAuthorNameAndSecondName() + "%"))
+                );
+            }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }

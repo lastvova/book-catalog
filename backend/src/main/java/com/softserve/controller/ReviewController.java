@@ -42,9 +42,9 @@ public class ReviewController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestBody ListParams<ReviewFilterParameters> filteringParameters) {
-        LOGGER.debug("getAll(params = {}", filteringParameters);
-        Page<Review> result = reviewService.getAll(super.validatePageAndSortParameters(filteringParameters));
+    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestBody ListParams<ReviewFilterParameters> pageSortFilterParameters) {
+        LOGGER.debug("getAll(params = {}", pageSortFilterParameters);
+        Page<Review> result = reviewService.getAll(super.validatePageAndSortParameters(pageSortFilterParameters));
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
         Page<ReviewDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);

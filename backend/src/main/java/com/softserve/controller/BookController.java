@@ -46,9 +46,18 @@ public class BookController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<BookDTO>> getAll(@RequestBody ListParams<BookFilterParameters> filteringParameters) {
-        LOGGER.debug("getAll( params = {}", filteringParameters);
-        Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(filteringParameters));
+    public ResponseEntity<Page<BookDTO>> getAll(@RequestBody ListParams<BookFilterParameters> pageSortFilterParameters) {
+        LOGGER.debug("getAll( params = {}", pageSortFilterParameters);
+        Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(pageSortFilterParameters));
+        List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
+        Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK).body(finalResult);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<BookDTO>> getAllWithOutParameters() {
+        LOGGER.debug("getAllWithOutParameters()");
+        Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(new ListParams<>()));
         List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
