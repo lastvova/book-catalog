@@ -1,6 +1,5 @@
 package com.softserve.controller;
 
-import com.softserve.dto.BookDTO;
 import com.softserve.dto.ReviewDTO;
 import com.softserve.entity.Review;
 import com.softserve.exception.WrongEntityException;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/reviews")
@@ -36,7 +34,6 @@ public class ReviewController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
-    private boolean isMethodCreate = false;
 
     @Autowired
     public ReviewController(ReviewService service, ReviewMapper mapper) {
@@ -46,10 +43,10 @@ public class ReviewController extends BaseController {
 
     @PostMapping
     public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                @RequestParam(required = false) String order,
-                                                @RequestParam Integer page,
-                                                @RequestParam Integer size,
-                                                @RequestBody List<FilteringParameters> filteringParameters) {
+                                                  @RequestParam(required = false) String order,
+                                                  @RequestParam Integer page,
+                                                  @RequestParam Integer size,
+                                                  @RequestBody List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
                 page, size, sortBy, order, filteringParameters);
         Page<Review> result = reviewService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
@@ -69,11 +66,9 @@ public class ReviewController extends BaseController {
     @PostMapping("/create")
     public ResponseEntity<ReviewDTO> create(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("create({})", reviewDTO);
-        isMethodCreate = true;
-        if (isInvalidReview(reviewDTO)) {
+        if (isInvalidReview(reviewDTO, true)) {
             throw new WrongEntityException("Wrong review in save method ");
         }
-        isMethodCreate = false;
         Review review = reviewService.create(reviewMapper.convertToEntity(reviewDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewMapper.convertToDto(review));
     }
@@ -81,7 +76,7 @@ public class ReviewController extends BaseController {
     @PutMapping
     public ResponseEntity<ReviewDTO> update(@RequestBody ReviewDTO reviewDTO) {
         LOGGER.debug("update(dto = {})", reviewDTO);
-        if (isInvalidReview(reviewDTO)) {
+        if (isInvalidReview(reviewDTO, false)) {
             throw new WrongEntityException("Wrong review in update method ");
         }
         Review review = reviewMapper.convertToEntity(reviewDTO);
@@ -96,12 +91,12 @@ public class ReviewController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Review was deleted");
     }
 
-    private boolean isInvalidReview(ReviewDTO reviewDTO) {
+    private boolean isInvalidReview(ReviewDTO reviewDTO, boolean isMethodCreate) {
         if (isMethodCreate) {
-            return Objects.isNull(reviewDTO) || Objects.nonNull(reviewDTO.getId()) || StringUtils.isBlank(reviewDTO.getCommenterName())
+            return reviewDTO == null || reviewDTO.getId() != null || StringUtils.isBlank(reviewDTO.getCommenterName())
                     || StringUtils.isBlank(reviewDTO.getComment());
         }
-        return Objects.isNull(reviewDTO) || StringUtils.isBlank(reviewDTO.getCommenterName())
+        return reviewDTO == null || StringUtils.isBlank(reviewDTO.getCommenterName())
                 || StringUtils.isBlank(reviewDTO.getComment());
     }
 }

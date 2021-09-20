@@ -6,8 +6,6 @@ import com.softserve.util.PaginationParameters;
 import com.softserve.util.SortingParameters;
 import org.springframework.data.domain.Sort;
 
-import java.util.Objects;
-
 public abstract class BaseController {
 
     protected PaginationParameters setPageParameters(Integer page, Integer size) {
@@ -19,10 +17,10 @@ public abstract class BaseController {
 
     protected SortingParameters setSortParameters(String sortBy, String order) {
         SortingParameters sortingParameters = new SortingParameters();
-        if (Objects.nonNull(order)) {
+        if (order != null) {
             sortingParameters.setSortDirection(Sort.Direction.fromString(order));
         }
-        if (Objects.nonNull(sortBy)) {
+        if (sortBy != null) {
             sortingParameters.setSortBy(sortBy);
         }
         return sortingParameters;
@@ -30,7 +28,7 @@ public abstract class BaseController {
 
     protected FilteringParameters setFilterParameters(String filterBy, String filterValue) {
         FilteringParameters filteringParameters = new FilteringParameters();
-        if (Objects.nonNull(filterBy) || Objects.nonNull(filterValue)) {
+        if (filterBy != null || filterValue != null) {
             filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
             filteringParameters.setFilterValue(filterValue);
         }

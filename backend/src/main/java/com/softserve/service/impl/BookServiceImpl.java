@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Service
 public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implements BookService {
@@ -30,13 +29,13 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     public boolean isInvalidEntity(Book book) {
         LOGGER.debug("isInvalidEntity({})", book);
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
-                || Objects.isNull(book.getIsbn())
+                || book.getIsbn() == null
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || isInValidYearOfPublisher(book);
     }
 
     private boolean isInValidYearOfPublisher(Book book) {
-        if (Objects.isNull(book.getYearPublisher())) {
+        if (book.getYearPublisher() == null) {
             return false;
         }
         return book.getYearPublisher() < 0

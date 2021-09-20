@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -21,7 +23,6 @@ import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -30,13 +31,14 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     private static final Logger LOGGER = LoggerFactory.getLogger(BookRepositoryImpl.class);
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Book getById(BigInteger id) {
         LOGGER.debug("getById({})", id);
-        if (Objects.isNull(id)) {
+        if (id == null) {
             throw new IllegalStateException("Wrong book id");
         }
         Book book = entityManager.find(Book.class, id);
-        if (Objects.isNull(book)) {
+        if (book == null) {
             throw new EntityNotFoundException("Not found entity with id: " + id.toString());
         }
         book.getAuthors().size();
@@ -44,6 +46,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Book> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                              List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll");
@@ -69,8 +72,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     protected boolean isInvalidEntity(Book book) {
         LOGGER.debug("isInvalidEntity({})", book);
+
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
-                || Objects.isNull(book.getIsbn())
+                || book.getIsbn() == null
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || isInValidYearOfPublisher(book);
     }
@@ -78,11 +82,11 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Override
     protected boolean isInvalidEntityId(Book book) {
         LOGGER.debug("isInvalidEntityId({})", book);
-        return Objects.isNull(book.getId());
+        return book.getId() == null;
     }
 
     private boolean isInValidYearOfPublisher(Book book) {
-        if (Objects.isNull(book.getYearPublisher())) {
+        if (book.getYearPublisher() == null) {
             return false;
         }
         return book.getYearPublisher() < 0

@@ -1,7 +1,6 @@
 package com.softserve.controller;
 
 import com.softserve.dto.AuthorDTO;
-import com.softserve.dto.BookDTO;
 import com.softserve.entity.Author;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/authors")
@@ -37,7 +35,6 @@ public class AuthorController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorController.class);
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
-    private boolean isMethodCreate = false;
 
     @Autowired
     public AuthorController(AuthorService authorService, AuthorMapper mapper) {
@@ -47,10 +44,10 @@ public class AuthorController extends BaseController {
 
     @PostMapping
     public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                @RequestParam(required = false) String order,
-                                                @RequestParam Integer page,
-                                                @RequestParam Integer size,
-                                                @RequestBody List<FilteringParameters> filteringParameters) {
+                                                  @RequestParam(required = false) String order,
+                                                  @RequestParam Integer page,
+                                                  @RequestParam Integer size,
+                                                  @RequestBody List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
                 page, size, sortBy, order, filteringParameters);
         Page<Author> result = authorService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
@@ -70,11 +67,9 @@ public class AuthorController extends BaseController {
     @PostMapping("/create")
     public ResponseEntity<AuthorDTO> create(@RequestBody AuthorDTO authorDTO) {
         LOGGER.debug("create({})", authorDTO);
-        isMethodCreate = true;
-        if (isInvalidAuthor(authorDTO)) {
+        if (isInvalidAuthor(authorDTO, true)) {
             throw new WrongEntityException("Wrong author in save method ");
         }
-        isMethodCreate = false;
         Author author = authorService.create(authorMapper.convertToEntity(authorDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(authorMapper.convertToDto(author));
     }
@@ -82,7 +77,7 @@ public class AuthorController extends BaseController {
     @PutMapping
     public ResponseEntity<AuthorDTO> update(@RequestBody AuthorDTO authorDTO) {
         LOGGER.debug("update(dto = {})", authorDTO);
-        if (isInvalidAuthor(authorDTO)) {
+        if (isInvalidAuthor(authorDTO, false)) {
             throw new WrongEntityException("Wrong author in update method ");
         }
         authorService.update(authorMapper.convertToEntity(authorDTO));
@@ -107,10 +102,10 @@ public class AuthorController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 
-    private boolean isInvalidAuthor(AuthorDTO authorDTO) {
+    private boolean isInvalidAuthor(AuthorDTO authorDTO, boolean isMethodCreate) {
         if (isMethodCreate) {
-            return Objects.isNull(authorDTO) || Objects.nonNull(authorDTO.getId()) || StringUtils.isBlank(authorDTO.getFirstName());
+            return authorDTO == null || authorDTO.getId() != null || StringUtils.isBlank(authorDTO.getFirstName());
         }
-        return Objects.isNull(authorDTO) || StringUtils.isBlank(authorDTO.getFirstName());
+        return authorDTO == null || StringUtils.isBlank(authorDTO.getFirstName());
     }
 }

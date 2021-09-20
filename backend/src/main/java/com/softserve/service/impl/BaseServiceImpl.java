@@ -12,11 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
@@ -30,28 +28,26 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
         LOGGER.debug("getById({})", id);
-        if (Objects.isNull(id)) {
+        if (id == null) {
             throw new IllegalStateException("Wrong entity id");
         }
         T entity = baseRepository.getById(id);
-        if (Objects.isNull(entity)) {
+        if (entity == null) {
             throw new EntityNotFoundException("Not found entity with id: " + id);
         }
         return entity;
     }
 
     @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll()");
         return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public T create(T entity) {
         LOGGER.debug("create({})", entity);
         if (isInvalidEntity(entity)) {
@@ -61,7 +57,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public T update(T entity) {
         LOGGER.debug("update({})", entity);
         if (isInvalidEntity(entity)) {
@@ -71,10 +67,10 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public boolean delete(I id) {
         LOGGER.debug("delete({})", id);
-        if (Objects.isNull(id)) {
+        if (id == null) {
             throw new IllegalStateException("Wrong entity id");
         }
         return baseRepository.delete(id);
@@ -82,6 +78,6 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
 
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("inInvalidEntity({})", entity);
-        return Objects.isNull(entity);
+        return entity == null;
     }
 }

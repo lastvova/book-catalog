@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/books")
@@ -37,7 +36,6 @@ public class BookController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
     private final BookMapper bookMapper;
-    private boolean isMethodCreate = false;
 
     @Autowired
     public BookController(BookService bookService, BookMapper bookMapper) {
@@ -72,11 +70,9 @@ public class BookController extends BaseController {
     @PostMapping("/create")
     public ResponseEntity<BookDTO> create(@RequestBody BookDTO bookDTO) {
         LOGGER.debug("create({})", bookDTO);
-        isMethodCreate = true;
-        if (isInvalidBook(bookDTO)) {
+        if (isInvalidBook(bookDTO, true)) {
             throw new WrongEntityException("Wrong book in save method");
         }
-        isMethodCreate = false;
         Book book = bookService.create(bookMapper.convertToEntity(bookDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(bookMapper.convertToDto(book));
     }
@@ -84,7 +80,7 @@ public class BookController extends BaseController {
     @PutMapping
     public ResponseEntity<BookDTO> update(@RequestBody BookDTO bookDTO) {
         LOGGER.debug("update(dto = {})", bookDTO);
-        if (isInvalidBook(bookDTO)) {
+        if (isInvalidBook(bookDTO, false)) {
             throw new WrongEntityException("Wrong book in update method");
         }
         bookService.update(bookMapper.convertToEntity(bookDTO));
@@ -108,21 +104,21 @@ public class BookController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 
-    private boolean isInvalidBook(BookDTO bookDTO) {
+    private boolean isInvalidBook(BookDTO bookDTO, boolean isMethodCreate) {
         if (isMethodCreate) {
-            return Objects.isNull(bookDTO) || Objects.nonNull(bookDTO.getId()) || StringUtils.isBlank(bookDTO.getName())
-                    || Objects.isNull(bookDTO.getIsbn())
+            return bookDTO == null || bookDTO.getId() != null || StringUtils.isBlank(bookDTO.getName())
+                    || bookDTO.getIsbn() == null
                     || CollectionUtils.isEmpty(bookDTO.getAuthors())
                     || isInValidYearOfPublisher(bookDTO);
         }
-        return Objects.isNull(bookDTO) || StringUtils.isBlank(bookDTO.getName())
-                || Objects.isNull(bookDTO.getIsbn())
+        return bookDTO == null || StringUtils.isBlank(bookDTO.getName())
+                || bookDTO.getIsbn() == null
                 || CollectionUtils.isEmpty(bookDTO.getAuthors())
                 || isInValidYearOfPublisher(bookDTO);
     }
 
     private boolean isInValidYearOfPublisher(BookDTO bookDTO) {
-        if (Objects.isNull(bookDTO.getYearPublisher())) {
+        if (bookDTO.getYearPublisher() == null) {
             return false;
         }
         return bookDTO.getYearPublisher() < 0

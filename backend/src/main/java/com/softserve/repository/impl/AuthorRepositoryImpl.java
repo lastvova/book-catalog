@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger> implements AuthorRepository {
@@ -23,7 +22,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean hasBooks(BigInteger id) {
         LOGGER.debug("hasBooks({})", id);
-        if (Objects.isNull(id)) {
+        if (id == null) {
             throw new IllegalStateException("Wrong author id");
         }
         BigInteger count = (BigInteger) entityManager
@@ -38,11 +37,11 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(BigInteger id) {
         LOGGER.debug("delete({})", id);
-        if (Objects.isNull(id)) {
-            throw new IllegalStateException("Wrong author id");
+        if (id == null) {
+            throw new IllegalArgumentException("Wrong author id");
         }
         Author author = getById(id);
-        if (Objects.isNull(author)) {
+        if (author == null) {
             return false;
         }
         if (hasBooks(id)) {
@@ -67,6 +66,6 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Override
     protected boolean isInvalidEntityId(Author author) {
         LOGGER.debug("isInvalidEntityId({})", author);
-        return Objects.isNull(author.getId());
+        return author.getId() == null;
     }
 }

@@ -28,7 +28,6 @@ import javax.persistence.criteria.Root;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
@@ -50,10 +49,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
         LOGGER.debug("getById({})", id);
         //TODO should be part of validating methods
-        if (Objects.isNull(id)) {
+        if (id == null) {
             throw new IllegalArgumentException("Wrong id");
         }
         criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -93,11 +93,11 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean delete(I id) {
         LOGGER.debug("delete({})", id);
-        if (Objects.isNull(id)) {
-            throw new IllegalStateException("Wrong id in delete method");
+        if (id == null) {
+            throw new IllegalArgumentException("Wrong id in delete method");
         }
         T entity = getById(id);
-        if (Objects.isNull(entity)) {
+        if (entity == null) {
             return false;
         }
         entityManager.remove(entity);
@@ -105,6 +105,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
                           List<FilteringParameters> filteringParameters) {
         LOGGER.debug("getAll");
@@ -197,7 +198,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("isInvalidEntity({})", entity);
-        return Objects.isNull(entity);
+        return entity == null;
     }
 
     //TODO all implementations of this method only check whether the ID is not null
