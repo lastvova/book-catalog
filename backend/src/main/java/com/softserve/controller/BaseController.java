@@ -1,37 +1,30 @@
 package com.softserve.controller;
 
-import com.softserve.enums.EntityFields;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SortingParameters;
-import org.springframework.data.domain.Sort;
+import com.softserve.utils.ListParams;
 
 public abstract class BaseController {
 
-    protected PaginationParameters setPageParameters(Integer page, Integer size) {
-        PaginationParameters paginationParameters = new PaginationParameters();
-        paginationParameters.setPageSize(size);
-        paginationParameters.setPageNumber(page);
-        return paginationParameters;
+    protected ListParams validatePageAndSortParameters(ListParams<?> params){
+        setPageParameters(params);
+        setSortParameters(params);
+        return params;
     }
 
-    protected SortingParameters setSortParameters(String sortBy, String order) {
-        SortingParameters sortingParameters = new SortingParameters();
-        if (order != null) {
-            sortingParameters.setSortDirection(Sort.Direction.fromString(order));
+    private void setPageParameters(ListParams<?> params) {
+        if (params.getPageNumber() == null) {
+            params.setPageNumber(0);
         }
-        if (sortBy != null) {
-            sortingParameters.setSortBy(sortBy);
+        if (params.getPageSize() == null) {
+            params.setPageSize(5);
         }
-        return sortingParameters;
     }
 
-    protected FilteringParameters setFilterParameters(String filterBy, String filterValue) {
-        FilteringParameters filteringParameters = new FilteringParameters();
-        if (filterBy != null || filterValue != null) {
-            filteringParameters.setFilterBy(EntityFields.valueOf(filterBy));
-            filteringParameters.setFilterValue(filterValue);
+    private void setSortParameters(ListParams<?> params) {
+        if (params.getSortField() == null) {
+            params.setSortField("rating");
         }
-        return filteringParameters;
+        if (params.getOrder() == null) {
+            params.setOrder("ASC");
+        }
     }
 }

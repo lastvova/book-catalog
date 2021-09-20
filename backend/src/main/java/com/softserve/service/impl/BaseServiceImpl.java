@@ -4,17 +4,13 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SortingParameters;
+import com.softserve.utils.ListParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
@@ -41,9 +37,9 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     }
 
     @Override
-    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, List<FilteringParameters> filteringParameters) {
+    public Page<T> getAll(ListParams<?> listParams) {
         LOGGER.debug("getAll()");
-        return baseRepository.getAll(paginationParameters, sortingParameters, filteringParameters);
+        return baseRepository.getAll(listParams);
     }
 
     @Override
@@ -71,7 +67,7 @@ public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
     public boolean delete(I id) {
         LOGGER.debug("delete({})", id);
         if (id == null) {
-            throw new IllegalStateException("Wrong entity id");
+            throw new IllegalArgumentException("Wrong entity id");
         }
         return baseRepository.delete(id);
     }

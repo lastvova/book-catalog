@@ -5,7 +5,8 @@ import com.softserve.entity.Book;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.BookMapper;
 import com.softserve.service.BookService;
-import com.softserve.util.FilteringParameters;
+import com.softserve.utils.BookFilterParameters;
+import com.softserve.utils.ListParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,16 +46,9 @@ public class BookController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<BookDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                @RequestParam(required = false) String order,
-                                                @RequestParam Integer page,
-                                                @RequestParam Integer size,
-                                                @RequestBody List<FilteringParameters> filteringParameters) {
-        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
-                page, size, sortBy, order, filteringParameters);
-
-        Page<Book> result = bookService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
-                filteringParameters);
+    public ResponseEntity<Page<BookDTO>> getAll(@RequestBody ListParams<BookFilterParameters> filteringParameters) {
+        LOGGER.debug("getAll( params = {}", filteringParameters);
+        Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(filteringParameters));
         List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);

@@ -3,10 +3,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SortingParameters;
-import org.apache.commons.collections4.CollectionUtils;
+import com.softserve.utils.ListParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,8 +23,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
@@ -38,7 +33,6 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @PersistenceContext
     protected EntityManager entityManager;
     protected CriteriaBuilder criteriaBuilder;
-    protected List<Predicate> predicates;
 
     @SuppressWarnings("unchecked")
     protected BaseRepositoryImpl() {
@@ -106,90 +100,45 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
-                          List<FilteringParameters> filteringParameters) {
+    public Page<T> getAll(ListParams<?> listParams) {
         LOGGER.debug("getAll");
         criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(basicClass);
         Root<T> root = criteriaQuery.from(basicClass);
-        Predicate predicate = getPredicate(filteringParameters, root);
+        Predicate predicate = getPredicate(listParams, root);
         criteriaQuery.where(predicate);
-        setOrder(sortingParameters, criteriaQuery, root);
+        setOrder(listParams, criteriaQuery, root);
 
         TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(paginationParameters.getPageNumber() * paginationParameters.getPageSize());
-        typedQuery.setMaxResults(paginationParameters.getPageSize());
+        typedQuery.setFirstResult(listParams.getPageNumber() * listParams.getPageSize());
+        typedQuery.setMaxResults(listParams.getPageSize());
 
-        Pageable pageable = getPageable(paginationParameters, sortingParameters);
+        Pageable pageable = getPageable(listParams);
 
         long entityCount = getEntityCount(predicate);
 
         return new PageImpl<>(typedQuery.getResultList(), pageable, entityCount);
     }
 
-    protected void addPredicates(Predicate predicate) {
-        LOGGER.debug("addPredicates({})", predicate);
-        if (CollectionUtils.isEmpty(predicates)) {
-            predicates = new ArrayList<>();
-        }
-        predicates.add(predicate);
-    }
+    public abstract Predicate getPredicate(ListParams<?> listParams, Root<T> entityRoot);
 
-    private Predicate getPredicate(List<FilteringParameters> filteringParameters,
-                                   Root<T> entityRoot) {
-        if (CollectionUtils.isEmpty(predicates)) {
-            predicates = new ArrayList<>();
-        }
-        for (FilteringParameters parameter : filteringParameters) {
-            if (parameter.getFilterBy() != null
-                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("string")) {
-                predicates.add(
-                        criteriaBuilder.like(entityRoot.get(parameter.getFilterBy().fieldName),
-                                "%" + parameter.getFilterValue() + "%")
-                );
-            }
-            if (parameter.getFilterBy() != null
-                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("integer")) {
-                predicates.add(
-                        criteriaBuilder.equal(entityRoot.get(parameter.getFilterBy().fieldName),
-                                parameter.getFilterValue())
-                );
-            }
-            if (parameter.getFilterBy() != null
-                    && parameter.getFilterBy().fieldType.equalsIgnoreCase("decimal")) {
-                predicates.add(
-                        criteriaBuilder.or(
-                                criteriaBuilder.equal(entityRoot.get(parameter.getFilterBy().fieldName),
-                                        Double.parseDouble(parameter.getFilterValue())),
-                                criteriaBuilder.and(
-                                        criteriaBuilder.lt(entityRoot.get(parameter.getFilterBy().fieldName),
-                                                Double.parseDouble(parameter.getFilterValue()) + 1),
-                                        criteriaBuilder.gt(entityRoot.get(parameter.getFilterBy().fieldName),
-                                                Double.parseDouble(parameter.getFilterValue())))));
-            }
 
-        }
-        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-    }
-
-    private void setOrder(SortingParameters sortingParameters,
-                          CriteriaQuery<T> criteriaQuery,
-                          Root<T> entityRoot) {
-        if (sortingParameters.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(sortingParameters.getSortBy())),
+    private void setOrder(ListParams<?> listParams, CriteriaQuery<T> criteriaQuery, Root<T> entityRoot) {
+        if (listParams.getOrder().equals("ASC")) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())),
                     criteriaBuilder.asc(entityRoot.get("createdDate")));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(sortingParameters.getSortBy())),
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(listParams.getSortField())),
                     criteriaBuilder.desc(entityRoot.get("createdDate")));
         }
     }
 
-    private Pageable getPageable(PaginationParameters paginationParameters, SortingParameters sortingParameters) {
-        Sort sort = Sort.by(sortingParameters.getSortDirection(), sortingParameters.getSortBy());
-        return PageRequest.of(paginationParameters.getPageNumber(), paginationParameters.getPageSize(), sort);
+    private Pageable getPageable(ListParams<?> listParams) {
+        Sort sort = Sort.by(listParams.getOrder(), listParams.getSortField());
+        return PageRequest.of(listParams.getPageNumber(), listParams.getPageSize(), sort);
     }
 
-    private long getEntityCount(Predicate predicate) {
+    protected long getEntityCount(Predicate predicate) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(basicClass);
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);

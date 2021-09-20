@@ -3,6 +3,8 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Author;
 import com.softserve.exception.DeleteAuthorWithBooksException;
 import com.softserve.repository.AuthorRepository;
+import com.softserve.utils.AuthorFilterParameters;
+import com.softserve.utils.ListParams;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -49,6 +54,29 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         }
         entityManager.remove(author);
         return true;
+    }
+
+    @Override
+    public Predicate getPredicate(ListParams<?> params, Root<Author> authors) {
+        List<Predicate> predicates = new ArrayList<>();
+        AuthorFilterParameters filterParameters = (AuthorFilterParameters) params.getPattern();
+        if (filterParameters.getFirstName() != null) {
+            predicates.add(
+                    criteriaBuilder.like(authors.get("firstName"),
+                            "%" + filterParameters.getFirstName() + "%")
+            );
+        }
+        if (filterParameters.getSecondName() != null) {
+            predicates.add(
+                    criteriaBuilder.like(authors.get("secondName"),
+                            "%" + filterParameters.getSecondName() + "%"));
+        }
+        if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+            predicates.add(
+                    criteriaBuilder.between(authors.get("rating"),
+                            filterParameters.getFromRating(), filterParameters.getToRating()));
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
     @Override

@@ -2,12 +2,10 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
-import com.softserve.enums.EntityFields;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SortingParameters;
+import com.softserve.utils.BookFilterParameters;
+import com.softserve.utils.ListParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,13 +15,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> implements BookRepository {
@@ -47,17 +46,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Page<Book> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters,
-                             List<FilteringParameters> filteringParameters) {
+    public Page<Book> getAll(ListParams<?> params) {
         LOGGER.debug("getAll");
-        Optional<FilteringParameters> parameters = filteringParameters.stream()
-                .filter(p -> p.getFilterBy().equals(EntityFields.BOOK_AUTHOR))
-                .findFirst();
-        if (parameters.isPresent()) {
-            filteringParameters.remove(parameters.get());
-            addPredicateFotFilteringByAuthor(parameters.get());
-        }
-        Page<Book> books = super.getAll(paginationParameters, sortingParameters, filteringParameters);
+        Page<Book> books = super.getAll(params);
         books.getContent().forEach(book -> book.getAuthors().size());
         return books;
     }
@@ -93,14 +84,56 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                 || book.getYearPublisher() > LocalDate.now().getYear();
     }
 
-    private void addPredicateFotFilteringByAuthor(FilteringParameters filteringParameters) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
-        Root<Author> authors = query.from(Author.class);
-        super.addPredicates(criteriaBuilder.or(
-                criteriaBuilder.like(authors.get(EntityFields.AUTHOR_FIRST_NAME.fieldName),
-                        "%" + filteringParameters.getFilterValue() + "%"),
-                criteriaBuilder.like(authors.get(EntityFields.AUTHOR_SECOND_NAME.fieldName),
-                        "%" + filteringParameters.getFilterValue() + "%")));
+    @Override
+    public Predicate getPredicate(ListParams<?> params, Root<Book> books) {
+        List<Predicate> predicates = new ArrayList<>();
+        BookFilterParameters filterParameters = (BookFilterParameters) params.getPattern();
+        if (filterParameters.getName() != null) {
+            predicates.add(
+                    criteriaBuilder.like(books.get("name"),
+                            "%" + filterParameters.getName() + "%")
+            );
+        }
+        if (filterParameters.getYearPublisher() != null) {
+            predicates.add(
+                    criteriaBuilder.equal(books.get("yearPublisher"), filterParameters.getYearPublisher()));
+        }
+        if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+            predicates.add(
+                    criteriaBuilder.between(books.get("rating"),
+                            filterParameters.getFromRating(), filterParameters.getToRating()));
+        }
+        if (filterParameters.getIsbn() != null) {
+            predicates.add(
+                    criteriaBuilder.equal(books.get("isbn"), filterParameters.getIsbn())
+            );
+        }
+        if (filterParameters.getPublisher() != null) {
+            predicates.add(
+                    criteriaBuilder.like(books.get("publisher"),
+                            "%" + filterParameters.getPublisher() + "%")
+            );
+        }
+        if (filterParameters.getAuthorNameAndSecondName() != null) {
+            Join<Book, Author> authors = books.join("authors");
+            predicates.add(
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(authors.get("firstName"),
+                                    "%" + filterParameters.getAuthorNameAndSecondName() + "%"),
+                            criteriaBuilder.like(authors.get("secondName"),
+                                    "%" + filterParameters.getAuthorNameAndSecondName() + "%"))
+            );
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    }
+
+    //This overriding needs for correct count books with joining authors
+    @Override
+    protected long getEntityCount(Predicate predicate) {
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Book> books = countQuery.from(Book.class);
+        books.join("authors");
+        countQuery.select(criteriaBuilder.count(books)).where(predicate);
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

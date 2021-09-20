@@ -5,7 +5,8 @@ import com.softserve.entity.Review;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.ReviewMapper;
 import com.softserve.service.ReviewService;
-import com.softserve.util.FilteringParameters;
+import com.softserve.utils.ListParams;
+import com.softserve.utils.ReviewFilterParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
@@ -42,15 +42,9 @@ public class ReviewController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                  @RequestParam(required = false) String order,
-                                                  @RequestParam Integer page,
-                                                  @RequestParam Integer size,
-                                                  @RequestBody List<FilteringParameters> filteringParameters) {
-        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
-                page, size, sortBy, order, filteringParameters);
-        Page<Review> result = reviewService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
-                filteringParameters);
+    public ResponseEntity<Page<ReviewDTO>> getAll(@RequestBody ListParams<ReviewFilterParameters> filteringParameters) {
+        LOGGER.debug("getAll(params = {}", filteringParameters);
+        Page<Review> result = reviewService.getAll(super.validatePageAndSortParameters(filteringParameters));
         List<ReviewDTO> dtos = reviewMapper.convertToDtoList(result.getContent());
         Page<ReviewDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);

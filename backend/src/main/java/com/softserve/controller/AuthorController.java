@@ -5,7 +5,8 @@ import com.softserve.entity.Author;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.mapper.AuthorMapper;
 import com.softserve.service.AuthorService;
-import com.softserve.util.FilteringParameters;
+import com.softserve.utils.AuthorFilterParameters;
+import com.softserve.utils.ListParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -43,15 +44,9 @@ public class AuthorController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestParam(required = false) String sortBy,
-                                                  @RequestParam(required = false) String order,
-                                                  @RequestParam Integer page,
-                                                  @RequestParam Integer size,
-                                                  @RequestBody List<FilteringParameters> filteringParameters) {
-        LOGGER.debug("getAll(page= {}, size={}, sortBy={}, order={}, filterParams={}",
-                page, size, sortBy, order, filteringParameters);
-        Page<Author> result = authorService.getAll(setPageParameters(page, size), setSortParameters(sortBy, order),
-                filteringParameters);
+    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestBody ListParams<AuthorFilterParameters> filteringParameters) {
+        LOGGER.debug("getAll( params = {}", filteringParameters);
+        Page<Author> result = authorService.getAll(super.validatePageAndSortParameters(filteringParameters));
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
         Page<AuthorDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);

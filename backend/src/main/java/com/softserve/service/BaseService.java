@@ -1,17 +1,13 @@
 package com.softserve.service;
 
-import com.softserve.util.FilteringParameters;
-import com.softserve.util.PaginationParameters;
-import com.softserve.util.SortingParameters;
+import com.softserve.utils.ListParams;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface BaseService<T, I> {
 
     T getById(I id);
 
-    Page<T> getAll(PaginationParameters paginationParameters, SortingParameters sortingParameters, List<FilteringParameters> filteringParameters);
+    Page<T> getAll(ListParams<?> listParams);
 
     T create(T entity);
 
