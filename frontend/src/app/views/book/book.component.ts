@@ -13,6 +13,8 @@ import {BookFieldType, BookFieldType2LabelMapping} from "../../enum/BookFieldTyp
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PaginationParameters} from "../../model/parameters/PaginationParameters";
+import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
+import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 
 @Component({
   selector: 'app-book',
@@ -34,11 +36,11 @@ export class BookComponent implements OnInit {
 
   public totalRecords?: number;
   // @ts-ignore: Object is possibly 'null'
-  public pageParameters: PaginationParameters = new PaginationParameters();
+  public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   // @ts-ignore: Object is possibly 'null'
   public sortParameters: SortingParameters = new SortingParameters();
   // @ts-ignore: Object is possibly 'null'
-  public filterParameters: FilterParameters = new FilterParameters();
+  public bookFilterParameters: BookFilterParameters;
 
   public FieldType2LabelMapping = BookFieldType2LabelMapping;
   public fieldTypes = Object.values(BookFieldType);
@@ -48,6 +50,8 @@ export class BookComponent implements OnInit {
 
   // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
+  // @ts-ignore: Object is possibly 'null'
+  @ViewChild('filterForm') filterForm : NgForm;
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -57,8 +61,7 @@ export class BookComponent implements OnInit {
   }
 
   public getAuthors(): void {
-    let allAuthors: PaginationParameters = new PaginationParameters(0, 1000000);
-    this.authorService.getAuthors(this.sortParameters, allAuthors, this.filterParameters).subscribe(
+    this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
       },
@@ -69,13 +72,26 @@ export class BookComponent implements OnInit {
   }
 
   public getBooks(): void {
-    this.bookService.getBooks(this.sortParameters, this.pageParameters, this.filterParameters).subscribe(
+    this.bookService.getBooks(this.pageSortFilterParameters).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.books = [];
+        this.books = response.content;
+        this.totalRecords = response.totalElements
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
+  public getBooksWithParameters(): void {
+    this.bookService.getBooksWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.books = [];
         this.books = response.content;
         this.totalRecords = response.totalElements;
-        this.pageParameters.currentPage = response.number;
-        this.pageParameters.recordsPerPage = response.size;
+        this.pageSortFilterParameters.pageNumber = response.number;
+        this.pageSortFilterParameters.pageSize = response.size;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -87,7 +103,7 @@ export class BookComponent implements OnInit {
     this.bookService.getBook(bookId).subscribe(
       (response: Book) => {
         console.log(response);
-        this.getBooks();
+        this.getBooksWithParameters();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -101,7 +117,7 @@ export class BookComponent implements OnInit {
     this.bookService.createBook(addForm.value).subscribe(
       (response: Book) => {
         console.log(response);
-        this.getBooks();
+        this.getBooksWithParameters();
         addForm.reset();
       },
       (error: HttpErrorResponse) => {
@@ -115,7 +131,7 @@ export class BookComponent implements OnInit {
     this.bookService.updateBook(book).subscribe(
       (response: Book) => {
         console.log(response);
-        this.getBooks();
+        this.getBooksWithParameters();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -127,7 +143,7 @@ export class BookComponent implements OnInit {
     this.bookService.deleteBook(bookId).subscribe(
       (response: void) => {
         console.log(response);
-        this.getBooks();
+        this.getBooksWithParameters();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -135,12 +151,19 @@ export class BookComponent implements OnInit {
     )
   }
 
-  public filterBooks(filter: FilterParameters): void {
-    this.filterParameters.filterBy = filter.filterBy;
-    this.filterParameters.filterValue = filter.filterValue;
+  public filterBooks(filterForm: NgForm): void {
+    this.bookFilterParameters =  new BookFilterParameters();
+    this.bookFilterParameters.name = this.filterForm.value.name;
+    this.bookFilterParameters.isbn = this.filterForm.value.isbn;
+    this.bookFilterParameters.publisher = this.filterForm.value.publisher;
+    this.bookFilterParameters.toRating = this.filterForm.value.toRating;
+    this.bookFilterParameters.fromRating = this.filterForm.value.fromRating;
+    this.bookFilterParameters.yearPublisher = this.filterForm.value.yearPublisher;
+    this.bookFilterParameters.authorNameAndSecondName = this.filterForm.value.authorNameAndSecondName;
+    this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.matPaginator.pageIndex = 0;
-    this.pageParameters.currentPage = 0;
-    this.getBooks()
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.getBooksWithParameters()
   }
 
   public onOpenModal(mode: string, book: Book): void {
@@ -172,31 +195,28 @@ export class BookComponent implements OnInit {
   }
 
   public onPageChange(event: PageEvent) {
-    this.pageParameters.currentPage = event.pageIndex;
-    this.pageParameters.recordsPerPage = event.pageSize;
-    this.getBooks()
+    this.pageSortFilterParameters.pageNumber = event.pageIndex;
+    this.pageSortFilterParameters.pageSize = event.pageSize;
+    this.getBooksWithParameters()
   }
 
   public sortByColumn(sortBy: string) {
-    this.sortParameters.sortBy = sortBy;
-    this.sortParameters.reverse = !this.sortParameters.reverse;
-    if (this.sortParameters.reverse) {
-      this.sortParameters.sortOrder = 'ASC'
+    this.pageSortFilterParameters.sortField = sortBy;
+    this.pageSortFilterParameters.reverseForSorting = !this.pageSortFilterParameters.reverseForSorting;
+    if (this.pageSortFilterParameters.reverseForSorting) {
+      this.pageSortFilterParameters.order = 'ASC'
     } else {
-      this.sortParameters.sortOrder = 'DESC'
+      this.pageSortFilterParameters.order = 'DESC'
     }
-    this.getBooks();
+    this.getBooksWithParameters();
   }
 
   public resetForm(filterForm: NgForm) {
-    // this.sortParameters.;
     filterForm.reset();
     // @ts-ignore
-    this.filterParameters.filterValue = null;
-    // @ts-ignore
-    this.filterParameters.filterBy = null;
-    this.pageParameters.recordsPerPage = this.matPaginator.pageSize;
-    this.pageParameters.currentPage = 0;
-    this.getBooks();
+    this.pageSortFilterParameters.pattern = null;
+    this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.getBooksWithParameters();
   }
 }

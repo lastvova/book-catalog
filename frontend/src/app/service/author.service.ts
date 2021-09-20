@@ -4,9 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Author} from "../model/Author";
 import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
-import {SortingParameters} from "../model/parameters/SortingParameters";
-import {PaginationParameters} from "../model/parameters/PaginationParameters";
-import {FilterParameters} from "../model/parameters/FilterParameters";
+import {PageSortFilterParameters} from "../model/parameters/PageSortFilterParameters";
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +15,12 @@ export class AuthorService {
   constructor(private http: HttpClient) {
   }
 
-  public getAuthors(sortParameters: SortingParameters, pageParameters: PaginationParameters, filterParameters: FilterParameters): Observable<DataWithTotalRecords> {
-    let requestUrl = '';
-    if (pageParameters === undefined || pageParameters.currentPage === undefined || pageParameters.recordsPerPage === undefined) {
-      requestUrl = requestUrl.concat('?page=0&size=5');
-    } else {
-      requestUrl = requestUrl.concat(`?page=${pageParameters.currentPage}&size=${pageParameters.recordsPerPage}`);
-    }
-    if (sortParameters?.sortBy != null) {
-      requestUrl = requestUrl.concat(`&sortBy=${sortParameters.sortBy}&order=${sortParameters.sortOrder}`);
-    }
-    if (filterParameters?.filterBy != null && filterParameters.filterValue != null) {
-      requestUrl = requestUrl.concat(`&filterBy=${filterParameters.filterBy}&filterValue=${filterParameters.filterValue}`);
-    }
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors` + requestUrl);
+  public getAuthors(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors`);
+  }
+
+  public getAuthorsWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors`, pageSortFilterParameters);
   }
 
   public getAuthor(authorId: number): Observable<Author> {
@@ -47,9 +37,5 @@ export class AuthorService {
 
   public deleteAuthor(authorId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/api/authors/${authorId}`);
-  }
-
-  public getAuthorsWithPagination(currentPage: number, recordsPerPage: number): Observable<DataWithTotalRecords> {
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors?page=${currentPage}&size=${recordsPerPage}`);
   }
 }

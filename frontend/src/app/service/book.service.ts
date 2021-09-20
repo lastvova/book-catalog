@@ -7,6 +7,7 @@ import {FilterParameters} from "../model/parameters/FilterParameters";
 import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
 import {SortingParameters} from "../model/parameters/SortingParameters";
 import {PaginationParameters} from "../model/parameters/PaginationParameters";
+import {PageSortFilterParameters} from "../model/parameters/PageSortFilterParameters";
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +18,12 @@ export class BookService {
   constructor(private http: HttpClient) {
   }
 
-  public getBooks(sortParameters: SortingParameters, pageParameters: PaginationParameters, filterParameters: FilterParameters): Observable<DataWithTotalRecords> {
-    let requestUrl = '';
-    if (pageParameters === undefined || pageParameters.currentPage === undefined || pageParameters.recordsPerPage === undefined) {
-      requestUrl = requestUrl.concat('?page=0&size=5');
-    } else {
-      requestUrl = requestUrl.concat(`?page=${pageParameters.currentPage}&size=${pageParameters.recordsPerPage}`);
-    }
-    if (sortParameters?.sortBy != null) {
-      requestUrl = requestUrl.concat(`&sortBy=${sortParameters.sortBy}&order=${sortParameters.sortOrder}`);
-    }
-    if (filterParameters?.filterBy != null && filterParameters.filterValue != null) {
-      requestUrl = requestUrl.concat(`&filterBy=${filterParameters.filterBy}&filterValue=${filterParameters.filterValue}`);
-    }
-    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books` + requestUrl);
+  public getBooks(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`);
+  }
+
+  public getBooksWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`,pageSortFilterParameters);
   }
 
   public getBook(bookId: number): Observable<Book> {
@@ -38,7 +31,7 @@ export class BookService {
   }
 
   public createBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(`${this.apiServerUrl}/api/books`, book);
+    return this.http.post<Book>(`${this.apiServerUrl}/api/books/create`, book);
   }
 
   public updateBook(book: Book): Observable<Book> {

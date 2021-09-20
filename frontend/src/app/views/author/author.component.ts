@@ -5,11 +5,12 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {PaginationParameters} from "../../model/parameters/PaginationParameters";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {AuthorFieldType, AuthorFieldType2LabelMapping} from "../../enum/AuthorFieldType";
+import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
+import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 
 @Component({
   selector: 'app-author',
@@ -27,11 +28,11 @@ export class AuthorComponent implements OnInit {
   public totalRecords?: number;
 
   // @ts-ignore: Object is possibly 'null'
-  public pageParameters: PaginationParameters = new PaginationParameters();
+  public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   // @ts-ignore: Object is possibly 'null'
   public sortParameters: SortingParameters = new SortingParameters();
   // @ts-ignore: Object is possibly 'null'
-  public filterParameters: FilterParameters = new FilterParameters();
+  public authorFilterParameters: AuthorFilterParameters;
 
   public FieldType2LabelMapping = AuthorFieldType2LabelMapping;
   public fieldTypes = Object.values(AuthorFieldType);
@@ -41,6 +42,8 @@ export class AuthorComponent implements OnInit {
 
   // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
+  // @ts-ignore: Object is possibly 'null'
+  @ViewChild('filterForm') filterForm: NgForm;
 
   constructor(private authorService: AuthorService) {
   }
@@ -50,13 +53,13 @@ export class AuthorComponent implements OnInit {
   }
 
   public getAuthors(): void {
-    this.authorService.getAuthors(this.sortParameters, this.pageParameters, this.filterParameters).subscribe(
+    this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
-        this.pageParameters.currentPage = response.number;
-        this.pageParameters.recordsPerPage = response.size;
+        this.pageSortFilterParameters.pageNumber = response.number;
+        this.pageSortFilterParameters.pageSize = response.size;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -104,11 +107,15 @@ export class AuthorComponent implements OnInit {
     )
   }
 
-  public filterAuthors(filter: FilterParameters): void {
-    this.filterParameters.filterBy = filter.filterBy;
-    this.filterParameters.filterValue = filter.filterValue;
+  public filterAuthors(filterForm: NgForm): void {
+    this.authorFilterParameters = new AuthorFilterParameters();
+    this.authorFilterParameters.firstName = this.filterForm.value.firstName;
+    this.authorFilterParameters.secondName = this.filterForm.value.secondName;
+    this.authorFilterParameters.toRating = this.filterForm.value.toRating;
+    this.authorFilterParameters.fromRating = this.filterForm.value.fromRating;
+    this.pageSortFilterParameters.pattern = this.authorFilterParameters;
     this.matPaginator.pageIndex = 0;
-    this.pageParameters.currentPage = 0;
+    this.pageSortFilterParameters.pageNumber = 0;
     this.getAuthors()
   }
 
@@ -139,8 +146,8 @@ export class AuthorComponent implements OnInit {
   }
 
   public onPageChange(event: PageEvent) {
-    this.pageParameters.currentPage = event.pageIndex;
-    this.pageParameters.recordsPerPage = event.pageSize;
+    this.pageSortFilterParameters.pageNumber = event.pageIndex;
+    this.pageSortFilterParameters.pageSize = event.pageSize;
     this.getAuthors()
   }
 
@@ -162,8 +169,8 @@ export class AuthorComponent implements OnInit {
     this.filterParameters.filterValue = null;
     // @ts-ignore
     // this.filterParameters.filterBy = null;
-    this.pageParameters.recordsPerPage = this.matPaginator.pageSize;
-    this.pageParameters.currentPage = 0;
+    this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
+    this.pageSortFilterParameters.pageNumber = 0;
     this.getAuthors();
   }
 }

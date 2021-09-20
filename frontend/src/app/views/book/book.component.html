@@ -19,7 +19,6 @@
         </div>
         <div>
           <mat-expansion-panel hideToggle>
-
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Filter by:
@@ -32,38 +31,37 @@
               <form #filterForm="ngForm" (ngSubmit)="filterBooks(filterForm.value)">
                 <label>Name: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_NAME}}" name="filterBy">
+                  <input matInput ngModel name="name" >
                 </mat-form-field>
 
                 <label>publisher: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_PUBLISHER}}" name="filterBy">
+                  <input matInput ngModel name="publisher" >
                 </mat-form-field>
 
                 <label>year: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_YEAR_PUBLISHER}}" name="filterBy">
+                  <input matInput ngModel name="yearPublisher">
                 </mat-form-field>
 
                 <label>isbn: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_ISBN}}" name="filterBy">
+                  <input matInput ngModel name="isbn" >
                 </mat-form-field>
 
-                <label>rating: </label>
+                <label>rating from: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.RATING}}" name="filterBy">
+                  <input matInput ngModel name="fromRating" >
+                </mat-form-field>
+
+                <label>rating to: </label>
+                <mat-form-field appearance="fill">
+                  <input matInput ngModel name="toRating" >
                 </mat-form-field>
 
                 <label>author: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="filterValue" required>
-                  <input hidden ngModel="{{FieldType2LabelMapping.BOOK_AUTHOR}}" name="filterBy">
+                  <input matInput ngModel name="authorNameAndSecondName" >
                 </mat-form-field>
 
                 <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -85,31 +83,31 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('name')" id="tableName">Name
-                  <em *ngIf="sortParameters.sortBy === 'name' && sortParameters.reverse" class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'name'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'name' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'name' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  != 'name'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'name' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher
-                  <em *ngIf="sortParameters.sortBy === 'publisher' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && sortParameters.reverse"
                       class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'publisher'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'publisher' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  != 'publisher'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher
-                  <em *ngIf="sortParameters.sortBy === 'yearPublisher' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && sortParameters.reverse"
                       class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'yearPublisher'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'yearPublisher' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  != 'yearPublisher'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN
-                  <em *ngIf="sortParameters.sortBy === 'isbn' && sortParameters.reverse" class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'isbn'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'isbn' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  != 'isbn'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="sortParameters.sortBy === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'rating' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  != 'rating'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 <th id="tableAuthors">Authors</th>
                 </thead>
@@ -274,54 +272,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           <button (click)="deleteBook(deletedBook.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="searchBook" tabindex="-1" role="dialog" aria-labelledby="searchBook"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H4 class="modal-title">Search By</H4>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="searchByName">By name</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByName" placeholder="name" required>
-        </div>
-        <div class="form-group">
-          <label for="searchByPublisher">By publisher</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByPublisher" placeholder="publisher" required>
-        </div>
-        <div class="form-group">
-          <label for="searchByIsbn">By isbn</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByIsbn" placeholder="isbn" required>
-        </div>
-        <div class="form-group">
-          <label for="searchByAuthors">By authors</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByAuthors" placeholder="authors" required>
-        </div>
-        <div class="form-group">
-          <label for="searchByRating">By rating</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByRating" placeholder="rating" required>
-        </div>
-        <div class="form-group">
-          <label for="searchByYear">By year</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByYear" placeholder="year" required>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" data-dismiss="modal">Search</button>
-          <button class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
