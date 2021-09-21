@@ -31,37 +31,39 @@
               <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
                 <label>Name: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="name">
+                  <input matInput ngModel name="name" maxlength="128">
                 </mat-form-field>
 
                 <label>publisher: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="publisher">
+                  <input matInput ngModel name="publisher" maxlength="128">
                 </mat-form-field>
 
                 <label>year: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="yearPublisher">
+                  <input matInput ngModel name="yearPublisher" type="number" min="1500" max="{{currentYear}}">
                 </mat-form-field>
 
                 <label>isbn: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="isbn">
+                  <input matInput ngModel name="isbn" type="text"
+                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                         minlength="13" maxlength="13"/>
                 </mat-form-field>
 
                 <label>rating from: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="fromRating">
+                  <input matInput ngModel name="fromRating" type="number" min="0" max="5">
                 </mat-form-field>
 
                 <label>rating to: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="toRating">
+                  <input matInput ngModel name="toRating" type="number" min="0" max="5">
                 </mat-form-field>
 
                 <label>author: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="authorNameAndSecondName">
+                  <input matInput ngModel name="authorNameAndSecondName" type="text" maxlength="128">
                 </mat-form-field>
 
                 <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -83,37 +85,47 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('name')" id="tableName">Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'name'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'name' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'name' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'publisher'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'yearPublisher'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'isbn'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 <th id="tableAuthors">Authors</th>
                 </thead>
                 <tbody>
@@ -172,21 +184,24 @@
         <form #addForm="ngForm" (ngSubmit)="createBook(addForm)">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name" required>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name"
+                   minlength="4" maxlength="256" required>
           </div>
           <div class="form-group">
             <label for="yearOfPublisher">Year of publisher</label>
-            <input type="text" ngModel name="yearOfPublisher" class="form-control" id="yearOfPublisher"
-                   placeholder="year of publisher">
+            <input type="number" ngModel name="yearOfPublisher" class="form-control" id="yearOfPublisher"
+                   placeholder="year of publisher" min="1500" max="{{currentYear}}">
           </div>
           <div class="form-group">
             <label for="publisher">Publisher</label>
             <input type="text" ngModel name="publisher" class="form-control" id="publisher" placeholder="publisher"
-                   required>
+                   minlength="4" maxlength="512" required>
           </div>
           <div class="form-group">
-            <label for="isbn">Publisher</label>
-            <input type="text" ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" required>
+            <label for="isbn">ISBN</label>
+            <input ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" type="text"
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                   minlength="13" maxlength="13" required>
           </div>
           <div class="form-group">
             <mat-form-field appearance="fill">
@@ -222,24 +237,24 @@
           <div class="form-group">
             <label for="bookName">Name</label>
             <input type="text" ngModel="{{editBook?.name}}" name="name" class="form-control" id="bookName"
-                   placeholder="name">
+                   placeholder="name" minlength="4" maxlength="256" required>
           </div>
           <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">
           <div class="form-group">
             <label for="yearOfPublisher">Year of publisher</label>
-            <input type="text" ngModel="{{editBook?.yearPublisher}}" name="yearPublisher" class="form-control"
-                   id="bookYearPublisher"
-                   placeholder="year of publisher">
+            <input type="number" ngModel="{{editBook?.yearPublisher}}" name="yearPublisher" class="form-control"
+                   id="bookYearPublisher" placeholder="year of publisher" min="1500" max="{{currentYear}}">
           </div>
           <div class="form-group">
             <label for="publisher">Publisher</label>
             <input type="text" ngModel="{{editBook?.publisher}}" name="publisher" class="form-control"
-                   id="bookPublisher" placeholder="publisher">
+                   id="bookPublisher" placeholder="publisher" minlength="4" maxlength="512" required>
           </div>
           <div class="form-group">
             <label for="isbn">ISBN</label>
-            <input type="text" ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn"
-                   placeholder="isbn">
+            <input ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn" placeholder="isbn"
+                   type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                   minlength="13" maxlength="13" required>
           </div>
           <div class="form-group">
             <mat-form-field appearance="fill">
@@ -320,18 +335,21 @@
         <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)">
           <div class="form-group">
             <label for="commenterName">Commenter name</label>
-            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name" required>
+            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name"
+                   minlength="4" maxlength="256" required>
           </div>
           <div class="form-group">
             <label for="comment">Comment</label>
-            <input type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment" required>
+            <input type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment"
+                   minlength="4" maxlength="4096" required>
           </div>
           <div class="form-group">
             <label for="rating">Rating</label>
-            <input type="text" ngModel name="rating" class="form-control" id="rating" placeholder="rating" required>
+            <input type="number" ngModel name="rating" class="form-control" id="rating" placeholder="rating"
+                   min="1" max="5" required>
           </div>
           <div class="form-group">
-            <input type="text" [ngModel]="detailBook" name="book" class="form-control" value="{{detailBook}}">
+            <input hidden type="text" [ngModel]="detailBook" name="book" class="form-control" value="{{detailBook}}">
           </div>
           <div class="modal-footer">
             <button [disabled]="reviewForm.invalid" type="submit" class="btn btn-success">Create</button>

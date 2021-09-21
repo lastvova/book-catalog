@@ -28,22 +28,22 @@
             <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
               <label>First name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="firstName">
+                <input matInput ngModel name="firstName" maxlength="128">
               </mat-form-field>
 
               <label>Second name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="secondName">
+                <input matInput ngModel name="secondName" maxlength="128">
               </mat-form-field>
 
               <label>Rating from: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="fromRating">
+                <input matInput ngModel name="fromRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <label>Rating to: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="toRating">
+                <input matInput  ngModel name="toRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -64,22 +64,29 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('firstName')" id="tableName">First Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'firstName'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('secondName')" id="tableSecondName">Second Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'secondName'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting" class="fa fa-sort-asc"></em>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"
-                      class="fa fa-sort-desc"></em></th>
+                  <em
+                    *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></th>
                 </thead>
                 <tbody>
                 <tr *ngFor="let author of authors">
@@ -126,12 +133,12 @@
         <form #addForm="ngForm" (ngSubmit)="createAuthor(addForm)">
           <div class="form-group">
             <label for="authorName">Name</label>
-            <input type="text" ngModel name="firstName"
+            <input type="text" ngModel name="firstName" minlength="2" maxlength="128"
                    class="form-control" id="authorName" placeholder="name" required>
           </div>
           <div class="form-group">
             <label for="authorSecondName">Second name</label>
-            <input type="text" ngModel name="secondName"
+            <input type="text" ngModel name="secondName" minlength="2" maxlength="128"
                    class="form-control" id="authorSecondName" placeholder="second name" required>
           </div>
           <div class="modal-footer">
@@ -157,13 +164,15 @@
         <form #editForm="ngForm">
           <div class="form-group">
             <label for="updateAuthorName">Name</label>
-            <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" class="form-control"
+            <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" minlength="2" maxlength="128"
+                   class="form-control"
                    id="updateAuthorName" placeholder="name" required>
           </div>
           <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control" id="id" placeholder="Email">
           <div class="form-group">
             <label for="updateAuthorSecondName">Second name</label>
-            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" class="form-control"
+            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" minlength="2" maxlength="128"
+                   class="form-control"
                    id="updateAuthorSecondName" placeholder="second name" required>
           </div>
           <div class="modal-footer">
@@ -191,34 +200,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
           <button (click)="deleteAuthor(deletedAuthor.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="searchAuthorModal" tabindex="-1" role="dialog" aria-labelledby="searchAuthorModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H4 class="modal-title">Search By</H4>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="searchByName">By name</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchByName" placeholder="name" required>
-        </div>
-        <div class="form-group">
-          <label for="searchBySecondName">By second name</label>
-          <input type="text" name="name"
-                 class="form-control" id="searchBySecondName" placeholder="second name" required>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" data-dismiss="modal">Search</button>
-          <button class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

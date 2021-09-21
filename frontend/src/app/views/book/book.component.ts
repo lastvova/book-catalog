@@ -30,8 +30,9 @@ export class BookComponent implements OnInit {
   // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
   public selectedAuthors?: Author[];
-
+  public currentYear: number = new Date().getFullYear();
   public totalRecords?: number;
+
   // @ts-ignore: Object is possibly 'null'
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   // @ts-ignore: Object is possibly 'null'

@@ -24,22 +24,22 @@
             <form #filterForm="ngForm" (ngSubmit)="filterReviews()">
               <label>Commenter name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="commenterName">
+                <input matInput ngModel name="commenterName" type="text" maxlength="64">
               </mat-form-field>
 
               <label>Book name : </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="bookName">
+                <input matInput ngModel name="bookName" type="text" maxlength="64">
               </mat-form-field>
 
               <label>Rating from: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="fromRating">
+                <input matInput ngModel name="fromRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <label>Rating to: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="toRating">
+                <input matInput ngModel name="toRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>

@@ -32,7 +32,7 @@ export class AuthorService {
   }
 
   public updateAuthor(author: Author): Observable<Author> {
-    return this.http.put<Author>(`${this.apiServerUrl}/api/authors/${author.id}`, author);
+    return this.http.put<Author>(`${this.apiServerUrl}/api/authors/`, author);
   }
 
   public deleteAuthor(authorId: number): Observable<void> {
