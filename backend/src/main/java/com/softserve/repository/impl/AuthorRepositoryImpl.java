@@ -85,7 +85,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     }
 
     @Override
-    public boolean deleteAuthors(List<Integer> ids) { //TODO
+    public boolean deleteAuthors(List<Integer> ids) { //TODO it doesnt work
         LOGGER.debug("deleteAuthors({})", ids);
         return false;
     }

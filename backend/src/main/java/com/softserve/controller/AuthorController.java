@@ -44,8 +44,8 @@ public class AuthorController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<Page<AuthorDTO>> getAll(@RequestBody ListParams<AuthorFilterParameters> pageSortFilterParameters) {
-        LOGGER.debug("getAll( params = {}", pageSortFilterParameters);
+    public ResponseEntity<Page<AuthorDTO>> getAllWithParameters(@RequestBody ListParams<AuthorFilterParameters> pageSortFilterParameters) {
+        LOGGER.debug("getAllWithParameters( params = {})", pageSortFilterParameters);
         Page<Author> result = authorService.getAll(super.validatePageAndSortParameters(pageSortFilterParameters));
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
         Page<AuthorDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
@@ -53,8 +53,8 @@ public class AuthorController extends BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AuthorDTO>> getAllWithOutParameters() {
-        LOGGER.debug("getAllWithOutParameters()");
+    public ResponseEntity<Page<AuthorDTO>> getAll() {
+        LOGGER.debug("getAll()");
         Page<Author> result = authorService.getAll(super.validatePageAndSortParameters(new ListParams<>()));
         List<AuthorDTO> dtos = authorMapper.convertToDtoList(result.getContent());
         Page<AuthorDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());

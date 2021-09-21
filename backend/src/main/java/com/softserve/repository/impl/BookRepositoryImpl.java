@@ -53,7 +53,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         return books;
     }
 
-    //TODO
+    //TODO it doesnt work
     @Override
     public boolean deleteBooks(List<Integer> ids) {
         LOGGER.debug("deleteBooks({})", ids);

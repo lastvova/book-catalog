@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.utils.ListParams;
 
 public abstract class BaseController {
-
+//TODO remove to pojo
     protected ListParams validatePageAndSortParameters(ListParams<?> params){
         setPageParameters(params);
         setSortParameters(params);
