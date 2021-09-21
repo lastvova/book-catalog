@@ -13,6 +13,7 @@ public interface ReviewMapper {
     @Mapping(target = "book", source = "book")
     Review convertToEntity(ReviewDTO reviewDTO);
 
+    @Mapping(target = "book.authors", source = "book.authors", ignore = true)
     ReviewDTO convertToDto(Review review);
 
     List<ReviewDTO> convertToDtoList(List<Review> reviews);
