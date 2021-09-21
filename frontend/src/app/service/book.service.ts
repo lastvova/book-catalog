@@ -3,10 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Book} from "../model/Book";
 import {environment} from "../../environments/environment";
-import {FilterParameters} from "../model/parameters/FilterParameters";
 import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
-import {SortingParameters} from "../model/parameters/SortingParameters";
-import {PaginationParameters} from "../model/parameters/PaginationParameters";
 import {PageSortFilterParameters} from "../model/parameters/PageSortFilterParameters";
 
 @Injectable({
@@ -23,7 +20,7 @@ export class BookService {
   }
 
   public getBooksWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
-    return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`,pageSortFilterParameters);
+    return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`, pageSortFilterParameters);
   }
 
   public getBook(bookId: number): Observable<Book> {

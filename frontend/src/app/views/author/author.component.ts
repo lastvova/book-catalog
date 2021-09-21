@@ -6,8 +6,6 @@ import {NgForm} from "@angular/forms";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
-import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
-import {AuthorFieldType, AuthorFieldType2LabelMapping} from "../../enum/AuthorFieldType";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 
@@ -115,7 +113,7 @@ export class AuthorComponent implements OnInit {
     )
   }
 
-  public filterAuthors(filterForm: NgForm): void {
+  public filterAuthors(): void {
     this.authorFilterParameters = new AuthorFilterParameters();
     this.authorFilterParameters.firstName = this.filterForm.value.firstName;
     this.authorFilterParameters.secondName = this.filterForm.value.secondName;

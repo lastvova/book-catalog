@@ -8,8 +8,6 @@ import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {BookFieldType, BookFieldType2LabelMapping} from "../../enum/BookFieldType";
-import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
@@ -143,7 +141,7 @@ export class BookComponent implements OnInit {
     )
   }
 
-  public filterBooks(filterForm: NgForm): void {
+  public filterBooks(): void {
     this.bookFilterParameters = new BookFilterParameters();
     this.bookFilterParameters.name = this.filterForm.value.name;
     this.bookFilterParameters.isbn = this.filterForm.value.isbn;

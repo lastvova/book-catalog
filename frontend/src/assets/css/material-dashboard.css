@@ -16989,7 +16989,7 @@ thead.thead-inverse th,
 }
 
 body {
-  background-color: #eee;
+  background-color: rgba(187, 187, 187, 0.5);
   color: #3C4858;
   font-weight: 300;
 }
@@ -17372,7 +17372,7 @@ html[dir="rtl"] .form-check .form-check-sign .check:before {
   margin-top: 30px;
   border-radius: 6px;
   color: #333333;
-  background: #fff;
+  background: #c2c2c2;
   width: 100%;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -19756,6 +19756,42 @@ Copyright (c) 2015 Daniel Eden
   .nav-mobile-menu,
   .sidebar .navbar-form {
     display: none !important;
+  }
+
+  .col-xs-five,
+  .col-sm-five,
+  .col-md-five,
+  .col-lg-five {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .col-xs-five {
+    width: 20%;
+    float: left;
+  }
+
+  @media (min-width: 768px) {
+    .col-sm-five {
+      width: 20%;
+      float: left;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .col-md-five {
+      width: 20%;
+      float: left;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .col-lg-five {
+      width: 20%;
+      float: left;
+    }
   }
 }
 

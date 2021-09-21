@@ -28,7 +28,7 @@
               </mat-panel-description>
             </mat-expansion-panel-header>
             <div>
-              <form #filterForm="ngForm" (ngSubmit)="filterBooks(filterForm.value)">
+              <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
                 <label>Name: </label>
                 <mat-form-field appearance="fill">
                   <input matInput ngModel name="name" >
@@ -77,7 +77,7 @@
               <h1 class="card-title">Books</h1>
             </div>
             <div class="card-body table-responsive">
-              <table class="table table-hover table-striped" aria-describedby="availableBooks">
+              <table class="table table-hover" aria-describedby="availableBooks">
                 <thead class="text-warning">
                 <th id="checkBox">
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all

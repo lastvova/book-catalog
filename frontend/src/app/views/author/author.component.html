@@ -25,7 +25,7 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div>
-            <form #filterForm="ngForm" (ngSubmit)="filterAuthors(filterForm.value)">
+            <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
               <label>First name: </label>
               <mat-form-field appearance="fill">
                 <input matInput ngModel name="firstName">
