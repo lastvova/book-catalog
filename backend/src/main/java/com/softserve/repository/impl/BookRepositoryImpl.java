@@ -99,10 +99,13 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                 predicates.add(
                         criteriaBuilder.equal(books.get("yearPublisher"), filterParameters.getYearPublisher()));
             }
-            if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+            if (filterParameters.getFromRating() != null) {
                 predicates.add(
-                        criteriaBuilder.between(books.get("rating"),
-                                filterParameters.getFromRating(), filterParameters.getToRating()));
+                        criteriaBuilder.ge(books.get("rating"), filterParameters.getFromRating()));
+            }
+            if (filterParameters.getToRating() != null) {
+                predicates.add(
+                        criteriaBuilder.le(books.get("rating"), filterParameters.getToRating()));
             }
             if (filterParameters.getIsbn() != null) {
                 predicates.add(
