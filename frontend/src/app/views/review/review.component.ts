@@ -1,5 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Review} from "../../model/Review";
+import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
+import {SortingParameters} from "../../model/parameters/SortingParameters";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {NgForm} from "@angular/forms";
+import {ReviewService} from "../../service/review.service";
+import {ReviewFilterParameters} from "../../model/parameters/ReviewFilterParameters";
+import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
+import {HttpErrorResponse} from "@angular/common/http";
+import {Author} from "../../model/Author";
 
 @Component({
   selector: 'app-review',
@@ -9,11 +18,111 @@ import {Review} from "../../model/Review";
 export class ReviewComponent implements OnInit {
 
   reviews: Review [] = [];
+  public totalRecords?: number;
 
-  constructor() {
+  // @ts-ignore: Object is possibly 'null'
+  public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
+  // @ts-ignore: Object is possibly 'null'
+  public sortParameters: SortingParameters = new SortingParameters();
+  // @ts-ignore: Object is possibly 'null'
+  public reviewFilterParameters: ReviewFilterParameters;
+
+  // @ts-ignore: Object is possibly 'null'
+  @ViewChild('matPaginator') matPaginator: MatPaginator;
+  // @ts-ignore: Object is possibly 'null'
+  @ViewChild('filterForm') filterForm: NgForm;
+
+  constructor(private reviewService: ReviewService) {
   }
 
   ngOnInit(): void {
+    this.getReviews();
   }
 
+  public getReviews(): void {
+    this.reviewService.getReviews(this.pageSortFilterParameters).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.reviews = [];
+        this.reviews = response.content;
+        this.totalRecords = response.totalElements;
+        this.pageSortFilterParameters.pageNumber = response.number;
+        this.pageSortFilterParameters.pageSize = response.size;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
+  public getReviewsWithParameters(): void {
+    this.reviewService.getReviewsWithParameters(this.pageSortFilterParameters).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.reviews = [];
+        this.reviews = response.content;
+        this.totalRecords = response.totalElements;
+        this.pageSortFilterParameters.pageNumber = response.number;
+        this.pageSortFilterParameters.pageSize = response.size;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
+  public createAuthor(addForm: NgForm): void {
+    //@ts-ignore
+    document.getElementById('add-author-form').click();
+    this.reviewService.createReview(addForm.value).subscribe(
+      (response: Review) => {
+        console.log(response);
+        this.getReviewsWithParameters();
+        addForm.reset();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+        addForm.reset();
+      }
+    )
+  }
+
+  public filterReviews(): void {
+    this.reviewFilterParameters = new ReviewFilterParameters();
+    this.reviewFilterParameters.commenterName = this.filterForm.value.commenterName;
+    this.reviewFilterParameters.bookName = this.filterForm.value.bookName;
+    this.reviewFilterParameters.toRating = this.filterForm.value.toRating;
+    this.reviewFilterParameters.fromRating = this.filterForm.value.fromRating;
+    this.pageSortFilterParameters.pattern = this.reviewFilterParameters;
+    this.matPaginator.pageIndex = 0;
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.getReviewsWithParameters()
+  }
+
+  public onOpenModal(mode: string, author: Author): void {
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#createAuthorModal');
+    }
+    //@ts-ignore
+    container.appendChild(button);
+    button.click();
+  }
+
+  public onPageChange(event: PageEvent) {
+    this.pageSortFilterParameters.pageNumber = event.pageIndex;
+    this.pageSortFilterParameters.pageSize = event.pageSize;
+    this.getReviewsWithParameters()
+  }
+
+  public resetForm(filterForm: NgForm) {
+    filterForm.reset();
+    // @ts-ignore
+    this.pageSortFilterParameters.pattern = null;
+    this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.getReviewsWithParameters();
+  }
 }

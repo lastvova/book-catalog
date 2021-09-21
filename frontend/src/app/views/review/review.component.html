@@ -1,33 +1,70 @@
 <div class="wrapper ">
-
   <div class="main-panel">
     <div class="content">
-      <div class="container-fluid">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header card-header-warning">
-              <h4 class="card-title">Reviews</h4>
-              <p id="availableReviews">Available reviews</p>
+      <div class="container-fluid" id="main-container">
+        <div class="row">
+          <div class="col">
+            <div class="d-flex justify-content-end align-items-end">
+              <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+                             (page)="onPageChange($event)" aria-label="Select page">
+              </mat-paginator>
             </div>
-            <div class="card-body table-responsive">
-              <table class="table table-hover" aria-describedby="availableReviews">
-                <thead class="text-warning">
-                <th id="id">ID</th>
-                <th id="commenterName">Commenter Name</th>
-                <th id="comment">comment</th>
-                <th id="rating">Rating</th>
-                <th id="book">Book</th>
-                </thead>
-                <tbody>
-                <tr *ngFor="let review of reviews">
-                  <td>{{review.id}}</td>
-                  <td>{{review.commenterName}}</td>
-                  <td>{{review.comment}}</td>
-                  <td>{{review.rating}}</td>
-                  <td>{{review.book}}</td>
-                </tr>
-                </tbody>
-              </table>
+          </div>
+        </div>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Filter by:
+            </mat-panel-title>
+            <mat-panel-description>
+              Parameters for filtering
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div>
+            <form #filterForm="ngForm" (ngSubmit)="filterReviews()">
+              <label>Commenter name: </label>
+              <mat-form-field appearance="fill">
+                <input matInput ngModel name="commenterName">
+              </mat-form-field>
+
+              <label>Book name : </label>
+              <mat-form-field appearance="fill">
+                <input matInput ngModel name="bookName">
+              </mat-form-field>
+
+              <label>Rating from: </label>
+              <mat-form-field appearance="fill">
+                <input matInput ngModel name="fromRating">
+              </mat-form-field>
+
+              <label>Rating to: </label>
+              <mat-form-field appearance="fill">
+                <input matInput ngModel name="toRating">
+              </mat-form-field>
+
+              <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
+              <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
+            </form>
+          </div>
+
+        </mat-expansion-panel>
+        <div class="row justify-content-center">
+          <div *ngFor="let review of reviews" class="col-md-five" >
+            <div class="card m-b-30">
+              <div class="card-body row">
+                <div class="col-12 card-title align-self-center mb-0">
+                  <h2>{{review.book.name}}</h2>
+                </div>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Commenter name : {{review.commenterName}}</li>
+                <li class="list-group-item">Rating : {{review.rating}}</li>
+                <li class="list-group-item">Comment : {{review.comment}}</li>
+              </ul>
+              <div class="card-body">
+                <div class="float-right btn-group btn-group-sm">
+                </div>
+              </div>
             </div>
           </div>
         </div>
