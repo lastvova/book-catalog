@@ -28,20 +28,22 @@
             <form #filterForm="ngForm" (ngSubmit)="filterAuthors(filterForm.value)">
               <label>First name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="filterValue" required>
-                <input hidden ngModel="{{FieldType2LabelMapping.AUTHOR_FIRST_NAME}}" name="filterBy">
+                <input matInput ngModel name="firstName">
               </mat-form-field>
 
               <label>Second name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="filterValue" required>
-                <input hidden ngModel="{{FieldType2LabelMapping.AUTHOR_SECOND_NAME}}" name="filterBy">
+                <input matInput ngModel name="secondName">
               </mat-form-field>
 
-              <label>Rating: </label>
+              <label>Rating from: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="filterValue" required>
-                <input hidden ngModel="{{FieldType2LabelMapping.RATING}}" name="filterBy">
+                <input matInput ngModel name="fromRating">
+              </mat-form-field>
+
+              <label>Rating to: </label>
+              <mat-form-field appearance="fill">
+                <input matInput ngModel name="toRating">
               </mat-form-field>
 
               <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -62,21 +64,21 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('firstName')" id="tableName">First Name
-                  <em *ngIf="sortParameters.sortBy === 'firstName' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && sortParameters.reverse"
                       class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'firstName'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'firstName' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField != 'firstName'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('secondName')" id="tableSecondName">Second Name
-                  <em *ngIf="sortParameters.sortBy === 'secondName' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && sortParameters.reverse"
                       class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'secondName'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'secondName' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField != 'secondName'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="sortParameters.sortBy === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
-                  <em *ngIf="sortParameters.sortBy != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="sortParameters.sortBy === 'rating' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && !sortParameters.reverse"
                       class="fa fa-sort-desc"></em></th>
                 </thead>
                 <tbody>

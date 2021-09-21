@@ -6,13 +6,11 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {FormControl, NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
-import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {BookFieldType, BookFieldType2LabelMapping} from "../../enum/BookFieldType";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
-import {PaginationParameters} from "../../model/parameters/PaginationParameters";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 
@@ -42,16 +40,10 @@ export class BookComponent implements OnInit {
   // @ts-ignore: Object is possibly 'null'
   public bookFilterParameters: BookFilterParameters;
 
-  public FieldType2LabelMapping = BookFieldType2LabelMapping;
-  public fieldTypes = Object.values(BookFieldType);
-
-  public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
-  public filterOperators = Object.values(FilterOperatorEnum);
-
   // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   // @ts-ignore: Object is possibly 'null'
-  @ViewChild('filterForm') filterForm : NgForm;
+  @ViewChild('filterForm') filterForm: NgForm;
 
   constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
   }
@@ -152,7 +144,7 @@ export class BookComponent implements OnInit {
   }
 
   public filterBooks(filterForm: NgForm): void {
-    this.bookFilterParameters =  new BookFilterParameters();
+    this.bookFilterParameters = new BookFilterParameters();
     this.bookFilterParameters.name = this.filterForm.value.name;
     this.bookFilterParameters.isbn = this.filterForm.value.isbn;
     this.bookFilterParameters.publisher = this.filterForm.value.publisher;

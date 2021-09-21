@@ -6,7 +6,6 @@ import {NgForm} from "@angular/forms";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {SortingParameters} from "../../model/parameters/SortingParameters";
-import {FilterParameters} from "../../model/parameters/FilterParameters";
 import {FilterOperator2LabelMapping, FilterOperatorEnum} from "../../enum/FilterOperatorEnum";
 import {AuthorFieldType, AuthorFieldType2LabelMapping} from "../../enum/AuthorFieldType";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
@@ -33,12 +32,6 @@ export class AuthorComponent implements OnInit {
   public sortParameters: SortingParameters = new SortingParameters();
   // @ts-ignore: Object is possibly 'null'
   public authorFilterParameters: AuthorFilterParameters;
-
-  public FieldType2LabelMapping = AuthorFieldType2LabelMapping;
-  public fieldTypes = Object.values(AuthorFieldType);
-
-  public FilterOperator2LabelMapping = FilterOperator2LabelMapping;
-  public filterOperators = Object.values(FilterOperatorEnum);
 
   // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
@@ -67,13 +60,28 @@ export class AuthorComponent implements OnInit {
     )
   }
 
+  public getAuthorsWithParameters(): void {
+    this.authorService.getAuthorsWithParameters(this.pageSortFilterParameters).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.authors = [];
+        this.authors = response.content;
+        this.totalRecords = response.totalElements;
+        this.pageSortFilterParameters.pageNumber = response.number;
+        this.pageSortFilterParameters.pageSize = response.size;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
   public createAuthor(addForm: NgForm): void {
     //@ts-ignore
     document.getElementById('add-author-form').click();
     this.authorService.createAuthor(addForm.value).subscribe(
       (response: Author) => {
         console.log(response);
-        this.getAuthors();
+        this.getAuthorsWithParameters();
         addForm.reset();
       },
       (error: HttpErrorResponse) => {
@@ -87,7 +95,7 @@ export class AuthorComponent implements OnInit {
     this.authorService.updateAuthor(author).subscribe(
       (response: Author) => {
         console.log(response);
-        this.getAuthors();
+        this.getAuthorsWithParameters();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -99,7 +107,7 @@ export class AuthorComponent implements OnInit {
     this.authorService.deleteAuthor(authorId).subscribe(
       (response: void) => {
         console.log(response);
-        this.getAuthors();
+        this.getAuthorsWithParameters();
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -116,7 +124,7 @@ export class AuthorComponent implements OnInit {
     this.pageSortFilterParameters.pattern = this.authorFilterParameters;
     this.matPaginator.pageIndex = 0;
     this.pageSortFilterParameters.pageNumber = 0;
-    this.getAuthors()
+    this.getAuthorsWithParameters()
   }
 
   public onOpenModal(mode: string, author: Author): void {
@@ -148,7 +156,7 @@ export class AuthorComponent implements OnInit {
   public onPageChange(event: PageEvent) {
     this.pageSortFilterParameters.pageNumber = event.pageIndex;
     this.pageSortFilterParameters.pageSize = event.pageSize;
-    this.getAuthors()
+    this.getAuthorsWithParameters()
   }
 
   public sortByColumn(sortBy: string) {
@@ -159,18 +167,15 @@ export class AuthorComponent implements OnInit {
     } else {
       this.sortParameters.sortOrder = 'DESC'
     }
-    this.getAuthors();
+    this.getAuthorsWithParameters();
   }
 
   public resetForm(filterForm: NgForm) {
-    // this.sortParameters.;
     filterForm.reset();
     // @ts-ignore
-    this.filterParameters.filterValue = null;
-    // @ts-ignore
-    // this.filterParameters.filterBy = null;
+    this.pageSortFilterParameters.pattern = null;
     this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
     this.pageSortFilterParameters.pageNumber = 0;
-    this.getAuthors();
+    this.getAuthorsWithParameters();
   }
 }

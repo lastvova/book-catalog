@@ -72,10 +72,13 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
                         criteriaBuilder.like(authors.get("secondName"),
                                 "%" + filterParameters.getSecondName() + "%"));
             }
-            if (filterParameters.getToRating() != null && filterParameters.getFromRating() != null) {
+            if (filterParameters.getFromRating() != null) {
                 predicates.add(
-                        criteriaBuilder.between(authors.get("rating"),
-                                filterParameters.getFromRating(), filterParameters.getToRating()));
+                        criteriaBuilder.ge(authors.get("rating"), filterParameters.getFromRating()));
+            }
+            if (filterParameters.getToRating() != null) {
+                predicates.add(
+                        criteriaBuilder.lt(authors.get("rating"), filterParameters.getToRating()));
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

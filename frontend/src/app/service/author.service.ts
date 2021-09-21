@@ -28,7 +28,7 @@ export class AuthorService {
   }
 
   public createAuthor(author: Author): Observable<Author> {
-    return this.http.post<Author>(`${this.apiServerUrl}/api/authors`, author);
+    return this.http.post<Author>(`${this.apiServerUrl}/api/authors/create`, author);
   }
 
   public updateAuthor(author: Author): Observable<Author> {
