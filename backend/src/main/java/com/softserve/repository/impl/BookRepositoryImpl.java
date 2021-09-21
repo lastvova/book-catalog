@@ -105,7 +105,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
             }
             if (filterParameters.getToRating() != null) {
                 predicates.add(
-                        criteriaBuilder.lt(books.get("rating"), filterParameters.getToRating()));
+                        criteriaBuilder.le(books.get("rating"), filterParameters.getToRating()));
             }
             if (filterParameters.getIsbn() != null) {
                 predicates.add(
