@@ -64,21 +64,21 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('firstName')" id="tableName">First Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'firstName'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'firstName' && pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('secondName')" id="tableSecondName">Second Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'secondName'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'secondName' && pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting" class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 </thead>
                 <tbody>

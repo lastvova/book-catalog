@@ -11,6 +11,7 @@ import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalR
 import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
+import {ReviewService} from "../../service/review.service";
 
 @Component({
   selector: 'app-book',
@@ -43,7 +44,8 @@ export class BookComponent implements OnInit {
   // @ts-ignore: Object is possibly 'null'
   @ViewChild('filterForm') filterForm: NgForm;
 
-  constructor(private router: Router, private bookService: BookService, private authorService: AuthorService) {
+  constructor(private router: Router, private bookService: BookService,
+              private authorService: AuthorService, private reviewService: ReviewService) {
   }
 
   ngOnInit() {
@@ -179,6 +181,10 @@ export class BookComponent implements OnInit {
       this.detailBook = book;
       button.setAttribute('data-target', '#detailBookModal')
     }
+    if (mode === 'createReview') {
+      this.detailBook = book;
+      button.setAttribute('data-target', '#createReviewModal')
+    }
     // @ts-ignore
     container.appendChild(button);
     button.click();
@@ -209,4 +215,20 @@ export class BookComponent implements OnInit {
     this.pageSortFilterParameters.pageNumber = 0;
     this.getBooksWithParameters();
   }
+  public createReview(reviewForm: NgForm): void {
+    // @ts-ignore
+    document.getElementById('add-review-form').click();
+    this.reviewService.createReview(reviewForm.value).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.getBooksWithParameters();
+        reviewForm.reset();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+        reviewForm.reset();
+      }
+    )
+  }
+
 }

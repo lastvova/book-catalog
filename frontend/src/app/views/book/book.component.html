@@ -31,12 +31,12 @@
               <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
                 <label>Name: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="name" >
+                  <input matInput ngModel name="name">
                 </mat-form-field>
 
                 <label>publisher: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="publisher" >
+                  <input matInput ngModel name="publisher">
                 </mat-form-field>
 
                 <label>year: </label>
@@ -46,22 +46,22 @@
 
                 <label>isbn: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="isbn" >
+                  <input matInput ngModel name="isbn">
                 </mat-form-field>
 
                 <label>rating from: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="fromRating" >
+                  <input matInput ngModel name="fromRating">
                 </mat-form-field>
 
                 <label>rating to: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="toRating" >
+                  <input matInput ngModel name="toRating">
                 </mat-form-field>
 
                 <label>author: </label>
                 <mat-form-field appearance="fill">
-                  <input matInput ngModel name="authorNameAndSecondName" >
+                  <input matInput ngModel name="authorNameAndSecondName">
                 </mat-form-field>
 
                 <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -83,31 +83,36 @@
                   <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
                 </th>
                 <th (click)="sortByColumn('name')" id="tableName">Name
-                  <em *ngIf="pageSortFilterParameters.sortField === 'name' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
+                      class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'name'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'name' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'name' && pageSortFilterParameters.reverseForSorting"
+                      class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'publisher'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'publisher' && pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'yearPublisher'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && pageSortFilterParameters.reverseForSorting"
+                      class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'isbn'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !sortParameters.reverse" class="fa fa-sort-desc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !pageSortFilterParameters.reverseForSorting"
+                      class="fa fa-sort-desc"></em>
                 </th>
                 <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && sortParameters.reverse" class="fa fa-sort-asc"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && pageSortFilterParameters.reverseForSorting"
+                      class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField  != 'rating'" class="fa fa-sort"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && !sortParameters.reverse"
+                  <em *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"
                       class="fa fa-sort-desc"></em></th>
                 <th id="tableAuthors">Authors</th>
                 </thead>
@@ -138,7 +143,8 @@
                          data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
                       <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
                          data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
-
+                      <a (click)="onOpenModal('createReview',book)" class="btn btn-primary btn-sm rounded-bottom"
+                         data-placement="top" title="Delete"><span class="material-icons">rate_review</span></a>
                     </div>
                   </td>
                 </tr>
@@ -297,6 +303,41 @@
           {{author.secondName}},
         </a>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createReviewModal" tabindex="-1" role="dialog" aria-labelledby="createReviewModal"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <H2 class="modal-title">Create Review</H2>
+        <button class="close" data-dismiss="modal">X</button>
+      </div>
+      <div class="modal-body">
+        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)">
+          <div class="form-group">
+            <label for="commenterName">Commenter name</label>
+            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name" required>
+          </div>
+          <div class="form-group">
+            <label for="comment">Comment</label>
+            <input type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment" required>
+          </div>
+          <div class="form-group">
+            <label for="rating">Rating</label>
+            <input type="text" ngModel name="rating" class="form-control" id="rating" placeholder="rating" required>
+          </div>
+          <div class="form-group">
+            <input type="text" [ngModel]="detailBook" name="book" class="form-control" value="{{detailBook}}">
+          </div>
+          <div class="modal-footer">
+            <button [disabled]="reviewForm.invalid" type="submit" class="btn btn-success">Create</button>
+            <button type="button" id="add-review-form" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

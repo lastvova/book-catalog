@@ -47,17 +47,13 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
                                 "%" + filterParameters.getCommenterName() + "%")
                 );
             }
-//            if (filterParameters.getComment() != null) {
-//                predicates.add(
-//                        criteriaBuilder.like(reviews.get("comment"), filterParameters.getComment()));
-//            }
             if (filterParameters.getFromRating() != null) {
                 predicates.add(
                         criteriaBuilder.ge(reviews.get("rating"), filterParameters.getFromRating()));
             }
             if (filterParameters.getToRating() != null) {
                 predicates.add(
-                        criteriaBuilder.lt(reviews.get("rating"), filterParameters.getToRating()));
+                        criteriaBuilder.le(reviews.get("rating"), filterParameters.getToRating()));
             }
             if (filterParameters.getBookName() != null) {
                 Join<Review, Book> book = reviews.join("book");

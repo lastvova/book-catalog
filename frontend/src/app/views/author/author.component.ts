@@ -158,12 +158,12 @@ export class AuthorComponent implements OnInit {
   }
 
   public sortByColumn(sortBy: string) {
-    this.sortParameters.sortBy = sortBy;
-    this.sortParameters.reverse = !this.sortParameters.reverse;
-    if (this.sortParameters.reverse) {
-      this.sortParameters.sortOrder = 'ASC'
+    this.pageSortFilterParameters.sortField = sortBy;
+    this.pageSortFilterParameters.reverseForSorting = !this.pageSortFilterParameters.reverseForSorting;
+    if (this.pageSortFilterParameters.reverseForSorting) {
+      this.pageSortFilterParameters.order = 'ASC'
     } else {
-      this.sortParameters.sortOrder = 'DESC'
+      this.pageSortFilterParameters.order = 'DESC'
     }
     this.getAuthorsWithParameters();
   }
