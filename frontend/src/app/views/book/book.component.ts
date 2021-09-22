@@ -8,7 +8,6 @@ import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 import {ReviewService} from "../../service/review.service";
@@ -20,33 +19,23 @@ import {ReviewService} from "../../service/review.service";
 })
 export class BookComponent implements OnInit {
 
-  toppings = new FormControl();
-
   public books: Book[] = [];
   public authors: Author[] = [];
   public detailBook: Book | undefined;
-  // @ts-ignore
   public editBook: Book;
-  // @ts-ignore: Object is possibly 'null'
   public deletedBook: Book;
-  public selectedAuthors?: Author[];
+  public selectedAuthors: Author[];
   public currentYear: number = new Date().getFullYear();
-  public totalRecords?: number;
+  public totalRecords: number;
 
-  // @ts-ignore: Object is possibly 'null'
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
-  // @ts-ignore: Object is possibly 'null'
-  public sortParameters: SortingParameters = new SortingParameters();
-  // @ts-ignore: Object is possibly 'null'
   public bookFilterParameters: BookFilterParameters;
 
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('filterForm') filterForm: NgForm;
 
-  constructor(private router: Router, private bookService: BookService,
-              private authorService: AuthorService, private reviewService: ReviewService) {
+  constructor(private bookService: BookService, private authorService: AuthorService,
+              private reviewService: ReviewService) {
   }
 
   ngOnInit() {
@@ -216,6 +205,7 @@ export class BookComponent implements OnInit {
     this.pageSortFilterParameters.pageNumber = 0;
     this.getBooksWithParameters();
   }
+
   public createReview(reviewForm: NgForm): void {
     // @ts-ignore
     document.getElementById('add-review-form').click();
@@ -231,5 +221,4 @@ export class BookComponent implements OnInit {
       }
     )
   }
-
 }

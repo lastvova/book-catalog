@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Review} from "../../model/Review";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
-import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {NgForm} from "@angular/forms";
 import {ReviewService} from "../../service/review.service";
@@ -20,16 +19,10 @@ export class ReviewComponent implements OnInit {
   reviews: Review [] = [];
   public totalRecords?: number;
 
-  // @ts-ignore: Object is possibly 'null'
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
-  // @ts-ignore: Object is possibly 'null'
-  public sortParameters: SortingParameters = new SortingParameters();
-  // @ts-ignore: Object is possibly 'null'
   public reviewFilterParameters: ReviewFilterParameters;
 
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('filterForm') filterForm: NgForm;
 
   constructor(private reviewService: ReviewService) {

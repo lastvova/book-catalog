@@ -16,20 +16,17 @@
             <mat-panel-title>
               Filter by:
             </mat-panel-title>
-            <mat-panel-description>
-              Parameters for filtering
-            </mat-panel-description>
           </mat-expansion-panel-header>
           <div>
             <form #filterForm="ngForm" (ngSubmit)="filterReviews()">
               <label>Commenter name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="commenterName" type="text" maxlength="64">
+                <input matInput ngModel name="commenterName" type="text" maxlength="256">
               </mat-form-field>
 
-              <label>Book name : </label>
+              <label>Book: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="bookName" type="text" maxlength="64">
+                <input matInput ngModel name="bookName" type="text" maxlength="256">
               </mat-form-field>
 
               <label>Rating from: </label>
@@ -53,13 +50,13 @@
             <div class="card m-b-30">
               <div class="card-body row">
                 <div class="col-12 card-title align-self-center mb-0">
-                  <h2>{{review.book.name}}</h2>
+                  <h2>Book: {{review.book.name}}</h2>
                 </div>
               </div>
               <ul class="list-group list-group-flush">
-                <li class="list-group-item">Commenter name : {{review.commenterName}}</li>
-                <li class="list-group-item">Rating : {{review.rating}}</li>
-                <li class="list-group-item">Comment : {{review.comment}}</li>
+                <li class="list-group-item">Commenter name: {{review.commenterName}}</li>
+                <li class="list-group-item">Rating: {{review.rating}}</li>
+                <li class="list-group-item">Comment: {{review.comment}}</li>
               </ul>
               <div class="card-body">
                 <div class="float-right btn-group btn-group-sm">

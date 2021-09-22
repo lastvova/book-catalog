@@ -5,7 +5,6 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {SortingParameters} from "../../model/parameters/SortingParameters";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 
@@ -18,22 +17,14 @@ export class AuthorComponent implements OnInit {
 
   public authors: Author[] = [];
   public detailAuthor: Author | undefined;
-  //@ts-ignore
   public editAuthor: Author;
-  //@ts-ignore
   public deletedAuthor: Author;
-  public totalRecords?: number;
+  public totalRecords: number;
 
-  // @ts-ignore: Object is possibly 'null'
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
-  // @ts-ignore: Object is possibly 'null'
-  public sortParameters: SortingParameters = new SortingParameters();
-  // @ts-ignore: Object is possibly 'null'
   public authorFilterParameters: AuthorFilterParameters;
 
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  // @ts-ignore: Object is possibly 'null'
   @ViewChild('filterForm') filterForm: NgForm;
 
   constructor(private authorService: AuthorService) {
@@ -146,7 +137,7 @@ export class AuthorComponent implements OnInit {
       this.detailAuthor = author;
       button.setAttribute('data-target', '#detailAuthorModal');
     }
-    //@ts-ignore
+    //@ts-ignorey
     container.appendChild(button);
     button.click();
   }

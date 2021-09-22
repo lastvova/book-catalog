@@ -5,17 +5,7 @@ export class Book {
   name: string;
   yearPublisher: number;
   publisher: string;
-  isbn: number;
+  isbn: string;
   rating: number;
   authors: Author[];
-
-  constructor(id: number, name: string, publisher: string, yearPublisher: number, isbn: number, rating: number, authors: Author[]) {
-    this.id = id;
-    this.name = name;
-    this.publisher = publisher;
-    this.yearPublisher = yearPublisher;
-    this.isbn = isbn;
-    this.rating = rating;
-    this.authors = authors;
-  }
 }

@@ -19,58 +19,54 @@
         </div>
         <div>
           <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header class="right-aligned-header">
               <mat-panel-title>
                 Filter by:
               </mat-panel-title>
-              <mat-panel-description>
-                Parameters for filtering
-              </mat-panel-description>
             </mat-expansion-panel-header>
             <div>
               <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
-                <label>Name: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="name" maxlength="128">
-                </mat-form-field>
+                <div>
+                  <label>Name: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="name" maxlength="256">
+                  </mat-form-field>
 
-                <label>publisher: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="publisher" maxlength="128">
-                </mat-form-field>
+                  <label>Publisher: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="publisher" maxlength="512">
+                  </mat-form-field>
 
-                <label>year: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="yearPublisher" type="number" min="1500" max="{{currentYear}}">
-                </mat-form-field>
+                  <label>Year of publisher: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="yearPublisher" type="number" min="1" max="{{currentYear}}">
+                  </mat-form-field>
 
-                <label>isbn: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="isbn" type="text"
-                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-                         minlength="13" maxlength="13"/>
-                </mat-form-field>
-
-                <label>rating from: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="fromRating" type="number" min="0" max="5">
-                </mat-form-field>
-
-                <label>rating to: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="toRating" type="number" min="0" max="5">
-                </mat-form-field>
-
-                <label>author: </label>
-                <mat-form-field appearance="fill">
-                  <input matInput ngModel name="authorNameAndSecondName" type="text" maxlength="128">
-                </mat-form-field>
-
-                <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
-                <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
+                  <label>ISBN: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="isbn" type="text"
+                           pattern="[0-9]{3}-[0-9]-[0-9]{4}-[0-9]{4}-[0-9]" mask="000-0-0000-0000-0"
+                           minlength="17" maxlength="17"/>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <label>Rating from: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="fromRating" type="number" min="0" max="5">
+                  </mat-form-field>
+                  <label>Rating to: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="toRating" type="number" min="0" max="5">
+                  </mat-form-field>
+                  <label>Authors: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="authorNameAndSecondName" type="text" maxlength="256">
+                  </mat-form-field>
+                  <button type="submit" class="btn btn-success">Filter</button>
+                  <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
+                </div>
               </form>
             </div>
-
           </mat-expansion-panel>
         </div>
         <div class="col-12">
@@ -81,9 +77,9 @@
             <div class="card-body table-responsive">
               <table class="table table-hover" aria-describedby="availableBooks">
                 <thead class="text-warning">
-                <th id="checkBox">
-                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all
-                </th>
+                <!--                <th id="checkBox">-->
+                <!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
+                <!--                </th>-->
                 <th (click)="sortByColumn('name')" id="tableName">Name
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
@@ -130,11 +126,11 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let book of books">
-                  <td>
-                    <div class="form-check">
-                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">
-                    </div>
-                  </td>
+                  <!--                  <td>-->
+                  <!--                    <div class="form-check">-->
+                  <!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
+                  <!--                    </div>-->
+                  <!--                  </td>-->
                   <td>{{book.name}}</td>
                   <td>{{book.publisher}}</td>
                   <td>{{book.yearPublisher}}</td>
@@ -143,8 +139,10 @@
                   <td>
                     <div
                       *ngFor="let author of book.authors">
-                      {{author.firstName}}
-                      {{author.secondName}},
+                      <div>
+                        {{author.firstName}}
+                        {{author.secondName}}
+                      </div>
                     </div>
                   </td>
                   <td>
@@ -181,32 +179,31 @@
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <form #addForm="ngForm" (ngSubmit)="createBook(addForm)">
+        <form #addForm="ngForm" (ngSubmit)="createBook(addForm)" class="was-validated">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name"
-                   minlength="4" maxlength="256" required>
+                   minlength="1" maxlength="256" required>
           </div>
           <div class="form-group">
             <label for="yearOfPublisher">Year of publisher</label>
             <input type="number" ngModel name="yearOfPublisher" class="form-control" id="yearOfPublisher"
-                   placeholder="year of publisher" min="1500" max="{{currentYear}}">
+                   placeholder="year of publisher" min="1" max="{{currentYear}}">
           </div>
-          <div class="form-group">
+          <div class="form-group ">
             <label for="publisher">Publisher</label>
             <input type="text" ngModel name="publisher" class="form-control" id="publisher" placeholder="publisher"
-                   minlength="4" maxlength="512" required>
+                   minlength="1" maxlength="512" required>
           </div>
-          <div class="form-group">
+          <div class="form-group ">
             <label for="isbn">ISBN</label>
-            <input ngModel name="isbn" class="form-control" id="isbn" placeholder="isbn" type="text"
-                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-                   minlength="13" maxlength="13" required>
+            <input ngModel name="isbn" class="form-control " id="isbn" placeholder="isbn" type="text"
+                    mask="000-0-0000-0000-0" pattern="[0-9]{13}" required>
           </div>
           <div class="form-group">
             <mat-form-field appearance="fill">
               <mat-label>Authors</mat-label>
-              <mat-select multiple ngModel name="authors">
+              <mat-select multiple required ngModel name="authors">
                 <mat-option *ngFor="let author of authors" [value]="author">
                   {{author.firstName}}
                   {{author.secondName}}
@@ -234,32 +231,31 @@
       </div>
       <div class="modal-body">
         <form #editForm="ngForm">
-          <div class="form-group">
+          <div class="form-group was-validated">
             <label for="bookName">Name</label>
             <input type="text" ngModel="{{editBook?.name}}" name="name" class="form-control" id="bookName"
-                   placeholder="name" minlength="4" maxlength="256" required>
+                   placeholder="name" minlength="1" maxlength="256" required>
           </div>
           <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">
           <div class="form-group">
             <label for="yearOfPublisher">Year of publisher</label>
             <input type="number" ngModel="{{editBook?.yearPublisher}}" name="yearPublisher" class="form-control"
-                   id="bookYearPublisher" placeholder="year of publisher" min="1500" max="{{currentYear}}">
+                   id="bookYearPublisher" placeholder="year of publisher" min="1" max="{{currentYear}}">
           </div>
-          <div class="form-group">
+          <div class="form-group was-validated">
             <label for="publisher">Publisher</label>
             <input type="text" ngModel="{{editBook?.publisher}}" name="publisher" class="form-control"
-                   id="bookPublisher" placeholder="publisher" minlength="4" maxlength="512" required>
+                   id="bookPublisher" placeholder="publisher" minlength="1" maxlength="512" required>
           </div>
-          <div class="form-group">
+          <div class="form-group was-validated">
             <label for="isbn">ISBN</label>
             <input ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn" placeholder="isbn"
-                   type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
-                   minlength="13" maxlength="13" required>
+                   type="text"  mask="000-0-0000-0000-0" required>
           </div>
-          <div class="form-group">
+          <div class="form-group was-validated">
             <mat-form-field appearance="fill">
               <mat-label>Authors</mat-label>
-              <mat-select multiple ngModel name="authors">
+              <mat-select required multiple ngModel name="authors">
                 <mat-option *ngFor="let author of authors" [value]="author">
                   {{author.firstName}}
                   {{author.secondName}}
@@ -269,7 +265,7 @@
           </div>
 
           <div class="modal-footer">
-            <button (click)="updateBook(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes
+            <button [disabled]="editForm.invalid" (click)="updateBook(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes
             </button>
             <button class="btn btn" data-dismiss="modal">Close</button>
             <button (click)="deleteBook(editBook.id)" class="btn btn-danger" data-dismiss="modal">Delete</button>
@@ -314,8 +310,10 @@
         <div>Year of publisher: {{detailBook?.yearPublisher}}</div>
         <div>Rating: {{detailBook?.rating}}</div>
         <div>Authors:<a *ngFor="let author of detailBook?.authors">
-          {{author.firstName}}
-          {{author.secondName}},
+          <div>
+            {{author.firstName}}
+            {{author.secondName}}
+          </div>
         </a>
         </div>
       </div>
@@ -332,16 +330,16 @@
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)">
+        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)" class="was-validated">
           <div class="form-group">
             <label for="commenterName">Commenter name</label>
             <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name"
-                   minlength="4" maxlength="256" required>
+                   minlength="1" maxlength="256" required>
           </div>
           <div class="form-group">
             <label for="comment">Comment</label>
             <input type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment"
-                   minlength="4" maxlength="4096" required>
+                   minlength="1" maxlength="4096" required>
           </div>
           <div class="form-group">
             <label for="rating">Rating</label>
