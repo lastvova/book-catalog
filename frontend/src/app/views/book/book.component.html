@@ -197,8 +197,11 @@
           </div>
           <div class="form-group ">
             <label for="isbn">ISBN</label>
+
             <input ngModel name="isbn" class="form-control " id="isbn" placeholder="isbn" type="text"
-                    mask="000-0-0000-0000-0" pattern="[0-9]{13}" required>
+                    mask="000-0-0000-0000-0" required>
+            <h5>ISBN must contains 13 digits</h5>
+<!--                    mask="000-0-0000-0000-0" pattern="[0-9]{13}" required>-->
           </div>
           <div class="form-group">
             <mat-form-field appearance="fill">
@@ -251,6 +254,7 @@
             <label for="isbn">ISBN</label>
             <input ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn" placeholder="isbn"
                    type="text"  mask="000-0-0000-0000-0" required>
+            <h5>ISBN must contains 13 digits</h5>
           </div>
           <div class="form-group was-validated">
             <mat-form-field appearance="fill">
