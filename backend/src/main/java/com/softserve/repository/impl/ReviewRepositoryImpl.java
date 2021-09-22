@@ -53,7 +53,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
             }
             if (filterParameters.getToRating() != null) {
                 predicates.add(
-                        criteriaBuilder.le(reviews.get("rating"), filterParameters.getToRating()));
+                        criteriaBuilder.lt(reviews.get("rating"), filterParameters.getToRating()));
             }
             if (filterParameters.getBookName() != null) {
                 Join<Review, Book> book = reviews.join("book");
@@ -71,7 +71,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Review> reviews = countQuery.from(Review.class);
         reviews.join("book");
-        countQuery.select(criteriaBuilder.count(reviews)).where(predicate);
+        countQuery.select(criteriaBuilder.countDistinct(reviews)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 

@@ -78,7 +78,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
             }
             if (filterParameters.getToRating() != null) {
                 predicates.add(
-                        criteriaBuilder.le(authors.get("rating"), filterParameters.getToRating()));
+                        criteriaBuilder.lt(authors.get("rating"), filterParameters.getToRating()));
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

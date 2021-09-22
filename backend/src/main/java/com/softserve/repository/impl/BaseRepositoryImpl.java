@@ -107,6 +107,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         Root<T> root = criteriaQuery.from(basicClass);
         Predicate predicate = getPredicate(listParams, root);
         criteriaQuery.where(predicate);
+        criteriaQuery.groupBy(root);
         setOrder(listParams, criteriaQuery, root);
 
         TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -141,7 +142,8 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected long getEntityCount(Predicate predicate) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(basicClass);
-        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
+        countQuery.groupBy(countRoot);
+        countQuery.select(criteriaBuilder.countDistinct(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 

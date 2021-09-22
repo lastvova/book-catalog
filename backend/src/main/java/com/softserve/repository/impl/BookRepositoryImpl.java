@@ -105,7 +105,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
             }
             if (filterParameters.getToRating() != null) {
                 predicates.add(
-                        criteriaBuilder.le(books.get("rating"), filterParameters.getToRating()));
+                        criteriaBuilder.lt(books.get("rating"), filterParameters.getToRating()));
             }
             if (filterParameters.getIsbn() != null) {
                 predicates.add(
@@ -138,7 +138,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Book> books = countQuery.from(Book.class);
         books.join("authors");
-        countQuery.select(criteriaBuilder.count(books)).where(predicate);
+        countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 }
