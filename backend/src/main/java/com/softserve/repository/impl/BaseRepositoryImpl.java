@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 
-import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.utils.ListParams;
 import org.slf4j.Logger;
@@ -63,7 +62,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     public T create(T entity) {
         LOGGER.debug("create({})", entity);
         if (isInvalidEntity(entity)) {
-            throw new WrongEntityException("Wrong entity in save method " + entity);
+            throw new IllegalArgumentException("Wrong entity in save method ");
         }
         entityManager.persist(entity);
         return entity;
@@ -74,10 +73,10 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     public T update(T entity) {
         LOGGER.debug("update({})", entity);
         if (isInvalidEntityId(entity)) {
-            throw new IllegalStateException("Wrong entity id");
+            throw new IllegalArgumentException("Wrong entity id");
         }
         if (isInvalidEntity(entity)) {
-            throw new WrongEntityException("Wrong entity in update method " + entity);
+            throw new IllegalArgumentException("Wrong entity in update method " + entity);
         }
         entityManager.merge(entity);
         return entity;

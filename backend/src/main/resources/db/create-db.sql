@@ -18,7 +18,7 @@ CREATE TABLE books
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT,
     name           VARCHAR(256) NOT NULL,
-    year_publisher INT,
+    year_publisher INT check ( year_publisher ),
     isbn           BIGINT       NOT NULL,
     publisher      VARCHAR(512),
     rating         DECIMAL(3, 2) DEFAULT 0.00,
@@ -31,7 +31,7 @@ CREATE TABLE reviews
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT,
     commenter_name VARCHAR(256)     NOT NULL,
-    comment        TEXT(4096) NOT NULL,
+    comment        TEXT NOT NULL,
     rating         TINYINT UNSIGNED NOT NULL,
     book_id        BIGINT UNSIGNED  NOT NULL,
     created_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

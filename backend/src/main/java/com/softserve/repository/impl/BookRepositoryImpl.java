@@ -2,7 +2,6 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Author;
 import com.softserve.entity.Book;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.utils.BookFilterParameters;
 import com.softserve.utils.ListParams;
@@ -37,9 +36,6 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
             throw new IllegalStateException("Wrong book id");
         }
         Book book = entityManager.find(Book.class, id);
-        if (book == null) {
-            throw new EntityNotFoundException("Not found entity with id: " + id.toString());
-        }
         book.getAuthors().size();
         return book;
     }
@@ -118,6 +114,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                                 "%" + filterParameters.getPublisher() + "%")
                 );
             }
+//            TODO
             if (filterParameters.getAuthorNameAndSecondName() != null) {
                 Join<Book, Author> authors = books.join("authors");
                 predicates.add(
