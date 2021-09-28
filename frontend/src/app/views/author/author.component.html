@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-4">
             <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>
-            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>
+            <!--            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>-->
           </div>
           <div class="col-8">
             <div class="d-flex justify-content-end align-items-end">
@@ -40,7 +40,7 @@
 
               <label>Rating to: </label>
               <mat-form-field appearance="fill">
-                <input matInput  ngModel name="toRating" type="number" min="0" max="5">
+                <input matInput ngModel name="toRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
@@ -56,10 +56,10 @@
             </div>
             <div class="card-body table-responsive">
               <table class="table table-hover" aria-describedby="availableAuthors">
-                <thead class="text-warning">
-<!--                <th id="checkBox">-->
-<!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
-<!--                </th>-->
+                <thead class="text">
+                <!--                <th id="checkBox">-->
+                <!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
+                <!--                </th>-->
                 <th (click)="sortByColumn('firstName')" id="tableName">First Name
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"
@@ -87,11 +87,11 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let author of authors">
-<!--                  <td>-->
-<!--                    <div class="form-check">-->
-<!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
-<!--                    </div>-->
-<!--                  </td>-->
+                  <!--                  <td>-->
+                  <!--                    <div class="form-check">-->
+                  <!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
+                  <!--                    </div>-->
+                  <!--                  </td>-->
                   <td>{{author.firstName}}</td>
                   <td>{{author.secondName}}</td>
                   <td>{{author.rating}}</td>
@@ -128,12 +128,12 @@
       </div>
       <div class="modal-body">
         <form #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="was-validated">
-          <div class="form-group">
-            <label for="authorName">Name</label>
+          <div class="form-group col-12">
+            <label for="authorName">First name</label>
             <input type="text" ngModel name="firstName" minlength="1" maxlength="128"
                    class="form-control" id="authorName" placeholder="name" required>
           </div>
-          <div class="form-group">
+          <div class="form-group col-12">
             <label for="authorSecondName">Second name</label>
             <input type="text" ngModel name="secondName" minlength="1" maxlength="128"
                    class="form-control" id="authorSecondName" placeholder="second name" required>
@@ -159,24 +159,24 @@
       </div>
       <div class="modal-body">
         <form #editForm="ngForm" class="was-validated">
-          <div class="form-group">
-            <label for="updateAuthorName">Name</label>
+          <div class="form-group col-12">
+            <label for="updateAuthorName">First name</label>
             <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" minlength="1" maxlength="128"
                    class="form-control"
                    id="updateAuthorName" placeholder="name" required>
           </div>
           <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control" id="id" placeholder="Email">
-          <div class="form-group">
+          <div class="form-group col-12">
             <label for="updateAuthorSecondName">Second name</label>
-            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName"  maxlength="128"
+            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" maxlength="128"
                    class="form-control"
                    id="updateAuthorSecondName" placeholder="second name">
           </div>
           <div class="modal-footer">
-            <button [disabled]="editForm.invalid" (click)="updateAuthor(editForm.value)" class="btn btn-success" data-dismiss="modal">Save changes
+            <button [disabled]="editForm.invalid" (click)="updateAuthor(editForm.value)" class="btn btn-success"
+                    data-dismiss="modal">Save
             </button>
             <button class="btn btn-danger" data-dismiss="modal">Close</button>
-            <button (click)="deleteAuthor(editAuthor.id)" class="btn btn-danger" data-dismiss="modal">Delete</button>
           </div>
         </form>
       </div>
@@ -212,12 +212,13 @@
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <div>Name: {{detailAuthor?.firstName}}</div>
+        <div>First name: {{detailAuthor?.firstName}}</div>
         <div>Second name: {{detailAuthor?.secondName}}</div>
-<!--        <div>Books: <a *ngFor="let book of detailAuthor?.books">-->
-<!--          {{book.name}}-->
-<!--        </a>-->
-<!--        </div>-->
+        <div>Rating: {{detailAuthor?.rating}}</div>
+        <!--        <div>Books: <a *ngFor="let book of detailAuthor?.books">-->
+        <!--          {{book.name}}-->
+        <!--        </a>-->
+        <!--        </div>-->
       </div>
     </div>
   </div>

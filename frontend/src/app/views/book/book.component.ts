@@ -1,9 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Book} from "../../model/Book";
-import {Router} from "@angular/router";
 import {BookService} from "../../service/book.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {FormControl, NgForm} from "@angular/forms";
+import {NgForm} from "@angular/forms";
 import {Author} from "../../model/Author";
 import {AuthorService} from "../../service/author.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
@@ -21,7 +20,8 @@ export class BookComponent implements OnInit {
 
   public books: Book[] = [];
   public authors: Author[] = [];
-  public detailBook: Book | undefined;
+  public searchedAuthors: Author[] = [];
+  public detailBook: Book;
   public editBook: Book;
   public deletedBook: Book;
   public selectedAuthors: Author[];
@@ -33,6 +33,7 @@ export class BookComponent implements OnInit {
 
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   @ViewChild('filterForm') filterForm: NgForm;
+  @ViewChild('multiSearch') multiAuthorSearch: ElementRef;
 
   constructor(private bookService: BookService, private authorService: AuthorService,
               private reviewService: ReviewService) {
@@ -46,6 +47,7 @@ export class BookComponent implements OnInit {
     this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
+        this.searchedAuthors = response.content;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -220,5 +222,21 @@ export class BookComponent implements OnInit {
         reviewForm.reset();
       }
     )
+  }
+
+  public onInputChange() {
+    this.searchedAuthors = this.authors;
+    const searchInput = this.multiAuthorSearch.nativeElement.value ?
+      this.multiAuthorSearch.nativeElement.value.toLowerCase() : '';
+    this.authors = this.searchedAuthors.filter(a => {
+      const name: string = a.firstName.toLowerCase();
+      return name.indexOf(searchInput) > -1;
+    })
+  }
+
+  public reformatIsbn(isbn: any): string {
+    debugger;
+    let result: string = isbn.toString().substring(0, 3);
+    return result;
   }
 }

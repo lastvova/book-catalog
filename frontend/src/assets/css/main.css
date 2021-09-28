@@ -10904,3 +10904,9 @@ textarea.form-control-lg {
     display: none !important
   }
 }
+/*.cdk-overlay-pane{*/
+/*  z-index: 1051 !important;*/
+/*}*/
+.cdk-overlay-container {
+  z-index: 1051;
+}
