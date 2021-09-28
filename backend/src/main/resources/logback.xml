@@ -18,4 +18,14 @@
         <appender-ref ref="FILE"/>
     </root>
 
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%-5level] %-4relative %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
 </configuration>
