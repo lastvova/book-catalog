@@ -62,11 +62,12 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (params.getPattern() != null) {
             AuthorFilterParameters filterParameters = (AuthorFilterParameters) params.getPattern();
             if (filterParameters.getName() != null) {
+                String filterName = filterParameters.getName();
                 predicates.add(criteriaBuilder.or(
                         criteriaBuilder.like(authors.get("firstName"),
-                                "%" + filterParameters.getName() + "%"),
+                                "%" + filterName + "%"),
                         criteriaBuilder.like(authors.get("secondName"),
-                                "%" + filterParameters.getName() + "%"))
+                                "%" + filterName + "%"))
                 );
             }
             if (filterParameters.getFromRating() != null) {

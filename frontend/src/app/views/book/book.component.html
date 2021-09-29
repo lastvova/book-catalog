@@ -30,38 +30,35 @@
                 <div>
                   <label>Name: </label>
                   <mat-form-field appearance="fill">
-                    <input matInput ngModel name="name" maxlength="256">
+                    <input matInput ngModel name="name" >
                   </mat-form-field>
-
-                  <label>Publisher: </label>
+                  <label>Authors: </label>
                   <mat-form-field appearance="fill">
-                    <input matInput ngModel name="publisher" maxlength="512">
+                    <input matInput ngModel name="searchingName" type="text">
                   </mat-form-field>
-
+                  <label>Rating from: </label>
+                  <mat-form-field appearance="fill" class="rating-field">
+                    <input matInput ngModel name="fromRating" type="number" min="0" max="5">
+                  </mat-form-field>
+                  <label>Rating to: </label>
+                  <mat-form-field appearance="fill" class="rating-field">
+                    <input matInput ngModel name="toRating" type="number" min="0" max="5">
+                  </mat-form-field>
+                </div>
+                <div>
                   <label>Year of publisher: </label>
-                  <mat-form-field appearance="fill">
+                  <mat-form-field appearance="fill" class="year-field">
                     <input matInput ngModel name="yearPublisher" type="number" min="1" max="{{currentYear}}">
                   </mat-form-field>
-
+                  <label>Publisher: </label>
+                  <mat-form-field appearance="fill">
+                    <input matInput ngModel name="publisher">
+                  </mat-form-field>
                   <label>ISBN: </label>
                   <mat-form-field appearance="fill">
                     <input matInput ngModel name="isbn" type="text"
                            pattern="[0-9]{3}-[0-9]-[0-9]{4}-[0-9]{4}-[0-9]" mask="000-0-0000-0000-0"
                            minlength="17" maxlength="17"/>
-                  </mat-form-field>
-                </div>
-                <div>
-                  <label>Rating from: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="fromRating" type="number" min="0" max="5">
-                  </mat-form-field>
-                  <label>Rating to: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="toRating" type="number" min="0" max="5">
-                  </mat-form-field>
-                  <label>Authors: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="authorNameAndSecondName" type="text" maxlength="256">
                   </mat-form-field>
                   <button type="submit" class="btn btn-success">Filter</button>
                   <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
@@ -99,7 +96,7 @@
                   <em
                     *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></th>
-                <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year
+                <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher:
                   <em
                     *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
@@ -149,7 +146,9 @@
                   <td>{{book.yearPublisher}}</td>
                   <td>{{book.publisher}}</td>
                   <td>
-                    <div>{{(book.isbn).toString().substring(0, 3)}}-{{(book.isbn).toString().substring(3, 4)}}-{{(book.isbn).toString().substring(4, 8)}}-{{(book.isbn).toString().substring(8, 12)}}-{{(book.isbn).toString().substring(12, 13)}}</div>
+                    <div>{{(book.isbn).toString().substring(0, 3)}}-{{(book.isbn).toString().substring(3, 4)}}
+                      -{{(book.isbn).toString().substring(4, 8)}}-{{(book.isbn).toString().substring(8, 12)}}
+                      -{{(book.isbn).toString().substring(12, 13)}}</div>
                   </td>
 
                   <td>
@@ -193,7 +192,7 @@
                    minlength="1" maxlength="256" required>
           </div>
           <div class="form-group col-6" style="float: right">
-            <label for="yearOfPublisher">Year</label>
+            <label for="yearOfPublisher">Year of publisher:</label>
             <input type="number" ngModel name="yearPublisher" class="form-control" id="yearOfPublisher"
                    placeholder="year of publisher" min="1" max="{{currentYear}}">
           </div>
@@ -325,14 +324,14 @@
       <div class="modal-body">
         <div>Name: {{detailBook?.name}}</div>
         <div>Authors:<a *ngFor="let author of detailBook?.authors">
-            {{author.firstName}}
-            {{author.secondName}}
+          {{author.firstName}}
+          {{author.secondName}}
         </a>
         </div>
         <div>Rating: {{detailBook?.rating}}</div>
         <div>Year of publisher: {{detailBook?.yearPublisher}}</div>
         <div>Publisher: {{detailBook?.publisher}}</div>
-        <div >ISBN: {{detailBook?.isbn}}</div>
+        <div>ISBN: {{detailBook?.isbn}}</div>
       </div>
     </div>
   </div>

@@ -114,15 +114,15 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                                 "%" + filterParameters.getPublisher() + "%")
                 );
             }
-//            TODO
-            if (filterParameters.getAuthorNameAndSecondName() != null) {
+            if (filterParameters.getSearchingName() != null) {
+                String filterName = filterParameters.getSearchingName();;
                 Join<Book, Author> authors = books.join("authors");
                 predicates.add(
                         criteriaBuilder.or(
                                 criteriaBuilder.like(authors.get("firstName"),
-                                        "%" + filterParameters.getAuthorNameAndSecondName() + "%"),
+                                        "%" + filterName + "%"),
                                 criteriaBuilder.like(authors.get("secondName"),
-                                        "%" + filterParameters.getAuthorNameAndSecondName() + "%"))
+                                        "%" + filterName + "%"))
                 );
             }
         }
