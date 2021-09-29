@@ -106,8 +106,7 @@ export class AuthorComponent implements OnInit {
 
   public filterAuthors(): void {
     this.authorFilterParameters = new AuthorFilterParameters();
-    this.authorFilterParameters.firstName = this.filterForm.value.firstName;
-    this.authorFilterParameters.secondName = this.filterForm.value.secondName;
+    this.authorFilterParameters.name = this.filterForm.value.name;
     this.authorFilterParameters.toRating = this.filterForm.value.toRating;
     this.authorFilterParameters.fromRating = this.filterForm.value.fromRating;
     this.pageSortFilterParameters.pattern = this.authorFilterParameters;

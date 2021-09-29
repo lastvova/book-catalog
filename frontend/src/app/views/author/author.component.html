@@ -23,14 +23,9 @@
           </mat-expansion-panel-header>
           <div>
             <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
-              <label>First name: </label>
+              <label>Name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="firstName" maxlength="128">
-              </mat-form-field>
-
-              <label>Second name: </label>
-              <mat-form-field appearance="fill">
-                <input matInput ngModel name="secondName" maxlength="128">
+                <input matInput ngModel name="name" maxlength="128">
               </mat-form-field>
 
               <label>Rating from: </label>

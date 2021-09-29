@@ -61,16 +61,13 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         List<Predicate> predicates = new ArrayList<>();
         if (params.getPattern() != null) {
             AuthorFilterParameters filterParameters = (AuthorFilterParameters) params.getPattern();
-            if (filterParameters.getFirstName() != null) {
-                predicates.add(
+            if (filterParameters.getName() != null) {
+                predicates.add(criteriaBuilder.or(
                         criteriaBuilder.like(authors.get("firstName"),
-                                "%" + filterParameters.getFirstName() + "%")
-                );
-            }
-            if (filterParameters.getSecondName() != null) {
-                predicates.add(
+                                "%" + filterParameters.getName() + "%"),
                         criteriaBuilder.like(authors.get("secondName"),
-                                "%" + filterParameters.getSecondName() + "%"));
+                                "%" + filterParameters.getName() + "%"))
+                );
             }
             if (filterParameters.getFromRating() != null) {
                 predicates.add(

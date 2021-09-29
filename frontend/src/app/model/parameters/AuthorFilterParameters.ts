@@ -1,6 +1,5 @@
 export class AuthorFilterParameters {
-  firstName: string;
-  secondName: string;
+  name: string;
   fromRating: number;
   toRating: number;
 }
