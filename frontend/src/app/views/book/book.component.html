@@ -30,7 +30,7 @@
                 <div>
                   <label>Name: </label>
                   <mat-form-field appearance="fill">
-                    <input matInput ngModel name="name" >
+                    <input matInput ngModel name="name">
                   </mat-form-field>
                   <label>Authors: </label>
                   <mat-form-field appearance="fill">
@@ -48,17 +48,16 @@
                 <div>
                   <label>Year of publisher: </label>
                   <mat-form-field appearance="fill" class="year-field">
-                    <input matInput ngModel name="yearPublisher" type="number" min="1" max="{{currentYear}}">
+                    <input matInput ngModel name="yearPublisher" type="number">
                   </mat-form-field>
                   <label>Publisher: </label>
                   <mat-form-field appearance="fill">
                     <input matInput ngModel name="publisher">
                   </mat-form-field>
                   <label>ISBN: </label>
-                  <mat-form-field appearance="fill">
+                  <mat-form-field hintLabel="Type 13 digits" appearance="fill">
                     <input matInput ngModel name="isbn" type="text"
-                           pattern="[0-9]{3}-[0-9]-[0-9]{4}-[0-9]{4}-[0-9]" mask="000-0-0000-0000-0"
-                           minlength="17" maxlength="17"/>
+                           mask="000-0-0000-0000-0" minlength="17" maxlength="17"/>
                   </mat-form-field>
                   <button type="submit" class="btn btn-success">Filter</button>
                   <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
@@ -226,6 +225,7 @@
                 <mat-option *ngFor="let author of authors" [value]="author">{{author.firstName}}</mat-option>
               </mat-select>
             </mat-form-field>
+
           </div>
           <div class="modal-footer">
             <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>
@@ -375,3 +375,19 @@
   </div>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // инициализируем контент #modal-content как Modal
+    $('#modal-content').modal({
+      keyboard: false,
+      show: false,
+      backdrop: 'static'
+    });
+    // при нажатию на кнопку будем его открывать
+    $('#btn').click(function () {
+      $('#modal-content').modal('show');
+    });
+
+  });
+</script>

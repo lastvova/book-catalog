@@ -40,8 +40,8 @@ export class AuthorComponent implements OnInit {
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
-        this.pageSortFilterParameters.pageNumber = response.number;
-        this.pageSortFilterParameters.pageSize = response.size;
+        // this.pageSortFilterParameters.pageNumber = response.number;
+        // this.pageSortFilterParameters.pageSize = response.size;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -77,7 +77,7 @@ export class AuthorComponent implements OnInit {
         alert(error.message)
         addForm.reset();
       }
-    )
+    );
   }
 
   public updateAuthor(author: Author): void {
@@ -136,7 +136,7 @@ export class AuthorComponent implements OnInit {
       this.detailAuthor = author;
       button.setAttribute('data-target', '#detailAuthorModal');
     }
-    //@ts-ignorey
+    //@ts-ignore
     container.appendChild(button);
     button.click();
   }

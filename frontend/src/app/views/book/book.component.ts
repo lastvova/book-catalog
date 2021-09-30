@@ -233,10 +233,4 @@ export class BookComponent implements OnInit {
       return name.indexOf(searchInput) > -1;
     })
   }
-
-  public reformatIsbn(isbn: any): string {
-    debugger;
-    let result: string = isbn.toString().substring(0, 3);
-    return result;
-  }
 }

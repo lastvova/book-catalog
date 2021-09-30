@@ -4,3 +4,10 @@
 .cdk-overlay-container {
   z-index: 1051;
 }
+
+.rating-field{
+  width: 50px;
+}
+.year-field{
+  width: 75px;
+}

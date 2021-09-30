@@ -29,12 +29,12 @@
               </mat-form-field>
 
               <label>Rating from: </label>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill" class="rating-field">
                 <input matInput ngModel name="fromRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <label>Rating to: </label>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill" class="rating-field">
                 <input matInput ngModel name="toRating" type="number" min="0" max="5">
               </mat-form-field>
 
@@ -114,7 +114,7 @@
 </div>
 
 <div class="modal fade" id="createAuthorModal" tabindex="-1" role="dialog" aria-labelledby="createAuthorModal"
-     aria-hidden="true">
+     aria-hidden="true" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -122,7 +122,7 @@
         <button class="close" data-dismiss="modal">X</button>
       </div>
       <div class="modal-body">
-        <form #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="was-validated">
+        <form id="createForm" #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="was-validated">
           <div class="form-group col-12">
             <label for="authorName">First name</label>
             <input type="text" ngModel name="firstName" minlength="1" maxlength="128"
@@ -218,3 +218,4 @@
     </div>
   </div>
 </div>
+

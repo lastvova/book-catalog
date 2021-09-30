@@ -21,21 +21,21 @@
             <form #filterForm="ngForm" (ngSubmit)="filterReviews()">
               <label>Commenter name: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="commenterName" type="text" maxlength="256">
+                <input matInput ngModel name="commenterName" type="text" >
               </mat-form-field>
 
               <label>Book: </label>
               <mat-form-field appearance="fill">
-                <input matInput ngModel name="bookName" type="text" maxlength="256">
+                <input matInput ngModel name="bookName" type="text" >
               </mat-form-field>
 
               <label>Rating from: </label>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill" class="rating-field">
                 <input matInput ngModel name="fromRating" type="number" min="0" max="5">
               </mat-form-field>
 
               <label>Rating to: </label>
-              <mat-form-field appearance="fill">
+              <mat-form-field appearance="fill" class="rating-field">
                 <input matInput ngModel name="toRating" type="number" min="0" max="5">
               </mat-form-field>
 
