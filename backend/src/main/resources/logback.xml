@@ -14,7 +14,9 @@
         </rollingPolicy>
     </appender>
 
-    <root level="DEBUG">
+    <logger name="com.softserve" level="DEBUG" />
+
+    <root level="INFO">
         <appender-ref ref="FILE"/>
     </root>
 
@@ -24,7 +26,9 @@
         </encoder>
     </appender>
 
-    <root level="DEBUG">
+    <logger name="com.softserve" level="DEBUG" />
+
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 
