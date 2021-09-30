@@ -7,6 +7,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
+import {MatAccordion} from "@angular/material/expansion";
 
 @Component({
   selector: 'app-author',
@@ -26,6 +27,7 @@ export class AuthorComponent implements OnInit {
 
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   @ViewChild('filterForm') filterForm: NgForm;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
 
   constructor(private authorService: AuthorService) {
   }

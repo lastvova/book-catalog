@@ -1,221 +1,400 @@
-<div class="wrapper ">
-  <div class="main-panel">
-    <div class="content">
-      <div class="container-fluid" id="main-container">
-        <div class="row">
-          <div class="col-4">
-            <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>
-            <!--            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>-->
-          </div>
-          <div class="col-8">
-            <div class="d-flex justify-content-end align-items-end">
-              <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
-                             (page)="onPageChange($event)" aria-label="Select page">
-              </mat-paginator>
+<!--<div class="wrapper ">-->
+<!--  <div class="main-panel">-->
+<!--    <div class="content">-->
+<!--      <div class="container-fluid" id="main-container">-->
+<!--        <div class="row">-->
+<!--          <div class="col-4">-->
+<!--            <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>-->
+<!--            &lt;!&ndash;            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>&ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="col-8">-->
+<!--            <div class="d-flex justify-content-end align-items-end">-->
+<!--              <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"-->
+<!--                             (page)="onPageChange($event)" aria-label="Select page">-->
+<!--              </mat-paginator>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <mat-expansion-panel hideToggle>-->
+<!--          <mat-expansion-panel-header>-->
+<!--            <mat-panel-title>-->
+<!--              Filter by:-->
+<!--            </mat-panel-title>-->
+<!--          </mat-expansion-panel-header>-->
+<!--          <div>-->
+<!--            <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">-->
+<!--              <label>Name: </label>-->
+<!--              <mat-form-field appearance="fill">-->
+<!--                <input matInput ngModel name="name" maxlength="128">-->
+<!--              </mat-form-field>-->
+
+<!--              <label>Rating from: </label>-->
+<!--              <mat-form-field appearance="fill" class="rating-field">-->
+<!--                <input matInput ngModel name="fromRating" type="number" min="0" max="5">-->
+<!--              </mat-form-field>-->
+
+<!--              <label>Rating to: </label>-->
+<!--              <mat-form-field appearance="fill" class="rating-field">-->
+<!--                <input matInput ngModel name="toRating" type="number" min="0" max="5">-->
+<!--              </mat-form-field>-->
+
+<!--              <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>-->
+<!--              <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>-->
+<!--            </form>-->
+<!--          </div>-->
+
+<!--        </mat-expansion-panel>-->
+<!--        <div class="col-12">-->
+<!--          <div class="card">-->
+<!--            <div class="card-header card-header-warning">-->
+<!--              <h1 class="card-title">Authors</h1>-->
+<!--            </div>-->
+<!--            <div class="card-body table-responsive">-->
+<!--              <table class="table table-hover" aria-describedby="availableAuthors">-->
+<!--                <thead class="text">-->
+<!--                &lt;!&ndash;                <th id="checkBox">&ndash;&gt;-->
+<!--                &lt;!&ndash;                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all&ndash;&gt;-->
+<!--                &lt;!&ndash;                </th>&ndash;&gt;-->
+<!--                <th (click)="sortByColumn('firstName')" id="tableName">First Name-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField != 'firstName'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+<!--                <th (click)="sortByColumn('secondName')" id="tableSecondName">Second Name-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField != 'secondName'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+<!--                <th (click)="sortByColumn('rating')" id="tableRating">Rating-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr *ngFor="let author of authors">-->
+<!--                  &lt;!&ndash;                  <td>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    <div class="form-check">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  </td>&ndash;&gt;-->
+<!--                  <td>{{author.firstName}}</td>-->
+<!--                  <td>{{author.secondName}}</td>-->
+<!--                  <td>{{author.rating}}</td>-->
+<!--                  <td>-->
+<!--                    <div class="btn-group" role="group">-->
+<!--                      <a (click)="onOpenModal('edit', author)" class="btn btn-success btn-sm rounded-top"-->
+<!--                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>-->
+<!--                      <a (click)="onOpenModal('detail',author)" class="btn btn-info btn-sm rounded-top"-->
+<!--                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>-->
+<!--                      <a (click)="onOpenModal('delete', author)" class="btn btn-danger btn-sm rounded-bottom"-->
+<!--                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>-->
+<!--                    </div>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--              </table>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <footer class="footer">-->
+<!--    </footer>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="createAuthorModal" tabindex="-1" role="dialog" aria-labelledby="createAuthorModal"-->
+<!--     aria-hidden="true" >-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Create Author</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form id="createForm" #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="was-validated">-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="authorName">First name</label>-->
+<!--            <input type="text" ngModel name="firstName" minlength="1" maxlength="128"-->
+<!--                   class="form-control" id="authorName" placeholder="name" required>-->
+<!--          </div>-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="authorSecondName">Second name</label>-->
+<!--            <input type="text" ngModel name="secondName" minlength="1" maxlength="128"-->
+<!--                   class="form-control" id="authorSecondName" placeholder="second name" required>-->
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>-->
+<!--            <button type="button" id="add-author-form" class="btn btn-danger" data-dismiss="modal">Close</button>-->
+<!--          </div>-->
+<!--        </form>-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="updateAuthorModal" tabindex="-1" role="dialog" aria-labelledby="updateAuthorModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Edit {{editAuthor?.firstName}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form #editForm="ngForm" class="was-validated">-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="updateAuthorName">First name</label>-->
+<!--            <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" minlength="1" maxlength="128"-->
+<!--                   class="form-control"-->
+<!--                   id="updateAuthorName" placeholder="name" required>-->
+<!--          </div>-->
+<!--          <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control" id="id" placeholder="Email">-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="updateAuthorSecondName">Second name</label>-->
+<!--            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" maxlength="128"-->
+<!--                   class="form-control"-->
+<!--                   id="updateAuthorSecondName" placeholder="second name">-->
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button [disabled]="editForm.invalid" (click)="updateAuthor(editForm.value)" class="btn btn-success"-->
+<!--                    data-dismiss="modal">Save-->
+<!--            </button>-->
+<!--            <button class="btn btn-danger" data-dismiss="modal">Close</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="deleteAuthorModal" tabindex="-1" role="dialog" aria-labelledby="deleteAuthorModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Delete {{deletedAuthor?.firstName}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p>Are you sure you want to delete {{deletedAuthor?.firstName}} {{deletedAuthor?.secondName}} ?</p>-->
+<!--        <div class="modal-footer">-->
+<!--          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>-->
+<!--          <button (click)="deleteAuthor(deletedAuthor.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="detailAuthorModal" tabindex="-1" role="dialog" aria-labelledby="detailAuthorModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Details {{detailAuthor?.firstName}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div>First name: {{detailAuthor?.firstName}}</div>-->
+<!--        <div>Second name: {{detailAuthor?.secondName}}</div>-->
+<!--        <div>Rating: {{detailAuthor?.rating}}</div>-->
+<!--        &lt;!&ndash;        <div>Books: <a *ngFor="let book of detailAuthor?.books">&ndash;&gt;-->
+<!--        &lt;!&ndash;          {{book.name}}&ndash;&gt;-->
+<!--        &lt;!&ndash;        </a>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </div>&ndash;&gt;-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="page-heading">
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        Authors Datatable
+      </div>
+      <div class="card-body">
+        <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+          <div class="dataTable-top">
+            <div class="dataTable-dropdown"><select class="dataTable-selector form-select">
+              <option value="5">5</option>
+              <option value="10" selected="">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+              <option value="25">25</option>
+            </select><label>entries per page</label></div>
+            <div>
+              <button class="mat-icon-button" data-toggle="collapse" href="#collapseExample" role="button"><a
+                class="fa fa-filter"></a></button>
             </div>
           </div>
-        </div>
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Filter by:
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div>
-            <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
-              <label>Name: </label>
-              <mat-form-field appearance="fill">
-                <input matInput ngModel name="name" maxlength="128">
-              </mat-form-field>
+          <div class="dataTable-container">
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
 
-              <label>Rating from: </label>
-              <mat-form-field appearance="fill" class="rating-field">
-                <input matInput ngModel name="fromRating" type="number" min="0" max="5">
-              </mat-form-field>
-
-              <label>Rating to: </label>
-              <mat-form-field appearance="fill" class="rating-field">
-                <input matInput ngModel name="toRating" type="number" min="0" max="5">
-              </mat-form-field>
-
-              <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
-              <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
-            </form>
-          </div>
-
-        </mat-expansion-panel>
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header card-header-warning">
-              <h1 class="card-title">Authors</h1>
-            </div>
-            <div class="card-body table-responsive">
-              <table class="table table-hover" aria-describedby="availableAuthors">
-                <thead class="text">
-                <!--                <th id="checkBox">-->
-                <!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
-                <!--                </th>-->
-                <th (click)="sortByColumn('firstName')" id="tableName">First Name
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField != 'firstName'" class="fa fa-sort"></em>
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
-                <th (click)="sortByColumn('secondName')" id="tableSecondName">Second Name
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField != 'secondName'" class="fa fa-sort"></em>
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'secondName' && pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
-                <th (click)="sortByColumn('rating')" id="tableRating">Rating
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>
-                  <em
-                    *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
-                </thead>
-                <tbody>
-                <tr *ngFor="let author of authors">
-                  <!--                  <td>-->
-                  <!--                    <div class="form-check">-->
-                  <!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
-                  <!--                    </div>-->
-                  <!--                  </td>-->
-                  <td>{{author.firstName}}</td>
-                  <td>{{author.secondName}}</td>
-                  <td>{{author.rating}}</td>
-                  <td>
-                    <div class="btn-group" role="group">
-                      <a (click)="onOpenModal('edit', author)" class="btn btn-success btn-sm rounded-top"
-                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
-                      <a (click)="onOpenModal('detail',author)" class="btn btn-info btn-sm rounded-top"
-                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
-                      <a (click)="onOpenModal('delete', author)" class="btn btn-danger btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
+                  <div class="row align-items-center">
+                    <div class="col-md-1 text-end" style="padding: 0px 0px">
+                      Name:
                     </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+                    <div class="col-md-3 text-center">
+                      <input class="form-control" type="text" ngModel name="name" maxlength="128">
+                    </div>
+                    <div class="col-md-1 text-end" style="padding: 0px 0px">
+                      Rating from:
+                    </div>
+                    <div class="col-md-1 text-center">
+                      <input class="form-control" type="number" ngModel name="fromRating" min="0" max="5">
+                    </div>
+                    <div class="col-md-1 text-end" style="padding: 0px 0px">
+                      Rating to:
+                    </div>
+                    <div class="col-md-1 text-center">
+                      <input class="form-control" type="number" ngModel name="toRating" min="0" max="5">
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <button [disabled]="filterForm.invalid" type="submit" class="btn btn-success">Filter</button>
+                      <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+
             </div>
+            <table class="table table-striped dataTable-table" id="table1">
+              <thead>
+              <tr>
+                <th data-sortable="" style="width: 11.8622%;"><a href="#" class="dataTable-sorter">Name</a></th>
+                <th data-sortable="" style="width: 41.8367%;"><a href="#" class="dataTable-sorter">Email</a></th>
+                <th data-sortable="" style="width: 18.8776%;"><a href="#" class="dataTable-sorter">Phone</a></th>
+                <th data-sortable="" style="width: 16.3265%;"><a href="#" class="dataTable-sorter">City</a></th>
+                <th data-sortable="" style="width: 11.0969%;"><a href="#" class="dataTable-sorter">Status</a></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Graiden</td>
+                <td>vehicula.aliquet@semconsequat.co.uk</td>
+                <td>076 4820 8838</td>
+                <td>Offenburg</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Dale</td>
+                <td>fringilla.euismod.enim@quam.ca</td>
+                <td>0500 527693</td>
+                <td>New Quay</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Nathaniel</td>
+                <td>mi.Duis@diam.edu</td>
+                <td>(012165) 76278</td>
+                <td>Grumo Appula</td>
+                <td>
+                  <span class="badge bg-danger">Inactive</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Darius</td>
+                <td>velit@nec.com</td>
+                <td>0309 690 7871</td>
+                <td>Ways</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Oleg</td>
+                <td>rhoncus.id@Aliquamauctorvelit.net</td>
+                <td>0500 441046</td>
+                <td>Rossignol</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Kermit</td>
+                <td>diam.Sed.diam@anteVivamusnon.org</td>
+                <td>(01653) 27844</td>
+                <td>Patna</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Jermaine</td>
+                <td>sodales@nuncsit.org</td>
+                <td>0800 528324</td>
+                <td>Mold</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Ferdinand</td>
+                <td>gravida.molestie@tinciduntadipiscing.org</td>
+                <td>(016977) 4107</td>
+                <td>Marlborough</td>
+                <td>
+                  <span class="badge bg-danger">Inactive</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Kuame</td>
+                <td>Quisque.purus@mauris.org</td>
+                <td>(0151) 561 8896</td>
+                <td>Tresigallo</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Deacon</td>
+                <td>Duis.a.mi@sociisnatoquepenatibus.com</td>
+                <td>07740 599321</td>
+                <td>Karapınar</td>
+                <td>
+                  <span class="badge bg-success">Active</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dataTable-bottom">
+            <div class="dataTable-info">Showing 1 to 10 of 26 entries</div>
+            <ul class="pagination pagination-primary float-end dataTable-pagination">
+              <li class="page-item pager"><a href="#" class="page-link" data-page="1">‹</a></li>
+              <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>
+              <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>
+              <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>
+              <li class="page-item pager"><a href="#" class="page-link" data-page="2">›</a></li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
-    <footer class="footer">
-    </footer>
-  </div>
+
+  </section>
 </div>
 
-<div class="modal fade" id="createAuthorModal" tabindex="-1" role="dialog" aria-labelledby="createAuthorModal"
-     aria-hidden="true" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Create Author</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <form id="createForm" #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="was-validated">
-          <div class="form-group col-12">
-            <label for="authorName">First name</label>
-            <input type="text" ngModel name="firstName" minlength="1" maxlength="128"
-                   class="form-control" id="authorName" placeholder="name" required>
-          </div>
-          <div class="form-group col-12">
-            <label for="authorSecondName">Second name</label>
-            <input type="text" ngModel name="secondName" minlength="1" maxlength="128"
-                   class="form-control" id="authorSecondName" placeholder="second name" required>
-          </div>
-          <div class="modal-footer">
-            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>
-            <button type="button" id="add-author-form" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="updateAuthorModal" tabindex="-1" role="dialog" aria-labelledby="updateAuthorModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Edit {{editAuthor?.firstName}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <form #editForm="ngForm" class="was-validated">
-          <div class="form-group col-12">
-            <label for="updateAuthorName">First name</label>
-            <input type="text" ngModel="{{editAuthor?.firstName}}" name="firstName" minlength="1" maxlength="128"
-                   class="form-control"
-                   id="updateAuthorName" placeholder="name" required>
-          </div>
-          <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control" id="id" placeholder="Email">
-          <div class="form-group col-12">
-            <label for="updateAuthorSecondName">Second name</label>
-            <input type="text" ngModel="{{editAuthor?.secondName}}" name="secondName" maxlength="128"
-                   class="form-control"
-                   id="updateAuthorSecondName" placeholder="second name">
-          </div>
-          <div class="modal-footer">
-            <button [disabled]="editForm.invalid" (click)="updateAuthor(editForm.value)" class="btn btn-success"
-                    data-dismiss="modal">Save
-            </button>
-            <button class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="deleteAuthorModal" tabindex="-1" role="dialog" aria-labelledby="deleteAuthorModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Delete {{deletedAuthor?.firstName}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete {{deletedAuthor?.firstName}} {{deletedAuthor?.secondName}} ?</p>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button (click)="deleteAuthor(deletedAuthor.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="detailAuthorModal" tabindex="-1" role="dialog" aria-labelledby="detailAuthorModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Details {{detailAuthor?.firstName}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <div>First name: {{detailAuthor?.firstName}}</div>
-        <div>Second name: {{detailAuthor?.secondName}}</div>
-        <div>Rating: {{detailAuthor?.rating}}</div>
-        <!--        <div>Books: <a *ngFor="let book of detailAuthor?.books">-->
-        <!--          {{book.name}}-->
-        <!--        </a>-->
-        <!--        </div>-->
-      </div>
-    </div>
-  </div>
-</div>
-
+<mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+               (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
+</mat-paginator>

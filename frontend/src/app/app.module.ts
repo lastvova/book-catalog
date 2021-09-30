@@ -17,6 +17,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatInputModule} from "@angular/material/input";
 import {NgxMaskModule} from "ngx-mask";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import {NgxMaskModule} from "ngx-mask";
     MatPaginatorModule,
     MatExpansionModule,
     MatInputModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
