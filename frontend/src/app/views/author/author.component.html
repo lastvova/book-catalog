@@ -52,9 +52,9 @@
 <!--            <div class="card-body table-responsive">-->
 <!--              <table class="table table-hover" aria-describedby="availableAuthors">-->
 <!--                <thead class="text">-->
-<!--                &lt;!&ndash;                <th id="checkBox">&ndash;&gt;-->
-<!--                &lt;!&ndash;                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all&ndash;&gt;-->
-<!--                &lt;!&ndash;                </th>&ndash;&gt;-->
+<!--                <th id="checkBox">-->
+<!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
+<!--                </th>-->
 <!--                <th (click)="sortByColumn('firstName')" id="tableName">First Name-->
 <!--                  <em-->
 <!--                    *ngIf="pageSortFilterParameters.sortField === 'firstName' && !pageSortFilterParameters.reverseForSorting"-->
@@ -227,15 +227,24 @@
       </div>
       <div class="card-body">
         <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-          <div class="dataTable-top">
-            <div class="dataTable-dropdown"><select class="dataTable-selector form-select">
-              <option value="5">5</option>
-              <option value="10" selected="">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="25">25</option>
-            </select><label>entries per page</label></div>
-            <div>
+          <div class="dataTable-top row">
+            <div class="col-4">
+              <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>
+              <!--            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAuthorModal">DELETE</button>-->
+            </div>
+            <div class="col-4">
+            </div>
+            <div class="col-3 text-end">
+              <label style="margin-right: 10px">Authors per page</label>
+              <div class="dataTable-dropdown">
+                <select class="dataTable-selector form-select" ngModel name="pageSize" (ngModelChange)="changeElementsPerPage($event)">
+                  <option value="5" [ngValue]="5" selected>5</option>
+                  <option value="10" [ngValue]="10">10</option>
+                  <option value="20" [ngValue]="20">20</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-1">
               <button class="mat-icon-button" data-toggle="collapse" href="#collapseExample" role="button"><a
                 class="fa fa-filter"></a></button>
             </div>
@@ -243,7 +252,6 @@
           <div class="dataTable-container">
             <div class="collapse" id="collapseExample">
               <div class="card card-body">
-
                 <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
                   <div class="row align-items-center">
                     <div class="col-md-1 text-end" style="padding: 0px 0px">
@@ -270,109 +278,36 @@
                     </div>
                   </div>
                 </form>
-
               </div>
-
             </div>
             <table class="table table-striped dataTable-table" id="table1">
               <thead>
               <tr>
-                <th data-sortable="" style="width: 11.8622%;"><a href="#" class="dataTable-sorter">Name</a></th>
-                <th data-sortable="" style="width: 41.8367%;"><a href="#" class="dataTable-sorter">Email</a></th>
-                <th data-sortable="" style="width: 18.8776%;"><a href="#" class="dataTable-sorter">Phone</a></th>
-                <th data-sortable="" style="width: 16.3265%;"><a href="#" class="dataTable-sorter">City</a></th>
-                <th data-sortable="" style="width: 11.0969%;"><a href="#" class="dataTable-sorter">Status</a></th>
+                <th data-sortable="" style="width: 40%;"><a href="#" class="dataTable-sorter">First name</a></th>
+                <th data-sortable="" style="width: 40%;"><a href="#" class="dataTable-sorter">Second name</a></th>
+                <th style="width: 10%;"><a (click)="sortByColumn('secondName')" class="dataTable-sorter">Rating</a></th>
+                <th data-sortable="" style="width: 10%;"></th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td>Graiden</td>
-                <td>vehicula.aliquet@semconsequat.co.uk</td>
-                <td>076 4820 8838</td>
-                <td>Offenburg</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Dale</td>
-                <td>fringilla.euismod.enim@quam.ca</td>
-                <td>0500 527693</td>
-                <td>New Quay</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Nathaniel</td>
-                <td>mi.Duis@diam.edu</td>
-                <td>(012165) 76278</td>
-                <td>Grumo Appula</td>
-                <td>
-                  <span class="badge bg-danger">Inactive</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Darius</td>
-                <td>velit@nec.com</td>
-                <td>0309 690 7871</td>
-                <td>Ways</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Oleg</td>
-                <td>rhoncus.id@Aliquamauctorvelit.net</td>
-                <td>0500 441046</td>
-                <td>Rossignol</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kermit</td>
-                <td>diam.Sed.diam@anteVivamusnon.org</td>
-                <td>(01653) 27844</td>
-                <td>Patna</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Jermaine</td>
-                <td>sodales@nuncsit.org</td>
-                <td>0800 528324</td>
-                <td>Mold</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Ferdinand</td>
-                <td>gravida.molestie@tinciduntadipiscing.org</td>
-                <td>(016977) 4107</td>
-                <td>Marlborough</td>
-                <td>
-                  <span class="badge bg-danger">Inactive</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kuame</td>
-                <td>Quisque.purus@mauris.org</td>
-                <td>(0151) 561 8896</td>
-                <td>Tresigallo</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
-                </td>
-              </tr>
-              <tr>
-                <td>Deacon</td>
-                <td>Duis.a.mi@sociisnatoquepenatibus.com</td>
-                <td>07740 599321</td>
-                <td>Karapınar</td>
-                <td>
-                  <span class="badge bg-success">Active</span>
+              <tr *ngFor="let author of authors">
+                <!--                  <td>-->
+                <!--                    <div class="form-check">-->
+                <!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
+                <!--                    </div>-->
+                <!--                  </td>-->
+                <td>{{author.firstName}}</td>
+                <td>{{author.secondName}}</td>
+                <td>{{author.rating}}</td>
+                <td class="text-end">
+                  <div class="btn-group text-end" role="group">
+                    <a (click)="onOpenModal('edit', author)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
+                    <a (click)="onOpenModal('detail',author)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
+                    <a (click)="onOpenModal('delete', author)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                  </div>
                 </td>
               </tr>
               </tbody>

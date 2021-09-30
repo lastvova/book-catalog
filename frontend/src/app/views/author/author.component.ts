@@ -21,6 +21,7 @@ export class AuthorComponent implements OnInit {
   public editAuthor: Author;
   public deletedAuthor: Author;
   public totalRecords: number;
+  public pageSize: number;
 
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   public authorFilterParameters: AuthorFilterParameters;
@@ -167,5 +168,10 @@ export class AuthorComponent implements OnInit {
     this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
     this.pageSortFilterParameters.pageNumber = 0;
     this.getAuthorsWithParameters();
+  }
+
+  public changeElementsPerPage(event: Event){
+    this.pageSortFilterParameters.pageSize =this.pageSize;
+    this.getAuthorsWithParameters()
   }
 }
