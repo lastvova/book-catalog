@@ -141,8 +141,8 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected long getEntityCount(Predicate predicate) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(basicClass);
-        countQuery.groupBy(countRoot);
-        countQuery.select(criteriaBuilder.countDistinct(countRoot)).where(predicate);
+//        countQuery.groupBy(countRoot.get("id"));
+        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 
