@@ -20,8 +20,9 @@ export class AuthorComponent implements OnInit {
   public detailAuthor: Author | undefined;
   public editAuthor: Author;
   public deletedAuthor: Author;
+  public numberOfRecords: number;
   public totalRecords: number;
-  public pageSize: number;
+  public totalPages: number;
 
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   public authorFilterParameters: AuthorFilterParameters;
@@ -43,8 +44,8 @@ export class AuthorComponent implements OnInit {
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
-        // this.pageSortFilterParameters.pageNumber = response.number;
-        // this.pageSortFilterParameters.pageSize = response.size;
+        this.totalPages = response.totalPages;
+        this.numberOfRecords = response.number;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -58,6 +59,8 @@ export class AuthorComponent implements OnInit {
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.numberOfRecords = response.number;
         this.pageSortFilterParameters.pageNumber = response.number;
         this.pageSortFilterParameters.pageSize = response.size;
       },
@@ -170,8 +173,11 @@ export class AuthorComponent implements OnInit {
     this.getAuthorsWithParameters();
   }
 
-  public changeElementsPerPage(event: Event){
-    this.pageSortFilterParameters.pageSize =this.pageSize;
+  public changeElementsPerPage(event: number) {
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.pageSortFilterParameters.pageSize = event;
+    this.matPaginator.pageIndex = 0;
+    this.matPaginator.pageSize = event;
     this.getAuthorsWithParameters()
   }
 }

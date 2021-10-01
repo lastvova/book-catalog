@@ -30,7 +30,7 @@
 .dataTable-pagination a {
   border: 1px solid transparent;
   float: left;
-  margin-left: 2px;
+  margin: 0px;
   padding: 6px 12px;
   position: relative;
   text-decoration: none;
@@ -140,6 +140,10 @@
   display: inline-flex;
   align-items: center;
 }
+#page-size-block {
+  left: auto;
+  right: auto;
+}
 
 .dataTable-dropdown label {
   white-space: nowrap;
@@ -147,7 +151,7 @@
 }
 
 label {
-display: inline-block;
+  display: inline-block;
   margin-bottom: 0px;
 }
 
@@ -157,10 +161,25 @@ display: inline-block;
   background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, .125)
 }
-.rating-field{
+
+.rating-field {
   width: 50px;
 }
 
-.dataTable-container button{
+.dataTable-container button {
   margin: 0px 10px;
+}
+
+.mat-icon-button {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.form-select {
+  font-size: 0.73rem;
+}
+
+#filter-forms .col-md-8 label{
+  margin: 5px 5px 5px 15px;
 }
