@@ -140,6 +140,7 @@
   display: inline-flex;
   align-items: center;
 }
+
 #page-size-block {
   left: auto;
   right: auto;
@@ -180,6 +181,28 @@ label {
   font-size: 0.73rem;
 }
 
-#filter-forms .col-md-8 label{
+#filter-forms .col-md-8 label {
   margin: 5px 5px 5px 15px;
+}
+
+.mat-h4, .mat-subheading-1, .mat-typography h4 {
+  margin: 0 0 0 0;
+}
+
+.modal-header {
+  font-size: medium;
+}
+
+.star-rating {
+  width: 160px;
+  height: 32px;
+  background-size: 32px;
+}
+
+.star-rating .star-value {
+  background-size: 32px;
+}
+#rating-line{
+  display: inline-flex;
+  align-items: center;
 }

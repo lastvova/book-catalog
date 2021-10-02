@@ -17,7 +17,7 @@ import {MatAccordion} from "@angular/material/expansion";
 export class AuthorComponent implements OnInit {
 
   public authors: Author[] = [];
-  public detailAuthor: Author | undefined;
+  public detailAuthor: Author = new Author();
   public editAuthor: Author;
   public deletedAuthor: Author;
   public numberOfRecords: number;
