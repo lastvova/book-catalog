@@ -3,15 +3,20 @@
   <div class="main-panel">
     <!-- Navbar -->
     <nav class="mb-3 ">
-      <div class="navbar navbar-expand navbar-light justify-content-center">
-        <a class="navbar-brand" routerLink="main">Main</a>
-        <a class="navbar-brand" routerLink="authors">Authors</a>
-        <a class="navbar-brand" routerLink="books">Books</a>
-        <a class="navbar-brand" routerLink="reviews">Reviews</a>
-        <button aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler" data-toggle="collapse" type="button">
-        </button>
-      </div>
+      <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link navbar-brand"  data-toggle="tab" routerLink="main" role="tab" aria-controls="home" aria-selected="true">Main</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link navbar-brand"  data-toggle="tab" routerLink="authors" role="tab" aria-controls="profile" aria-selected="false">Authors</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link navbar-brand"  data-toggle="tab" routerLink="books" role="tab" aria-controls="contact" aria-selected="false">Books</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link navbar-brand"  data-toggle="tab" routerLink="reviews" role="tab" aria-controls="contact" aria-selected="false">Reviews</a>
+        </li>
+      </ul>
     </nav>
     <!-- End Navbar -->
     <div class="content">
