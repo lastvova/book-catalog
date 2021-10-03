@@ -13,13 +13,13 @@ export class NotificationService {
   public errorSnackBar(message: string): void {
     this.snackbar.open(message, undefined, {
       panelClass: ['error-snackbar'],
-      duration: 5000
+      duration: 3000
     })
   }
 
   public successSnackBar(message: string): void {
     this.snackbar.open(message, undefined, {
-      duration: 2000,
+      duration: 3000,
       panelClass: ['success-snackbar']
     })
   }

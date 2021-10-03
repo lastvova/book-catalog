@@ -206,3 +206,15 @@ label {
   display: inline-flex;
   align-items: center;
 }
+
+table {
+  table-layout: fixed;
+}
+
+th,
+td {
+  overflow: hidden;
+}
+ul{
+
+}

@@ -343,17 +343,20 @@
                     of {{totalRecords}} authors
                   </div>
                 </td>
-                <td style="display: flex; align-items: center;">
-                  <label style="margin-right: 10px">Authors per page</label>
-                  <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
-                          (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
-                    <option value="5" selected>5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                  </select>
+                <td>
+                  <div style="display: flex; align-items: center;justify-content: center">
+                    <label style="margin-right: 10px">Authors per page</label>
+                    <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
+                            (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
+                      <option value="5" selected>5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                    </select>
+                  </div>
                 </td>
                 <td>
-                  <ul class="pagination pagination-primary float-end dataTable-pagination" style="align-items: center">
+                  <ul class="pagination pagination-primary float-end dataTable-pagination"
+                      style="align-items: center;margin-bottom: 0px">
                     <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
                                                    data-page="1">‹</a></li>
                     <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
@@ -377,12 +380,11 @@
 </mat-paginator>
 
 <div class="modal fade text-left" id="detailAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"
-     aria-labelledby="detailAuthorModal"
-     aria-hidden="true">
+     aria-labelledby="detailAuthorModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        {{detailAuthor.firstName}} {{detailAuthor.secondName}}
+        Details
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
       </div>
       <div class="modal-body">
@@ -398,6 +400,123 @@
         <button type="button" class="btn btn-outline-dark" data-dismiss="modal">
           Close
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade text-left" id="createAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="detailAuthorModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Create author
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="addForm.resetForm()">X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="createForm" #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="form form-vertical">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="authorFirstName">First Name*</label>
+                  <input type="text" id="authorFirstName" class="form-control" ngModel name="firstName"
+                         #firstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
+                  <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="firstName.errors?.required || firstName.errors?.pattern">
+                      Wrong first name.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="authorSecondName">Second Name</label>
+                  <input type="text" id="authorSecondName" class="form-control" ngModel name="secondName"
+                         placeholder="Second Name" minlength="1" maxlength="128">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
+            <button type="button" id="close-author-form" class="btn btn-outline-dark" data-dismiss="modal"
+                    (click)="addForm.resetForm()" style="width: 80px">Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade text-left" id="updateAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-labelledby="detailAuthorModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Edit
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="editForm.resetForm(editAuthor)">X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" #editForm="ngForm" class="form form-vertical">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="authorFirstName">First Name*</label>
+                  <input type="text" class="form-control" ngModel="{{editAuthor.firstName}}" name="firstName"
+                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
+                  <div *ngIf="editFirstName.invalid && editFirstName.dirty"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="editFirstName.errors?.required || editFirstName.errors?.pattern">
+                      Wrong first name.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="authorSecondName">Second Name</label>
+                  <input type="text" class="form-control" ngModel="{{editAuthor.secondName}}" name="secondName"
+                         placeholder="Second Name" minlength="1" maxlength="128">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success" (click)="updateAuthor(editForm)"
+                    style="width: 80px">Save
+            </button>
+            <button id="close-edit-form" type="button" class="btn btn-outline-dark" data-dismiss="modal"
+                    style="width: 80px" (click)="editForm.resetForm(editAuthor)">Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade text-left" id="deleteAuthorModal" tabindex="-1" role="dialog"
+     aria-labelledby="detailAuthorModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center" style="word-break: break-all">
+        <h3>Delete this author?</h3>
+        <p> {{deletedAuthor.firstName}} {{deletedAuthor.secondName}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteAuthor(deletedAuthor.id)">Delete
+        </button>
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

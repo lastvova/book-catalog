@@ -8,6 +8,7 @@ import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalR
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 import {MatAccordion} from "@angular/material/expansion";
+import {NotificationService} from "../../service/notification.service";
 
 @Component({
   selector: 'app-author',
@@ -18,8 +19,8 @@ export class AuthorComponent implements OnInit {
 
   public authors: Author[] = [];
   public detailAuthor: Author = new Author();
-  public editAuthor: Author;
-  public deletedAuthor: Author;
+  public editAuthor: Author = new Author();
+  public deletedAuthor: Author = new Author();
   public numberOfRecords: number;
   public totalRecords: number;
   public totalPages: number;
@@ -31,7 +32,7 @@ export class AuthorComponent implements OnInit {
   @ViewChild('filterForm') filterForm: NgForm;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  constructor(private authorService: AuthorService) {
+  constructor(private authorService: AuthorService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -71,37 +72,52 @@ export class AuthorComponent implements OnInit {
   }
 
   public createAuthor(addForm: NgForm): void {
-    //@ts-ignore
-    document.getElementById('add-author-form').click();
+    if (addForm.invalid){
+      addForm.controls.firstName.markAsTouched();
+      return;
+    }
     this.authorService.createAuthor(addForm.value).subscribe(
       (response: Author) => {
         console.log(response);
         this.getAuthorsWithParameters();
         addForm.reset();
+        this.notificationService.successSnackBar("Success!");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message)
+        alert(error.message);
+        this.notificationService.errorSnackBar((error.message));
         addForm.reset();
       }
     );
+    //@ts-ignore
+    document.getElementById('close-author-form').click();
   }
 
-  public updateAuthor(author: Author): void {
-    this.authorService.updateAuthor(author).subscribe(
+  public updateAuthor(editForm: NgForm): void {
+    if (editForm.invalid){
+      editForm.controls.firstName.markAsTouched();
+      return;
+    }
+    this.authorService.updateAuthor(editForm.value).subscribe(
       (response: Author) => {
         console.log(response);
         this.getAuthorsWithParameters();
+        this.notificationService.successSnackBar("Success!");
+        editForm.resetForm(this.editAuthor);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
+    //@ts-ignore
+    document.getElementById('close-edit-form').click();
   }
 
   public deleteAuthor(authorId: number): void {
     this.authorService.deleteAuthor(authorId).subscribe(
       (response: void) => {
         console.log(response);
+        this.notificationService.successSnackBar("Success!");
         this.getAuthorsWithParameters();
       },
       (error: HttpErrorResponse) => {
