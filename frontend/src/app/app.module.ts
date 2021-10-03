@@ -18,6 +18,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatInputModule} from "@angular/material/input";
 import {NgxMaskModule} from "ngx-mask";
 import {MatButtonModule} from "@angular/material/button";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -40,9 +41,10 @@ import {MatButtonModule} from "@angular/material/button";
     ReactiveFormsModule,
     MatPaginatorModule,
     MatExpansionModule,
+    MatSnackBarModule,
     MatInputModule,
     NgxMaskModule.forRoot(),
-    MatButtonModule
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
