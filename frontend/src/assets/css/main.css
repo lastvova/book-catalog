@@ -10942,3 +10942,12 @@ textarea.form-control-lg {
 .cdk-overlay-container {
   z-index: 1051;
 }
+
+.error-snackbar {
+  text-align: center;
+  background: #dc3545;
+}
+.success-snackbar {
+  text-align: center;
+  background: #198754;
+}
