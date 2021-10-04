@@ -76,6 +76,9 @@ export class AuthorComponent implements OnInit {
       addForm.controls.firstName.markAsTouched();
       return;
     }
+    let createdAuthor: Author = addForm.value;
+    createdAuthor.firstName= createdAuthor.firstName.trim();
+    createdAuthor.secondName= createdAuthor.secondName.trim();
     this.authorService.createAuthor(addForm.value).subscribe(
       (response: Author) => {
         console.log(response);
@@ -98,6 +101,9 @@ export class AuthorComponent implements OnInit {
       editForm.controls.firstName.markAsTouched();
       return;
     }
+    this.editAuthor = editForm.value;
+    this.editAuthor.firstName= this.editAuthor.firstName.trim();
+    this.editAuthor.secondName= this.editAuthor.secondName.trim();
     this.authorService.updateAuthor(editForm.value).subscribe(
       (response: Author) => {
         console.log(response);

@@ -219,11 +219,11 @@
 <!--  </div>-->
 <!--</div>-->
 
-<div class="page-heading" id="main-container">
+<div class="page-heading" id="main-container" style="min-width: 800px; overflow-x: auto">
   <section class="section">
     <div class="card">
       <div class="card-header">
-        Authors Datatable
+        <h1 style="margin-bottom: 0">Authors</h1>
       </div>
       <div class="card-body">
         <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
@@ -248,7 +248,7 @@
                 <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
                   <div id="filter-forms" class="row align-items-center">
                     <div class="col-md-8" style="display: flex;align-items: center">
-                      <label style="margin-left:0px">Name:</label>
+                      <label style="margin-left:0">Name:</label>
                       <input class="form-control" type="text" ngModel name="name" maxlength="128" style="width: 200px">
                       <label>Rating from:</label>
                       <select class="dataTable-selector form-select" ngModel name="fromRating" style="width: auto">
@@ -259,8 +259,9 @@
                         <option>4</option>
                         <option>5</option>
                       </select>
-                      <label>Rating to:</label>
-                      <select class="dataTable-selector form-select" ngModel name="toRating" style="width: auto">
+                      <label style="margin-left: 5px">to:</label>
+                      <select class="dataTable-selector form-select" ngModel name="toRating"
+                              style="width: auto;">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -357,13 +358,17 @@
                 <td>
                   <ul class="pagination pagination-primary float-end dataTable-pagination"
                       style="align-items: center;margin-bottom: 0px">
+                    <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
+                                                   data-page="1"><em class="fa fa-step-backward"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
-                                                   data-page="1">‹</a></li>
+                                                   data-page="1"><em class="fa fa-arrow-left"></em></a></li>
                     <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
                     <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
                     <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
                     <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
-                                                   data-page="2">›</a></li>
+                                                   data-page="2"><em class="fa fa-arrow-right"></em></a></li>
+                    <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
+                                                   data-page="2"><em class="fa fa-step-forward"></em> </a></li>
                   </ul>
                 </td>
               </tr>
