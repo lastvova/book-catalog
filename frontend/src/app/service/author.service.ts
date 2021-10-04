@@ -38,4 +38,9 @@ export class AuthorService {
   public deleteAuthor(authorId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/api/authors/${authorId}`);
   }
+
+  public bulkDelete(authorsIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/api/authors?ids=${authorsIds}`);
+  }
+
 }

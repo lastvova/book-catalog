@@ -19,6 +19,7 @@ import {MatInputModule} from "@angular/material/input";
 import {NgxMaskModule} from "ngx-mask";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -29,23 +30,24 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     ReviewComponent,
     MainPageComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-    MatExpansionModule,
-    MatSnackBarModule,
-    MatInputModule,
-    NgxMaskModule.forRoot(),
-    MatButtonModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        NgMultiSelectDropDownModule.forRoot(),
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatPaginatorModule,
+        MatExpansionModule,
+        MatSnackBarModule,
+        MatInputModule,
+        NgxMaskModule.forRoot(),
+        MatButtonModule,
+        MatCheckboxModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

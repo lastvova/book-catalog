@@ -95,14 +95,13 @@ public class AuthorController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("author was deleted");
     }
 
-    //TODO this action is not currently working
     @DeleteMapping
     public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
         LOGGER.debug("bulkDelete()");
         if (CollectionUtils.isEmpty(ids)) {
-            throw new IllegalStateException("Empty collection with ids");
+            throw new IllegalArgumentException("Empty collection with ids");
         }
-        authorService.delete(null);
+        authorService.bulkDelete(ids);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 

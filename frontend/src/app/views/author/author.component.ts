@@ -9,6 +9,7 @@ import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterPar
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 import {MatAccordion} from "@angular/material/expansion";
 import {NotificationService} from "../../service/notification.service";
+import {SelectionModel} from "@angular/cdk/collections";
 
 @Component({
   selector: 'app-author',
@@ -24,6 +25,7 @@ export class AuthorComponent implements OnInit {
   public numberOfRecords: number;
   public totalRecords: number;
   public totalPages: number;
+  public selection = new SelectionModel<Author>(true, []);
 
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   public authorFilterParameters: AuthorFilterParameters;
@@ -69,17 +71,20 @@ export class AuthorComponent implements OnInit {
         alert(error.message);
       }
     )
+    this.selection.clear();
   }
 
   public createAuthor(addForm: NgForm): void {
-    if (addForm.invalid){
+    if (addForm.invalid) {
       addForm.controls.firstName.markAsTouched();
       return;
     }
     let createdAuthor: Author = addForm.value;
-    createdAuthor.firstName= createdAuthor.firstName.trim();
-    createdAuthor.secondName= createdAuthor.secondName.trim();
-    this.authorService.createAuthor(addForm.value).subscribe(
+    createdAuthor.firstName = createdAuthor.firstName.trim();
+    if (createdAuthor.secondName != null) {
+      createdAuthor.secondName = createdAuthor.secondName.trim();
+    }
+    this.authorService.createAuthor(createdAuthor).subscribe(
       (response: Author) => {
         console.log(response);
         this.getAuthorsWithParameters();
@@ -97,13 +102,13 @@ export class AuthorComponent implements OnInit {
   }
 
   public updateAuthor(editForm: NgForm): void {
-    if (editForm.invalid){
+    if (editForm.invalid) {
       editForm.controls.firstName.markAsTouched();
       return;
     }
     this.editAuthor = editForm.value;
-    this.editAuthor.firstName= this.editAuthor.firstName.trim();
-    this.editAuthor.secondName= this.editAuthor.secondName.trim();
+    this.editAuthor.firstName = this.editAuthor.firstName.trim();
+    this.editAuthor.secondName = this.editAuthor.secondName.trim();
     this.authorService.updateAuthor(editForm.value).subscribe(
       (response: Author) => {
         console.log(response);
@@ -160,6 +165,12 @@ export class AuthorComponent implements OnInit {
       this.deletedAuthor = author;
       button.setAttribute('data-target', '#deleteAuthorModal');
     }
+    if (mode === 'bulkDelete') {
+      if (!this.selection.hasValue()) {
+        return;
+      }
+      button.setAttribute('data-target', '#bulkDeleteAuthorsModal');
+    }
     if (mode === 'detail') {
       this.detailAuthor = author;
       button.setAttribute('data-target', '#detailAuthorModal');
@@ -172,7 +183,8 @@ export class AuthorComponent implements OnInit {
   public onPageChange(event: PageEvent) {
     this.pageSortFilterParameters.pageNumber = event.pageIndex;
     this.pageSortFilterParameters.pageSize = event.pageSize;
-    this.getAuthorsWithParameters()
+    this.selection.clear();
+    this.getAuthorsWithParameters();
   }
 
   public sortByColumn(sortBy: string) {
@@ -183,6 +195,7 @@ export class AuthorComponent implements OnInit {
     } else {
       this.pageSortFilterParameters.order = 'DESC'
     }
+    this.selection.clear();
     this.getAuthorsWithParameters();
   }
 
@@ -201,5 +214,35 @@ export class AuthorComponent implements OnInit {
     this.matPaginator.pageIndex = 0;
     this.matPaginator.pageSize = event;
     this.getAuthorsWithParameters()
+  }
+
+  // Whether the number of selected elements matches the total number of rows.
+  public isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.authors.length;
+    return numSelected === numRows;
+  }
+
+  // Selects all rows if they are not all selected; otherwise clear selection.
+  public masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.authors.forEach(row => this.selection.select(row));
+  }
+
+  public bulkDelete() {
+    if (this.selection.hasValue()) {
+      let authorsIds = this.selection.selected.map(value => value.id);
+      this.authorService.bulkDelete(authorsIds).subscribe(
+        (response: void) => {
+          console.log(response);
+          this.notificationService.successSnackBar("Success!");
+          this.getAuthorsWithParameters();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
+        }
+      )
+    }
   }
 }

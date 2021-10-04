@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
@@ -83,9 +85,13 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     }
 
     @Override
-    public boolean deleteAuthors(List<Integer> ids) { //TODO it doesnt work
+    @Transactional(propagation = Propagation.MANDATORY)
+    public boolean deleteAuthors(List<BigInteger> ids) {
         LOGGER.debug("deleteAuthors({})", ids);
-        return false;
+        CriteriaDelete<Author> deleteQuery = criteriaBuilder.createCriteriaDelete(Author.class);
+        Root<Author> authors = deleteQuery.from(Author.class);
+        deleteQuery.where(authors.get("id").in(ids));
+        return entityManager.createQuery(deleteQuery).executeUpdate() > 0;
     }
 
     @Override

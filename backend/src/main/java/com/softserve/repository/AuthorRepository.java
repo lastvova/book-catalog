@@ -9,5 +9,5 @@ public interface AuthorRepository extends BaseRepository<Author, BigInteger> {
 
     boolean hasBooks(BigInteger id);
 
-    boolean deleteAuthors(List<Integer> ids);
+    boolean deleteAuthors(List<BigInteger> ids);
 }
