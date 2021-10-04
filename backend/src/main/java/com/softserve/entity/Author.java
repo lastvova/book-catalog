@@ -2,6 +2,7 @@ package com.softserve.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "authors")
 public class Author implements Serializable {
     private static final long serialVersionUID = -7910979735208650001L;

@@ -2,6 +2,7 @@ package com.softserve.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "reviews")
 public class Review implements Serializable {
     private static final long serialVersionUID = 1020476374006568471L;

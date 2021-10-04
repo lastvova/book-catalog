@@ -3,6 +3,7 @@ package com.softserve.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "books")
 public class Book implements Serializable {
     private static final long serialVersionUID = -4426773266096656069L;
