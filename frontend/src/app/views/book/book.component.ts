@@ -50,7 +50,7 @@ export class BookComponent implements OnInit {
   }
 
   public getAuthors(): void {
-    let pageParameters = this.pageSortFilterParameters;
+    let pageParameters = new PageSortFilterParameters();
     //todo
     pageParameters.pageNumber = 0;
     pageParameters.pageSize = 999999;
@@ -112,15 +112,14 @@ export class BookComponent implements OnInit {
 
   public createBook(addForm: NgForm): void {
     if (addForm.invalid) {
-      addForm.controls.name.markAsTouched();
+      Object.keys(addForm.form.controls).forEach(key => {
+        addForm.form.controls[key].markAsTouched()
+      })
       return;
-      //  TODO
     }
     let createdBook: Book = addForm.value;
-    // createdBook.firstName = createdBook.firstName.trim();
-    // if (createdBook.secondName != null) {
-    //   createdBook.secondName = createdBook.secondName.trim();
-    // }
+    createdBook.name = createdBook.name.trim();
+    createdBook.publisher = createdBook.publisher.trim();
     this.bookService.createBook(createdBook).subscribe(
       (response: Book) => {
         console.log(response);
@@ -139,14 +138,23 @@ export class BookComponent implements OnInit {
   }
 
   public updateBook(editForm: NgForm): void {
+    debugger;
     if (editForm.invalid) {
-      editForm.controls.firstName.markAsTouched();
+      editForm.controls.name.markAsDirty();
+      editForm.controls.authors.markAsDirty();
+      editForm.controls.publisher.markAsDirty();
+      editForm.controls.isbn.markAsDirty();
       return;
-      //  TODO
+    }
+
+    if (editForm.untouched) {
+      //@ts-ignore
+      document.getElementById('close-edit-book-form').click();
+      return;
     }
     this.editBook = editForm.value;
-    // this.editBook.firstName = this.editBook.firstName.trim();
-    // this.editBook.secondName = this.editBook.secondName.trim();
+    this.editBook.name = this.editBook.name.trim();
+    this.editBook.publisher = this.editBook.publisher.trim();
     this.bookService.updateBook(editForm.value).subscribe(
       (response: Book) => {
         console.log(response);
@@ -159,7 +167,7 @@ export class BookComponent implements OnInit {
       }
     );
     //@ts-ignore
-    document.getElementById('close-edit-form').click();
+    document.getElementById('close-edit-book-form').click();
   }
 
   public deleteBook(bookId: number): void {
@@ -210,7 +218,7 @@ export class BookComponent implements OnInit {
       button.setAttribute('data-target', '#deleteBookModal');
     }
     if (mode === 'bulkDelete' && this.selection.hasValue()) {
-      button.setAttribute('data-target', '#bulkDeleteAuthorsModal');
+      button.setAttribute('data-target', '#bulkDeleteBooksModal');
     }
     if (mode === 'detail') {
       this.detailBook = book;
@@ -289,7 +297,7 @@ export class BookComponent implements OnInit {
 
   public isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.authors.length;
+    const numRows = this.books.length;
     return numSelected === numRows;
   }
 

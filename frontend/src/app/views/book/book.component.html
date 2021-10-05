@@ -406,50 +406,58 @@
             <div class="collapse" id="collapseExample">
               <div class="card card-body">
                 <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
-                  <div id="filter-forms" class="row align-items-center">
-                    <div class="col-md-8" style="display: flex;align-items: center">
-                      <label style="margin-left:0">Name:</label>
-                      <input class="form-control" type="text" ngModel name="name"
-                             style="width: 200px; height: 30.8px">
-                      <label style="margin-left:0">Authors:</label>
-                      <input class="form-control" type="text" ngModel name="searchingName"
-                             style="width: 200px; height: 30.8px">
-                      <label>Publisher:</label>
-                      <input class="form-control" type="text" ngModel name="publisher"
-                             style="width: 200px; height: 30.8px">
-                      <label>Year:</label>
-                      <input class="form-control" type="number" ngModel name="yearPublisher"
-                             style="width: 200px; height: 30.8px">
-                      <label>ISBN</label>
-                      <input class="form-control" type="text" ngModel name="isbn"
-                             style="width: 200px; height: 30.8px" mask="000-0-0000-0000-0" minlength="17"
-                             maxlength="17" hintLabel="Type 13 digits">
-                      <label>Rating from:</label>
-                      <select class="dataTable-selector form-select" ngModel name="fromRating" style="width: auto">
-                        <option>0</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                      </select>
-                      <label style="margin-left: 5px">to:</label>
-                      <select class="dataTable-selector form-select" ngModel name="toRating"
-                              style="width: auto;">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                      </select>
+                  <div id="filter-forms" class="row-12">
+                    <div class="row" style="margin-bottom: 5px">
+                      <div class="col-md-10" style="display: flex;align-items: center">
+                        <label style="margin-left:0">Name:</label>
+                        <input class="form-control" type="text" ngModel name="name"
+                               style="width: 150px; height: 30.8px">
+                        <label style="margin-left:10px">Authors:</label>
+                        <input class="form-control" type="text" ngModel name="searchingName"
+                               style="width: 150px; height: 30.8px">
+                        <label style="margin-left:10px">Rating from:</label>
+                        <select class="dataTable-selector form-select" ngModel name="fromRating" style="width: auto">
+                          <option>0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                        <label style="margin-left: 5px">to:</label>
+                        <select class="dataTable-selector form-select" ngModel name="toRating"
+                                style="width: auto;">
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2 text-end">
+                        <button [disabled]="filterForm.invalid" type="submit" class="btn btn-outline-primary"
+                                style="width: 90px">SEARCH
+                        </button>
+                      </div>
                     </div>
-                    <div class="col-md-4 text-end">
-                      <button [disabled]="filterForm.invalid" type="submit" class="btn btn-outline-primary"
-                              style="width: 90px">SEARCH
-                      </button>
-                      <button type="button" (click)="resetForm(filterForm)" class="btn btn-outline-dark"
-                              style="width: 90px">RESET
-                      </button>
+                    <div class="row" style="margin-top: 5px">
+                      <div class="col-md-10" style="display: flex;align-items: center">
+                        <label style="margin-left:0">Publisher:</label>
+                        <input class="form-control" type="text" ngModel name="publisher"
+                               style="width: 200px; height: 30.8px">
+                        <label style="margin-left:10px">Year:</label>
+                        <input class="form-control" type="number" ngModel name="yearPublisher"
+                               style="width: 100px; height: 30.8px">
+                        <label style="margin-left:10px">ISBN</label>
+                        <input class="form-control" type="text" ngModel name="isbn"
+                               style="width: 175px; height: 30.8px" mask="000-0-0000-0000-0" minlength="17"
+                               maxlength="17" hintLabel="Type 13 digits">
+                      </div>
+                      <div class="col-md-2 text-end">
+                        <button type="button" (click)="resetForm(filterForm)" class="btn btn-outline-dark"
+                                style="width: 90px">RESET
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -483,11 +491,11 @@
                     class="fa fa-sort-desc"></em></a></th>
                 <th id="tablePublisher" style="width: 15%;"><a (click)="sortByColumn('publisher')">Publisher
                   <em
-                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && !pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
                   <em *ngIf="pageSortFilterParameters.sortField != 'publisher'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && !pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
                 <th id="tableYearOfPublisher" style="width: 5%;"><a (click)="sortByColumn('yearPublisher')">Year
                   <em
@@ -520,8 +528,8 @@
                 <td>{{book.name}}</td>
                 <td>
                   <div *ngFor="let author of book.authors">
-                      {{author.firstName}}
-                      {{author.secondName}}
+                    {{author.firstName}}
+                    {{author.secondName}}
                   </div>
                 </td>
                 <td class="text-center">{{book.rating}}</td>
@@ -641,11 +649,11 @@
                 <div class="form-group">
                   <label for="bookName">First Name*</label>
                   <input type="text" id="bookName" class="form-control" ngModel name="name"
-                         #firstName="ngModel" placeholder="name" minlength="1" maxlength="256"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
-                  <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+                         #name="ngModel" placeholder="name" minlength="1" maxlength="256"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                  <div *ngIf="name.invalid && (name.dirty || name.touched)"
                        class="alert alert-danger" style="padding: 5px">
-                    <div *ngIf="firstName.errors?.required || firstName.errors?.pattern">
+                    <div *ngIf="name.errors?.required || name.errors?.pattern">
                       Wrong name.
                     </div>
                   </div>
@@ -662,20 +670,28 @@
                   <!--                      </mat-option>-->
                   <!--                    </mat-select>-->
                   <!--                  </mat-form-field>-->
-<!--                  <mat-form-field class="dropdown-search col-12">-->
-<!--                    <mat-select multiple placeholder="authors" required ngModel name="authors">-->
-<!--                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"-->
-<!--                             #multiSearch (input)="onInputChange()">-->
-<!--                      <mat-option *ngFor="let author of authors" [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>-->
-<!--                    </mat-select>-->
-<!--                  </mat-form-field>-->
+                  <mat-form-field class="dropdown-search col-12">
+                    <mat-select multiple placeholder="authors" required ngModel name="authors">
+                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"
+                             #multiSearch (input)="onInputChange()">
+                      <mat-option *ngFor="let author of authors"
+                                  [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <label for="bookPublisher">Publisher:</label>
-                  <input type="text" id="bookPublisher" class="form-control" ngModel name="publisher"
-                         placeholder="Publisher" minlength="1" maxlength="512" required>
+                  <label for="bookPublisher">Publisher*</label>
+                  <input type="text" id="bookPublisher" class="form-control" #publisher="ngModel" ngModel
+                         name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,512})$" required>
+                  <div *ngIf="publisher.invalid && (publisher.dirty || publisher.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="publisher.errors?.required || publisher.errors?.pattern">
+                      Wrong publisher.
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col-6">
@@ -688,15 +704,21 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookIsbn">ISBN:</label>
-                  <input type="text" id="bookIsbn" class="form-control" ngModel name="isbn"
+                  <input type="text" id="bookIsbn" class="form-control" #isbn="ngModel" ngModel name="isbn"
                          placeholder="ISBN" mask="000-0-0000-0000-0" required>
+                  <div *ngIf="isbn.invalid && (isbn.dirty || isbn.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="isbn.errors?.required">
+                      Wrong isbn.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
-            <button type="button" id="close-author-form" class="btn btn-outline-dark" data-dismiss="modal"
+            <button type="button" id="close-book-form" class="btn btn-outline-dark" data-dismiss="modal"
                     (click)="addForm.resetForm()" style="width: 80px">Close
             </button>
           </div>
@@ -706,86 +728,132 @@
   </div>
 </div>
 
-<!--<div class="modal fade text-left" id="updateAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"-->
-<!--     aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        Edit-->
-<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close"-->
-<!--                (click)="editForm.resetForm(editAuthor)">X-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        <form id="editForm" #editForm="ngForm" class="form form-vertical">-->
-<!--          <div class="form-body">-->
-<!--            <div class="row">-->
-<!--              <div class="col-12">-->
-<!--                <div class="form-group">-->
-<!--                  <label for="authorFirstName">First Name*</label>-->
-<!--                  <input type="text" class="form-control" ngModel="{{editAuthor.firstName}}" name="firstName"-->
-<!--                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"-->
-<!--                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>-->
-<!--                  <div *ngIf="editFirstName.invalid && editFirstName.dirty"-->
-<!--                       class="alert alert-danger" style="padding: 5px">-->
-<!--                    <div *ngIf="editFirstName.errors?.required || editFirstName.errors?.pattern">-->
-<!--                      Wrong first name.-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control">-->
-<!--              <div class="col-12">-->
-<!--                <div class="form-group">-->
-<!--                  <label for="authorSecondName">Second Name</label>-->
-<!--                  <input type="text" class="form-control" ngModel="{{editAuthor.secondName}}" name="secondName"-->
-<!--                         placeholder="Second Name" minlength="1" maxlength="128">-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="modal-footer">-->
-<!--            <button type="submit" class="btn btn-outline-success" (click)="updateAuthor(editForm)"-->
-<!--                    style="width: 80px">Save-->
-<!--            </button>-->
-<!--            <button id="close-edit-form" type="button" class="btn btn-outline-dark" data-dismiss="modal"-->
-<!--                    style="width: 80px" (click)="editForm.resetForm(editAuthor)">Close-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+<div class="modal fade text-left" id="updateBookModal" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Edit
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="editForm.resetForm(editBook)">X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm" #editForm="ngForm" (ngSubmit)="updateBook(editForm)" class="form form-vertical">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="bookName">First Name*</label>
+                  <input type="text" class="form-control" ngModel="{{editBook.name}}" name="name"
+                         #bookName="ngModel" placeholder="name" minlength="1" maxlength="256"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                  <div *ngIf="bookName.invalid && (bookName.dirty || bookName.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="bookName.errors?.required || bookName.errors?.pattern">
+                      Wrong name.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <!--                  <mat-form-field appearance="fill">-->
+                  <!--                    <mat-label>Authors</mat-label>-->
+                  <!--                    <mat-select multiple required ngModel name="authors">-->
+                  <!--                      <mat-option *ngFor="let author of authors" [value]="author">-->
+                  <!--                        {{author.firstName}}-->
+                  <!--                        {{author.secondName}}-->
+                  <!--                      </mat-option>-->
+                  <!--                    </mat-select>-->
+                  <!--                  </mat-form-field>-->
+                  <mat-form-field class="dropdown-search col-12">
+                    <mat-select multiple placeholder="authors" required ngModel name="authors">
+                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"
+                             #multiSearch (input)="onInputChange()">
+                      <mat-option *ngFor="let author of authors"
+                                  [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="bookPublisher">Publisher*</label>
+                  <input type="text" class="form-control" #bookPublisher="ngModel" ngModel="{{editBook.publisher}}"
+                         name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                  <div *ngIf="bookPublisher.invalid && (bookPublisher.dirty || bookPublisher.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="bookPublisher.errors?.required || bookPublisher.errors?.pattern">
+                      Wrong publisher.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="bookYearPublisher">Year:</label>
+                  <input type="number" class="form-control" ngModel="{{editBook.yearPublisher}}" name="yearPublisher"
+                         placeholder="Year" max="{{currentYear}}">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="bookIsbn">ISBN:</label>
+                  <input type="text" class="form-control" #bookIsbn="ngModel" ngModel="{{editBook.isbn}}" name="isbn"
+                         placeholder="ISBN" mask="000-0-0000-0000-0" required>
+                  <div *ngIf="bookIsbn.invalid && (isbn.dirty || bookIsbn.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="bookIsbn.errors?.required">
+                      Wrong isbn.
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
+            <button type="button" id="close-edit-book-form" class="btn btn-outline-dark" data-dismiss="modal"
+                    (click)="editForm.resetForm(editBook)" style="width: 80px">Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!--<div class="modal fade text-left" id="deleteAuthorModal" tabindex="-1" role="dialog" aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-body text-center" style="word-break: break-all">-->
-<!--        <h3>Are you want to delete?</h3>-->
-<!--        <p> {{deletedAuthor.firstName}} {{deletedAuthor.secondName}}</p>-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteAuthor(deletedAuthor.id)">Delete-->
-<!--        </button>-->
-<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+<div class="modal fade text-left" id="deleteBookModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center" style="word-break: break-all">
+        <h3>Are you want to delete?</h3>
+        <p> {{deletedBook.name}}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteBook(deletedBook.id)">Delete
+        </button>
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-<!--<div class="modal fade text-left" id="bulkDeleteAuthorsModal" tabindex="-1" role="dialog" aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-body text-center">-->
-<!--        <h3>Are you want to delete selected authors?</h3>-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="bulkDelete()">Delete-->
-<!--        </button>-->
-<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+<div class="modal fade text-left" id="bulkDeleteBooksModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <h3>Are you want to delete selected books?</h3>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="bulkDelete()">Delete
+        </button>
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
