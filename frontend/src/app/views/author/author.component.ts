@@ -70,7 +70,7 @@ export class AuthorComponent implements OnInit {
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
     this.selection.clear();
   }
 
@@ -165,10 +165,7 @@ export class AuthorComponent implements OnInit {
       this.deletedAuthor = author;
       button.setAttribute('data-target', '#deleteAuthorModal');
     }
-    if (mode === 'bulkDelete') {
-      if (!this.selection.hasValue()) {
-        return;
-      }
+    if (mode === 'bulkDelete' && this.selection.hasValue()) {
       button.setAttribute('data-target', '#bulkDeleteAuthorsModal');
     }
     if (mode === 'detail') {
