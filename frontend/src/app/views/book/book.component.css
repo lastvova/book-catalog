@@ -1,13 +1,218 @@
-.cdk-overlay-pane{
-  z-index: 1051 !important;
-}
-.cdk-overlay-container {
-  z-index: 1051;
+.dataTable-wrapper.no-header .dataTable-container {
+  border-top: 1px solid #d9d9d9;
 }
 
-.rating-field{
+
+.dataTable-top,
+.dataTable-bottom {
+  padding: 8px 10px;
+}
+
+.dataTable-top > div:first-child,
+.dataTable-bottom > div:first-child {
+  float: left;
+}
+
+.dataTable-top > div:last-child,
+.dataTable-bottom > div:last-child {
+  float: right;
+}
+
+.dataTable-input {
+  padding: 6px 12px;
+}
+
+.dataTable-info {
+  margin: 7px 0;
+}
+
+
+.dataTable-pagination a {
+  border: 1px solid transparent;
+  float: left;
+  margin: 0px;
+  padding: 6px 12px;
+  position: relative;
+  text-decoration: none;
+  color: #333;
+}
+
+.dataTable-pagination a:hover {
+  background-color: #d9d9d9;
+}
+
+.dataTable-pagination .active a,
+.dataTable-pagination .active a:focus,
+.dataTable-pagination .active a:hover {
+  background-color: #d9d9d9;
+  cursor: default;
+}
+
+.dataTable-pagination .ellipsis a,
+.dataTable-pagination .disabled a,
+.dataTable-pagination .disabled a:focus,
+.dataTable-pagination .disabled a:hover {
+  cursor: not-allowed;
+}
+
+.dataTable-pagination .disabled a,
+.dataTable-pagination .disabled a:focus,
+.dataTable-pagination .disabled a:hover {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.dataTable-pagination .pager a {
+  font-weight: bold;
+}
+
+/* TABLE */
+.dataTable-table {
+  max-width: 100%;
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+
+.dataTable-table > tfoot > tr > th {
+  vertical-align: bottom;
+  text-align: left;
+  border-top: 1px solid #d9d9d9;
+}
+
+.dataTable-table th {
+  vertical-align: bottom;
+  text-align: left;
+}
+
+.dataTable-table th a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.dataTable-sorter {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.dataTable-sorter::before,
+.dataTable-sorter::after {
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  right: 4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  opacity: 0.2;
+}
+
+.dataTable-sorter::before {
+  border-top: 4px solid #000;
+  bottom: 0px;
+}
+
+.dataTable-sorter::after {
+  border-bottom: 4px solid #000;
+  border-top: 4px solid transparent;
+  top: 0px;
+}
+
+.asc .dataTable-sorter::after,
+.desc .dataTable-sorter::before {
+  opacity: 0.6;
+}
+
+.dataTables-empty {
+  text-align: center;
+}
+
+.dataTable-top::after, .dataTable-bottom::after {
+  clear: both;
+  content: " ";
+  display: table;
+}
+
+.dataTable-dropdown {
+  display: inline-flex;
+  align-items: center;
+}
+
+#page-size-block {
+  left: auto;
+  right: auto;
+}
+
+.dataTable-dropdown label {
+  white-space: nowrap;
+  margin-left: 5px;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+.card-header {
+  padding: 1rem;
+  margin-bottom: 0;
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, .125)
+}
+
+.rating-field {
   width: 50px;
 }
-.year-field{
-  width: 75px;
+
+.dataTable-container button {
+  margin: 0px 5px;
+}
+
+.mat-icon-button {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.form-select {
+  font-size: 0.73rem;
+}
+
+#filter-forms .col-md-8 label {
+  margin: 5px 5px 5px 15px;
+}
+
+.mat-h4, .mat-subheading-1, .mat-typography h4 {
+  margin: 0 0 0 0;
+}
+
+.modal-header {
+  font-size: medium;
+}
+
+.star-rating {
+  width: 160px;
+  height: 32px;
+  background-size: 32px;
+}
+
+.star-rating .star-value {
+  background-size: 32px;
+}
+
+#rating-line {
+  display: inline-flex;
+  align-items: center;
+}
+
+table {
+  table-layout: fixed;
+}
+
+.fa {
+  size: auto;
+  opacity: 0.7;
 }

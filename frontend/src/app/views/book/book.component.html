@@ -1,292 +1,704 @@
-<div class="wrapper ">
-  <div class="main-panel">
-    <div class="content">
-      <div class="container-fluid" id="main-container">
-        <div class="row">
-          <div class="col-6">
-            <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>
-            <!--            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteBookModal">DELETE</button>-->
+<!--<div class="wrapper ">-->
+<!--  <div class="main-panel">-->
+<!--    <div class="content">-->
+<!--      <div class="container-fluid" id="main-container">-->
+<!--        <div class="row">-->
+<!--          <div class="col-6">-->
+<!--            <button class="btn btn-primary" (click)="onOpenModal('add',$any(null))">CREATE</button>-->
+<!--            &lt;!&ndash;            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteBookModal">DELETE</button>&ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="col-6">-->
+<!--            <div class="d-flex justify-content-end align-items-end">-->
+<!--              <div>-->
+<!--                <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"-->
+<!--                               (page)="onPageChange($event)" aria-label="Select page">-->
+<!--                </mat-paginator>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <mat-expansion-panel hideToggle>-->
+<!--            <mat-expansion-panel-header class="right-aligned-header">-->
+<!--              <mat-panel-title>-->
+<!--                Filter by:-->
+<!--              </mat-panel-title>-->
+
+<!--            </mat-expansion-panel-header>-->
+<!--            <div>-->
+<!--              <form #filterForm="ngForm" (ngSubmit)="filterBooks()">-->
+<!--                <div>-->
+<!--<label>Name: </label>-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <input matInput ngModel name="name">-->
+<!--</mat-form-field>-->
+<!--<label>Authors: </label>-->
+<!--<mat-form-field appearance="fill">-->
+<!--  <input matInput ngModel name="searchingName" type="text">-->
+<!--</mat-form-field>-->
+<!--<label>Rating from: </label>-->
+<!--<mat-form-field appearance="fill" class="rating-field">-->
+<!--  <input matInput ngModel name="fromRating" type="number" min="0" max="5">-->
+<!--</mat-form-field>-->
+<!--<label>Rating to: </label>-->
+<!--<mat-form-field appearance="fill" class="rating-field">-->
+<!--  <input matInput ngModel name="toRating" type="number" min="0" max="5">-->
+<!--</mat-form-field>-->
+<!--</div>-->
+<!--<div>-->
+<!--  <label>Year of publisher: </label>-->
+<!--  <mat-form-field appearance="fill" class="year-field">-->
+<!--    <input matInput ngModel name="yearPublisher" type="number">-->
+<!--  </mat-form-field>-->
+<!--  <label>Publisher: </label>-->
+<!--  <mat-form-field appearance="fill">-->
+<!--    <input matInput ngModel name="publisher">-->
+<!--  </mat-form-field>-->
+<!--  <label>ISBN: </label>-->
+<!--  <mat-form-field hintLabel="Type 13 digits" appearance="fill">-->
+<!--    <input matInput ngModel name="isbn" type="text"-->
+<!--           mask="000-0-0000-0000-0" minlength="17" maxlength="17"/>-->
+<!--  </mat-form-field>-->
+<!--  <button type="submit" class="btn btn-success">Filter</button>-->
+<!--  <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>-->
+<!--</div>-->
+<!--              </form>-->
+<!--            </div>-->
+<!--          </mat-expansion-panel>-->
+<!--        </div>-->
+<!--        <div class="col-12">-->
+<!--          <div class="card">-->
+<!--            <div class="card-header card-header-warning">-->
+<!--              <h1 class="card-title">Books</h1>-->
+<!--            </div>-->
+<!--            <div class="card-body table-responsive">-->
+<!--              <table class="table table-hover" aria-describedby="availableBooks">-->
+<!--                <thead class="text">-->
+<!--                &lt;!&ndash;                <th id="checkBox">&ndash;&gt;-->
+<!--                &lt;!&ndash;                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all&ndash;&gt;-->
+<!--                &lt;!&ndash;                </th>&ndash;&gt;-->
+<!--                <th (click)="sortByColumn('name')" id="tableName">Name-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField  != 'name'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'name' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em>-->
+<!--                </th>-->
+<!--                <th id="tableAuthors">Authors</th>-->
+<!--                <th (click)="sortByColumn('rating')" id="tableRating">Rating-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField  != 'rating'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+<!--                <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher:-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField  != 'yearPublisher'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+<!--                <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField  != 'publisher'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em></th>-->
+
+<!--                <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-asc"></em>-->
+<!--                  <em *ngIf="pageSortFilterParameters.sortField  != 'isbn'" class="fa fa-sort"></em>-->
+<!--                  <em-->
+<!--                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !pageSortFilterParameters.reverseForSorting"-->
+<!--                    class="fa fa-sort-desc"></em>-->
+<!--                </th>-->
+
+
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr *ngFor="let book of books">-->
+<!--                  &lt;!&ndash;                  <td>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    <div class="form-check">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  </td>&ndash;&gt;-->
+<!--                  <td>{{book.name}}</td>-->
+<!--                  <td>-->
+<!--                    <div-->
+<!--                      *ngFor="let author of book.authors">-->
+<!--                      <div>-->
+<!--                        {{author.firstName}}-->
+<!--                        {{author.secondName}}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </td>-->
+<!--                  <td>{{book.rating}}</td>-->
+<!--                  <td>{{book.yearPublisher}}</td>-->
+<!--                  <td>{{book.publisher}}</td>-->
+<!--                  <td>-->
+<!--                    <div>{{(book.isbn).toString().substring(0, 3)}}-{{(book.isbn).toString().substring(3, 4)}}-->
+<!--                      -{{(book.isbn).toString().substring(4, 8)}}-{{(book.isbn).toString().substring(8, 12)}}-->
+<!--                      -{{(book.isbn).toString().substring(12, 13)}}</div>-->
+<!--                  </td>-->
+
+<!--                  <td>-->
+<!--                    <div class="btn-group" role="group">-->
+<!--                      <a (click)="onOpenModal('edit',book)" class="btn btn-success btn-sm rounded-top"-->
+<!--                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>-->
+<!--                      <a (click)="onOpenModal('detail',book)" class="btn btn-info btn-sm rounded-bottom"-->
+<!--                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>-->
+<!--                      <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"-->
+<!--                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>-->
+<!--                      <a (click)="onOpenModal('createReview',book)" class="btn btn-primary btn-sm rounded-bottom"-->
+<!--                         data-placement="top" title="Delete"><span class="material-icons">rate_review</span></a>-->
+<!--                    </div>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--              </table>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <footer class="footer">-->
+<!--    </footer>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Create Book</H2>-->
+<!--        <button class="close" data-dismiss="modal" (click)="addForm.resetForm()">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form #addForm="ngForm" (ngSubmit)="createBook(addForm)" class="was-validated">-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="name">Name</label>-->
+<!--            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name"-->
+<!--                   minlength="1" maxlength="256" required>-->
+<!--          </div>-->
+<!--          <div class="form-group col-6" style="float: right">-->
+<!--            <label for="yearOfPublisher">Year of publisher:</label>-->
+<!--            <input type="number" ngModel name="yearPublisher" class="form-control" id="yearOfPublisher"-->
+<!--                   placeholder="year of publisher" min="1" max="{{currentYear}}">-->
+<!--          </div>-->
+<!--          <div class="form-group col-6">-->
+<!--            <label for="isbn">ISBN</label>-->
+<!--            <input ngModel name="isbn" class="form-control " id="isbn" placeholder="isbn" type="text"-->
+<!--                   mask="000-0-0000-0000-0" required>-->
+<!--            <h5>ISBN must contains 13 digits</h5>-->
+<!--            &lt;!&ndash;                    mask="000-0-0000-0000-0" pattern="[0-9]{13}" required>&ndash;&gt;-->
+<!--          </div>-->
+<!--          <div class="form-group col-12">-->
+<!--            <label for="publisher">Publisher</label>-->
+<!--            <input type="text" ngModel name="publisher" class="form-control" id="publisher" placeholder="publisher"-->
+<!--                   minlength="1" maxlength="512" required>-->
+<!--          </div>-->
+
+<!--          <div class="form-group">-->
+<!--            &lt;!&ndash;            <mat-form-field appearance="fill">&ndash;&gt;-->
+<!--            &lt;!&ndash;              <mat-label>Authors</mat-label>&ndash;&gt;-->
+<!--            &lt;!&ndash;              <mat-select multiple required ngModel name="authors">&ndash;&gt;-->
+<!--            &lt;!&ndash;                <mat-option *ngFor="let author of authors" [value]="author">&ndash;&gt;-->
+<!--            &lt;!&ndash;                  {{author.firstName}}&ndash;&gt;-->
+<!--            &lt;!&ndash;                  {{author.secondName}}&ndash;&gt;-->
+<!--            &lt;!&ndash;                </mat-option>&ndash;&gt;-->
+<!--            &lt;!&ndash;              </mat-select>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </mat-form-field>&ndash;&gt;-->
+<!--            <mat-form-field class="dropdown-search col-6">-->
+<!--              <mat-select multiple placeholder="authors" required ngModel name="authors">-->
+<!--                <input type="text" id="1234" class="p-2" autocomplete="on" matInput placeholder="authors" #multiSearch-->
+<!--                       (input)="onInputChange()">-->
+<!--                <mat-option *ngFor="let author of authors" [value]="author">{{author.firstName}}</mat-option>-->
+<!--              </mat-select>-->
+<!--            </mat-form-field>-->
+
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>-->
+<!--            <button type="button" id="add-book-form" class="btn btn-danger" data-dismiss="modal"-->
+<!--                    (click)="addForm.resetForm()">Close-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title"> Edit {{editBook?.name}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form #editForm="ngForm">-->
+<!--          <div class="form-group was-validated col-12">-->
+<!--            <label for="bookName">Name</label>-->
+<!--            <input type="text" ngModel="{{editBook?.name}}" name="name" class="form-control" id="bookName"-->
+<!--                   placeholder="name" minlength="1" maxlength="256" required>-->
+<!--          </div>-->
+<!--          <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">-->
+<!--          <div class="form-group col-6" style="float: right">-->
+<!--            <label for="yearOfPublisher">Year of publisher</label>-->
+<!--            <input type="number" ngModel="{{editBook?.yearPublisher}}" name="yearPublisher" class="form-control"-->
+<!--                   id="bookYearPublisher" placeholder="year of publisher" min="1" max="{{currentYear}}">-->
+<!--          </div>-->
+<!--          <div class="form-group was-validated col-6">-->
+<!--            <label for="isbn">ISBN</label>-->
+<!--            <input ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn" placeholder="isbn"-->
+<!--                   type="text" mask="000-0-0000-0000-0" required>-->
+<!--            <h5>ISBN must contains 13 digits</h5>-->
+<!--          </div>-->
+<!--          <div class="form-group was-validated col-12">-->
+<!--            <label for="publisher">Publisher</label>-->
+<!--            <input type="text" ngModel="{{editBook?.publisher}}" name="publisher" class="form-control"-->
+<!--                   id="bookPublisher" placeholder="publisher" minlength="1" maxlength="512" required>-->
+<!--          </div>-->
+
+<!--          <div class="form-group was-validated col-6">-->
+<!--            <mat-form-field appearance="fill">-->
+<!--              <mat-label>Authors</mat-label>-->
+<!--              <mat-select required multiple ngModel name="authors">-->
+<!--                <mat-option *ngFor="let author of authors" [value]="author">-->
+<!--                  {{author.firstName}}-->
+<!--                  {{author.secondName}}-->
+<!--                </mat-option>-->
+<!--              </mat-select>-->
+<!--            </mat-form-field>-->
+<!--          </div>-->
+
+<!--          <div class="modal-footer">-->
+<!--            <button [disabled]="editForm.invalid" (click)="updateBook(editForm.value)" class="btn btn-success"-->
+<!--                    data-dismiss="modal">Save-->
+<!--            </button>-->
+<!--            <button class="btn btn" data-dismiss="modal">Close</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="deleteBookModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Delete {{deletedBook?.name}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p>Are you sure you want to delete {{deletedBook?.name}}</p>-->
+<!--        <div class="modal-footer">-->
+<!--          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>-->
+<!--          <button (click)="deleteBook(deletedBook.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="detailBookModal" tabindex="-1" role="dialog" aria-labelledby="detailBookModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">{{detailBook?.name}}</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div>Name: {{detailBook?.name}}</div>-->
+<!--        <div>Authors:<a *ngFor="let author of detailBook?.authors">-->
+<!--          {{author.firstName}}-->
+<!--          {{author.secondName}}-->
+<!--        </a>-->
+<!--        </div>-->
+<!--        <div>Rating: {{detailBook?.rating}}</div>-->
+<!--        <div>Year of publisher: {{detailBook?.yearPublisher}}</div>-->
+<!--        <div>Publisher: {{detailBook?.publisher}}</div>-->
+<!--        <div>ISBN: {{detailBook?.isbn}}</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="modal fade" id="createReviewModal" tabindex="-1" role="dialog" aria-labelledby="createReviewModal"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <H2 class="modal-title">Create Review</H2>-->
+<!--        <button class="close" data-dismiss="modal">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)" class="was-validated">-->
+<!--          <div class="form-group">-->
+<!--            <label for="commenterName">Commenter name</label>-->
+<!--            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name"-->
+<!--                   minlength="1" maxlength="256" required>-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="comment">Comment</label>-->
+<!--            <textarea type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment"-->
+<!--                      minlength="1" maxlength="4096" required></textarea>-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <label for="rating">Rating</label>-->
+<!--            <input type="number" ngModel name="rating" class="form-control" id="rating" placeholder="rating"-->
+<!--                   min="1" max="5" required>-->
+<!--          </div>-->
+<!--          <div class="form-group">-->
+<!--            <input hidden type="text" [ngModel]="detailBook" name="book" class="form-control" value="{{detailBook}}">-->
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button [disabled]="reviewForm.invalid" type="submit" class="btn btn-success">Create</button>-->
+<!--            <button type="button" id="add-review-form" class="btn btn-danger" data-dismiss="modal">Close</button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="page-heading" id="main-container" style="min-width: 800px; overflow-x: auto">
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <h1 style="margin-bottom: 0">Books</h1>
+      </div>
+      <div class="card-body">
+        <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+          <div class="dataTable-top row">
+            <div class="col-4">
+              <button class="btn btn-outline-primary" (click)="onOpenModal('add',$any(null))"
+                      style="width: 90px; margin: 0 10px 0 0">CREATE
+              </button>
+              <button class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
+                      style="width: 90px;">DELETE
+              </button>
+            </div>
+            <div class="col-5">
+            </div>
+            <div class="col-3 text-end">
+              <button class="btn btn-outline-secondary" data-toggle="collapse" href="#collapseExample"
+                      style="width: 90px">FILTER
+              </button>
+            </div>
           </div>
-          <div class="col-6">
-            <div class="d-flex justify-content-end align-items-end">
-              <div>
-                <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
-                               (page)="onPageChange($event)" aria-label="Select page">
-                </mat-paginator>
+          <div class="dataTable-container">
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
+                  <div id="filter-forms" class="row align-items-center">
+                    <div class="col-md-8" style="display: flex;align-items: center">
+                      <label style="margin-left:0">Name:</label>
+                      <input class="form-control" type="text" ngModel name="name"
+                             style="width: 200px; height: 30.8px">
+                      <label style="margin-left:0">Authors:</label>
+                      <input class="form-control" type="text" ngModel name="searchingName"
+                             style="width: 200px; height: 30.8px">
+                      <label>Publisher:</label>
+                      <input class="form-control" type="text" ngModel name="publisher"
+                             style="width: 200px; height: 30.8px">
+                      <label>Year:</label>
+                      <input class="form-control" type="number" ngModel name="yearPublisher"
+                             style="width: 200px; height: 30.8px">
+                      <label>ISBN</label>
+                      <input class="form-control" type="text" ngModel name="isbn"
+                             style="width: 200px; height: 30.8px" mask="000-0-0000-0000-0" minlength="17"
+                             maxlength="17" hintLabel="Type 13 digits">
+                      <label>Rating from:</label>
+                      <select class="dataTable-selector form-select" ngModel name="fromRating" style="width: auto">
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>
+                      <label style="margin-left: 5px">to:</label>
+                      <select class="dataTable-selector form-select" ngModel name="toRating"
+                              style="width: auto;">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <button [disabled]="filterForm.invalid" type="submit" class="btn btn-outline-primary"
+                              style="width: 90px">SEARCH
+                      </button>
+                      <button type="button" (click)="resetForm(filterForm)" class="btn btn-outline-dark"
+                              style="width: 90px">RESET
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
-          </div>
-        </div>
-        <div>
-          <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header class="right-aligned-header">
-              <mat-panel-title>
-                Filter by:
-              </mat-panel-title>
-
-            </mat-expansion-panel-header>
-            <div>
-              <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
-                <div>
-                  <label>Name: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="name">
-                  </mat-form-field>
-                  <label>Authors: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="searchingName" type="text">
-                  </mat-form-field>
-                  <label>Rating from: </label>
-                  <mat-form-field appearance="fill" class="rating-field">
-                    <input matInput ngModel name="fromRating" type="number" min="0" max="5">
-                  </mat-form-field>
-                  <label>Rating to: </label>
-                  <mat-form-field appearance="fill" class="rating-field">
-                    <input matInput ngModel name="toRating" type="number" min="0" max="5">
-                  </mat-form-field>
-                </div>
-                <div>
-                  <label>Year of publisher: </label>
-                  <mat-form-field appearance="fill" class="year-field">
-                    <input matInput ngModel name="yearPublisher" type="number">
-                  </mat-form-field>
-                  <label>Publisher: </label>
-                  <mat-form-field appearance="fill">
-                    <input matInput ngModel name="publisher">
-                  </mat-form-field>
-                  <label>ISBN: </label>
-                  <mat-form-field hintLabel="Type 13 digits" appearance="fill">
-                    <input matInput ngModel name="isbn" type="text"
-                           mask="000-0-0000-0000-0" minlength="17" maxlength="17"/>
-                  </mat-form-field>
-                  <button type="submit" class="btn btn-success">Filter</button>
-                  <button type="button" (click)="resetForm(filterForm)" class="btn btn-primary">Reset</button>
-                </div>
-              </form>
-            </div>
-          </mat-expansion-panel>
-        </div>
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header card-header-warning">
-              <h1 class="card-title">Books</h1>
-            </div>
-            <div class="card-body table-responsive">
-              <table class="table table-hover" aria-describedby="availableBooks">
-                <thead class="text">
-                <!--                <th id="checkBox">-->
-                <!--                  <input class="form-check-inline" type="checkbox" value="" id="checkAll">Mark all-->
-                <!--                </th>-->
-                <th (click)="sortByColumn('name')" id="tableName">Name
+            <table class="table table-striped dataTable-table">
+              <thead>
+              <tr>
+                <th id="tableMarks" class="text-center" style="width: 5%;">
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <th id="tableName" style="width: 25%;"><a (click)="sortByColumn('name')">Name
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  != 'name'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'name'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'name' && pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em>
-                </th>
-                <th id="tableAuthors">Authors</th>
-                <th (click)="sortByColumn('rating')" id="tableRating">Rating
+                    *ngIf="pageSortFilterParameters.sortField === 'name' && pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></a></th>
+                <th id="tableAuthors" style="width: 25%;">Authors</th>
+                <th id="tableRating" style="width: 5%;"><a (click)="sortByColumn('rating')">Rating
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  != 'rating'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'rating'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'rating' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
-                <th (click)="sortByColumn('yearPublisher')" id="tableYearOfPublisher">Year of publisher:
+                    *ngIf="pageSortFilterParameters.sortField === 'rating' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></a></th>
+                <th id="tablePublisher" style="width: 15%;"><a (click)="sortByColumn('publisher')">Publisher
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  != 'yearPublisher'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'publisher'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
-                <th (click)="sortByColumn('publisher')" id="tablePublisher">Publisher
+                    *ngIf="pageSortFilterParameters.sortField === 'publisher' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></a></th>
+                <th id="tableYearOfPublisher" style="width: 5%;"><a (click)="sortByColumn('yearPublisher')">Year
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && !pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  != 'publisher'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'yearPublisher'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'publisher' && pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em></th>
+                    *ngIf="pageSortFilterParameters.sortField === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></a></th>
 
-                <th (click)="sortByColumn('isbn')" id="tableIsbn">ISBN
+                <th id="tableIsbn" style="width: 10%;"><a (click)="sortByColumn('isbn')">ISBN
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && pageSortFilterParameters.reverseForSorting"
+                    *ngIf="pageSortFilterParameters.sortField === 'isbn' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
-                  <em *ngIf="pageSortFilterParameters.sortField  != 'isbn'" class="fa fa-sort"></em>
+                  <em *ngIf="pageSortFilterParameters.sortField != 'isbn'" class="fa fa-sort"></em>
                   <em
-                    *ngIf="pageSortFilterParameters.sortField  === 'isbn' && !pageSortFilterParameters.reverseForSorting"
-                    class="fa fa-sort-desc"></em>
-                </th>
+                    *ngIf="pageSortFilterParameters.sortField === 'isbn' && !pageSortFilterParameters.reverseForSorting"
+                    class="fa fa-sort-desc"></em></a></th>
+                <th id="tableButtons" style="width: 10%;"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let book of books">
+                <td class="text-center align-middle">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(book) : null"
+                                [checked]="selection.isSelected(book)">
+                  </mat-checkbox>
+                </td>
+                <td>{{book.name}}</td>
+                <td>
+                  <div *ngFor="let author of book.authors">
+                      {{author.firstName}}
+                      {{author.secondName}}
+                  </div>
+                </td>
+                <td class="text-center">{{book.rating}}</td>
+                <td>{{book.publisher}}</td>
+                <td>{{book.yearPublisher}}</td>
+                <td>{{book.isbn}}</td>
+                <td class="text-end">
+                  <div class="btn-group text-end" role="group">
+                    <a (click)="onOpenModal('edit', book)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
+                    <a (click)="onOpenModal('detail',book)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
+                    <a (click)="onOpenModal('delete', book)" class="mat-icon-button" role="button"
+                       data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="dataTable-bottom">
+            <table style="width: 100%;">
+              <tr>
+                <td>
+                  <div class="dataTable-info">Showing {{1 + numberOfRecords * matPaginator.pageSize}}
+                    to {{totalRecords <= ((1 + numberOfRecords) * matPaginator.pageSize) ? totalRecords : ((1 + numberOfRecords) * matPaginator.pageSize)}}
+                    of {{totalRecords}} books
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center;justify-content: center">
+                    <label style="margin-right: 10px">Authors per page</label>
+                    <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
+                            (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
+                      <option value="5" selected>5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <ul class="pagination pagination-primary float-end dataTable-pagination"
+                      style="align-items: center;margin-bottom: 0px">
+                    <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
+                                                   data-page="1"><em class="fa fa-step-backward"></em></a></li>
+                    <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
+                                                   data-page="1"><em class="fa fa-arrow-left"></em></a></li>
+                    <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
+                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
+                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
+                    <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
+                                                   data-page="2"><em class="fa fa-arrow-right"></em></a></li>
+                    <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
+                                                   data-page="2"><em class="fa fa-step-forward"></em> </a></li>
+                  </ul>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
+<mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+               (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
+</mat-paginator>
 
-                </thead>
-                <tbody>
-                <tr *ngFor="let book of books">
-                  <!--                  <td>-->
-                  <!--                    <div class="form-check">-->
-                  <!--                      <input class="form-check-inline" type="checkbox" value="" id="flexCheckDefault">-->
-                  <!--                    </div>-->
-                  <!--                  </td>-->
-                  <td>{{book.name}}</td>
-                  <td>
-                    <div
-                      *ngFor="let author of book.authors">
-                      <div>
-                        {{author.firstName}}
-                        {{author.secondName}}
-                      </div>
+<!--<div class="modal fade text-left" id="detailBookModal" data-backdrop="static" tabindex="-1" role="dialog"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        Details-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <p>First name: {{detailBook.name}}</p>-->
+<!--        <div>Authors:<a *ngFor="let author of detailBook?.authors">-->
+<!--          {{author.firstName}}-->
+<!--          {{author.secondName}}-->
+<!--        </a>-->
+<!--        </div>-->
+<!--        <div id="rating-line"><label style="margin-right: 10px">Rating:</label>-->
+<!--          <div id="step" class="star-rating" title="{{detailBook.rating}}/5">-->
+<!--            <div class="star-value" [ngStyle]="{'width': (detailBook.rating * 100 / 5)+ '%' } "></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <p>Publisher: {{detailBook.publisher}}</p>-->
+<!--        <p>Year: {{detailBook.yearPublisher}}</p>-->
+<!--        <p>ISBN: {{detailBook.isbn}}</p>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">-->
+<!--          Close-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="modal fade text-left" id="createBookModal" data-backdrop="static" tabindex="-1" role="dialog"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Create book
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="addForm.resetForm()">X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="createForm" #addForm="ngForm" (ngSubmit)="createBook(addForm)" class="form form-vertical">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="bookName">First Name*</label>
+                  <input type="text" id="bookName" class="form-control" ngModel name="name"
+                         #firstName="ngModel" placeholder="name" minlength="1" maxlength="256"
+                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
+                  <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
+                       class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="firstName.errors?.required || firstName.errors?.pattern">
+                      Wrong name.
                     </div>
-                  </td>
-                  <td>{{book.rating}}</td>
-                  <td>{{book.yearPublisher}}</td>
-                  <td>{{book.publisher}}</td>
-                  <td>
-                    <div>{{(book.isbn).toString().substring(0, 3)}}-{{(book.isbn).toString().substring(3, 4)}}
-                      -{{(book.isbn).toString().substring(4, 8)}}-{{(book.isbn).toString().substring(8, 12)}}
-                      -{{(book.isbn).toString().substring(12, 13)}}</div>
-                  </td>
-
-                  <td>
-                    <div class="btn-group" role="group">
-                      <a (click)="onOpenModal('edit',book)" class="btn btn-success btn-sm rounded-top"
-                         data-placement="top" title="Edit"><em class="fa fa-edit"></em></a>
-                      <a (click)="onOpenModal('detail',book)" class="btn btn-info btn-sm rounded-bottom"
-                         data-placement="top" title="Detail"><em class="fa fa-info"></em></a>
-                      <a (click)="onOpenModal('delete',book)" class="btn btn-danger btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><em class="fa fa-trash"></em></a>
-                      <a (click)="onOpenModal('createReview',book)" class="btn btn-primary btn-sm rounded-bottom"
-                         data-placement="top" title="Delete"><span class="material-icons">rate_review</span></a>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <!--                  <mat-form-field appearance="fill">-->
+                  <!--                    <mat-label>Authors</mat-label>-->
+                  <!--                    <mat-select multiple required ngModel name="authors">-->
+                  <!--                      <mat-option *ngFor="let author of authors" [value]="author">-->
+                  <!--                        {{author.firstName}}-->
+                  <!--                        {{author.secondName}}-->
+                  <!--                      </mat-option>-->
+                  <!--                    </mat-select>-->
+                  <!--                  </mat-form-field>-->
+<!--                  <mat-form-field class="dropdown-search col-12">-->
+<!--                    <mat-select multiple placeholder="authors" required ngModel name="authors">-->
+<!--                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"-->
+<!--                             #multiSearch (input)="onInputChange()">-->
+<!--                      <mat-option *ngFor="let author of authors" [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>-->
+<!--                    </mat-select>-->
+<!--                  </mat-form-field>-->
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="bookPublisher">Publisher:</label>
+                  <input type="text" id="bookPublisher" class="form-control" ngModel name="publisher"
+                         placeholder="Publisher" minlength="1" maxlength="512" required>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="bookYearPublisher">Year:</label>
+                  <input type="number" id="bookYearPublisher" class="form-control" ngModel name="yearPublisher"
+                         placeholder="Year" maxlength="{{currentYear}}">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="bookIsbn">ISBN:</label>
+                  <input type="text" id="bookIsbn" class="form-control" ngModel name="isbn"
+                         placeholder="ISBN" mask="000-0-0000-0000-0" required>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <footer class="footer">
-    </footer>
-  </div>
-</div>
-
-<div class="modal fade" id="createBookModal" tabindex="-1" role="dialog" aria-labelledby="createBookModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Create Book</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <form #addForm="ngForm" (ngSubmit)="createBook(addForm)" class="was-validated">
-          <div class="form-group col-12">
-            <label for="name">Name</label>
-            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="name"
-                   minlength="1" maxlength="256" required>
-          </div>
-          <div class="form-group col-6" style="float: right">
-            <label for="yearOfPublisher">Year of publisher:</label>
-            <input type="number" ngModel name="yearPublisher" class="form-control" id="yearOfPublisher"
-                   placeholder="year of publisher" min="1" max="{{currentYear}}">
-          </div>
-          <div class="form-group col-6">
-            <label for="isbn">ISBN</label>
-            <input ngModel name="isbn" class="form-control " id="isbn" placeholder="isbn" type="text"
-                   mask="000-0-0000-0000-0" required>
-            <h5>ISBN must contains 13 digits</h5>
-            <!--                    mask="000-0-0000-0000-0" pattern="[0-9]{13}" required>-->
-          </div>
-          <div class="form-group col-12">
-            <label for="publisher">Publisher</label>
-            <input type="text" ngModel name="publisher" class="form-control" id="publisher" placeholder="publisher"
-                   minlength="1" maxlength="512" required>
-          </div>
-
-          <div class="form-group">
-            <!--            <mat-form-field appearance="fill">-->
-            <!--              <mat-label>Authors</mat-label>-->
-            <!--              <mat-select multiple required ngModel name="authors">-->
-            <!--                <mat-option *ngFor="let author of authors" [value]="author">-->
-            <!--                  {{author.firstName}}-->
-            <!--                  {{author.secondName}}-->
-            <!--                </mat-option>-->
-            <!--              </mat-select>-->
-            <!--            </mat-form-field>-->
-            <mat-form-field class="dropdown-search col-6">
-              <mat-select multiple placeholder="authors" required ngModel name="authors">
-                <input type="text" id="1234" class="p-2" autocomplete="on" matInput placeholder="authors" #multiSearch
-                       (input)="onInputChange()">
-                <mat-option *ngFor="let author of authors" [value]="author">{{author.firstName}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-          </div>
           <div class="modal-footer">
-            <button [disabled]="addForm.invalid" type="submit" class="btn btn-success">Create</button>
-            <button type="button" id="add-book-form" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title"> Edit {{editBook?.name}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <form #editForm="ngForm">
-          <div class="form-group was-validated col-12">
-            <label for="bookName">Name</label>
-            <input type="text" ngModel="{{editBook?.name}}" name="name" class="form-control" id="bookName"
-                   placeholder="name" minlength="1" maxlength="256" required>
-          </div>
-          <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control" id="id">
-          <div class="form-group col-6" style="float: right">
-            <label for="yearOfPublisher">Year of publisher</label>
-            <input type="number" ngModel="{{editBook?.yearPublisher}}" name="yearPublisher" class="form-control"
-                   id="bookYearPublisher" placeholder="year of publisher" min="1" max="{{currentYear}}">
-          </div>
-          <div class="form-group was-validated col-6">
-            <label for="isbn">ISBN</label>
-            <input ngModel="{{editBook?.isbn}}" name="isbn" class="form-control" id="bookIsbn" placeholder="isbn"
-                   type="text" mask="000-0-0000-0000-0" required>
-            <h5>ISBN must contains 13 digits</h5>
-          </div>
-          <div class="form-group was-validated col-12">
-            <label for="publisher">Publisher</label>
-            <input type="text" ngModel="{{editBook?.publisher}}" name="publisher" class="form-control"
-                   id="bookPublisher" placeholder="publisher" minlength="1" maxlength="512" required>
-          </div>
-
-          <div class="form-group was-validated col-6">
-            <mat-form-field appearance="fill">
-              <mat-label>Authors</mat-label>
-              <mat-select required multiple ngModel name="authors">
-                <mat-option *ngFor="let author of authors" [value]="author">
-                  {{author.firstName}}
-                  {{author.secondName}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div class="modal-footer">
-            <button [disabled]="editForm.invalid" (click)="updateBook(editForm.value)" class="btn btn-success"
-                    data-dismiss="modal">Save
+            <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
+            <button type="button" id="close-author-form" class="btn btn-outline-dark" data-dismiss="modal"
+                    (click)="addForm.resetForm()" style="width: 80px">Close
             </button>
-            <button class="btn btn" data-dismiss="modal">Close</button>
           </div>
         </form>
       </div>
@@ -294,100 +706,86 @@
   </div>
 </div>
 
-<div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="deleteBookModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Delete {{deletedBook?.name}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete {{deletedBook?.name}}</p>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          <button (click)="deleteBook(deletedBook.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="modal fade text-left" id="updateAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        Edit-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close"-->
+<!--                (click)="editForm.resetForm(editAuthor)">X-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <form id="editForm" #editForm="ngForm" class="form form-vertical">-->
+<!--          <div class="form-body">-->
+<!--            <div class="row">-->
+<!--              <div class="col-12">-->
+<!--                <div class="form-group">-->
+<!--                  <label for="authorFirstName">First Name*</label>-->
+<!--                  <input type="text" class="form-control" ngModel="{{editAuthor.firstName}}" name="firstName"-->
+<!--                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"-->
+<!--                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>-->
+<!--                  <div *ngIf="editFirstName.invalid && editFirstName.dirty"-->
+<!--                       class="alert alert-danger" style="padding: 5px">-->
+<!--                    <div *ngIf="editFirstName.errors?.required || editFirstName.errors?.pattern">-->
+<!--                      Wrong first name.-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control">-->
+<!--              <div class="col-12">-->
+<!--                <div class="form-group">-->
+<!--                  <label for="authorSecondName">Second Name</label>-->
+<!--                  <input type="text" class="form-control" ngModel="{{editAuthor.secondName}}" name="secondName"-->
+<!--                         placeholder="Second Name" minlength="1" maxlength="128">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="modal-footer">-->
+<!--            <button type="submit" class="btn btn-outline-success" (click)="updateAuthor(editForm)"-->
+<!--                    style="width: 80px">Save-->
+<!--            </button>-->
+<!--            <button id="close-edit-form" type="button" class="btn btn-outline-dark" data-dismiss="modal"-->
+<!--                    style="width: 80px" (click)="editForm.resetForm(editAuthor)">Close-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<div class="modal fade" id="detailBookModal" tabindex="-1" role="dialog" aria-labelledby="detailBookModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">{{detailBook?.name}}</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <div>Name: {{detailBook?.name}}</div>
-        <div>Authors:<a *ngFor="let author of detailBook?.authors">
-          {{author.firstName}}
-          {{author.secondName}}
-        </a>
-        </div>
-        <div>Rating: {{detailBook?.rating}}</div>
-        <div>Year of publisher: {{detailBook?.yearPublisher}}</div>
-        <div>Publisher: {{detailBook?.publisher}}</div>
-        <div>ISBN: {{detailBook?.isbn}}</div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="modal fade text-left" id="deleteAuthorModal" tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-body text-center" style="word-break: break-all">-->
+<!--        <h3>Are you want to delete?</h3>-->
+<!--        <p> {{deletedAuthor.firstName}} {{deletedAuthor.secondName}}</p>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteAuthor(deletedAuthor.id)">Delete-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<div class="modal fade" id="createReviewModal" tabindex="-1" role="dialog" aria-labelledby="createReviewModal"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <H2 class="modal-title">Create Review</H2>
-        <button class="close" data-dismiss="modal">X</button>
-      </div>
-      <div class="modal-body">
-        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)" class="was-validated">
-          <div class="form-group">
-            <label for="commenterName">Commenter name</label>
-            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name"
-                   minlength="1" maxlength="256" required>
-          </div>
-          <div class="form-group">
-            <label for="comment">Comment</label>
-            <textarea type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment"
-                      minlength="1" maxlength="4096" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="rating">Rating</label>
-            <input type="number" ngModel name="rating" class="form-control" id="rating" placeholder="rating"
-                   min="1" max="5" required>
-          </div>
-          <div class="form-group">
-            <input hidden type="text" [ngModel]="detailBook" name="book" class="form-control" value="{{detailBook}}">
-          </div>
-          <div class="modal-footer">
-            <button [disabled]="reviewForm.invalid" type="submit" class="btn btn-success">Create</button>
-            <button type="button" id="add-review-form" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="modal fade text-left" id="bulkDeleteAuthorsModal" tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-body text-center">-->
+<!--        <h3>Are you want to delete selected authors?</h3>-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="bulkDelete()">Delete-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-
-    // инициализируем контент #modal-content как Modal
-    $('#modal-content').modal({
-      keyboard: false,
-      show: false,
-      backdrop: 'static'
-    });
-    // при нажатию на кнопку будем его открывать
-    $('#btn').click(function () {
-      $('#modal-content').modal('show');
-    });
-
-  });
-</script>

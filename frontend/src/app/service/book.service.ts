@@ -39,4 +39,8 @@ export class BookService {
     return this.http.delete<void>(`${this.apiServerUrl}/api/books/${bookId}`);
   }
 
+  public bulkDelete(booksIds: number[]): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/api/books?ids=${booksIds}`);
+  }
+
 }

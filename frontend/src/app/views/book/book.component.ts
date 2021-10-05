@@ -10,6 +10,9 @@ import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalR
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 import {ReviewService} from "../../service/review.service";
+import {SelectionModel} from "@angular/cdk/collections";
+import {NotificationService} from "../../service/notification.service";
+import {MatAccordion} from "@angular/material/expansion";
 
 @Component({
   selector: 'app-book',
@@ -21,12 +24,14 @@ export class BookComponent implements OnInit {
   public books: Book[] = [];
   public authors: Author[] = [];
   public searchedAuthors: Author[] = [];
-  public detailBook: Book;
-  public editBook: Book;
-  public deletedBook: Book;
-  public selectedAuthors: Author[];
+  public detailBook: Book = new Book();
+  public editBook: Book = new Book();
+  public deletedBook: Book = new Book();
   public currentYear: number = new Date().getFullYear();
+  public numberOfRecords: number;
   public totalRecords: number;
+  public totalPages: number;
+  public selection = new SelectionModel<Book>(true, []);
 
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   public bookFilterParameters: BookFilterParameters;
@@ -34,9 +39,10 @@ export class BookComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   @ViewChild('filterForm') filterForm: NgForm;
   @ViewChild('multiSearch') multiAuthorSearch: ElementRef;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
 
   constructor(private bookService: BookService, private authorService: AuthorService,
-              private reviewService: ReviewService) {
+              private reviewService: ReviewService, private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -44,7 +50,11 @@ export class BookComponent implements OnInit {
   }
 
   public getAuthors(): void {
-    this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
+    let pageParameters = this.pageSortFilterParameters;
+    //todo
+    pageParameters.pageNumber = 0;
+    pageParameters.pageSize = 999999;
+    this.authorService.getAuthorsWithParameters(pageParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
         this.searchedAuthors = response.content;
@@ -60,7 +70,9 @@ export class BookComponent implements OnInit {
       (response: DataWithTotalRecords) => {
         this.books = [];
         this.books = response.content;
-        this.totalRecords = response.totalElements
+        this.totalRecords = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.numberOfRecords = response.number;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -74,13 +86,16 @@ export class BookComponent implements OnInit {
         this.books = [];
         this.books = response.content;
         this.totalRecords = response.totalElements;
+        this.totalPages = response.totalPages;
+        this.numberOfRecords = response.number;
         this.pageSortFilterParameters.pageNumber = response.number;
         this.pageSortFilterParameters.pageSize = response.size;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
+    this.selection.clear();
   }
 
   public getBook(bookId: number): void {
@@ -96,37 +111,62 @@ export class BookComponent implements OnInit {
   }
 
   public createBook(addForm: NgForm): void {
-    // @ts-ignore
-    document.getElementById('add-book-form').click();
-    this.bookService.createBook(addForm.value).subscribe(
+    if (addForm.invalid) {
+      addForm.controls.name.markAsTouched();
+      return;
+      //  TODO
+    }
+    let createdBook: Book = addForm.value;
+    // createdBook.firstName = createdBook.firstName.trim();
+    // if (createdBook.secondName != null) {
+    //   createdBook.secondName = createdBook.secondName.trim();
+    // }
+    this.bookService.createBook(createdBook).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
         addForm.reset();
+        this.notificationService.successSnackBar("Success!");
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
+        this.notificationService.errorSnackBar((error.message))
         addForm.reset();
       }
-    )
+    );
+    //@ts-ignore
+    document.getElementById('close-book-form').click();
   }
 
-  public updateBook(book: Book): void {
-    this.bookService.updateBook(book).subscribe(
+  public updateBook(editForm: NgForm): void {
+    if (editForm.invalid) {
+      editForm.controls.firstName.markAsTouched();
+      return;
+      //  TODO
+    }
+    this.editBook = editForm.value;
+    // this.editBook.firstName = this.editBook.firstName.trim();
+    // this.editBook.secondName = this.editBook.secondName.trim();
+    this.bookService.updateBook(editForm.value).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
+        this.notificationService.successSnackBar("Success!");
+        editForm.resetForm(this.editBook);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
+    //@ts-ignore
+    document.getElementById('close-edit-form').click();
   }
 
   public deleteBook(bookId: number): void {
     this.bookService.deleteBook(bookId).subscribe(
       (response: void) => {
         console.log(response);
+        this.notificationService.successSnackBar("Success!");
         this.getBooksWithParameters();
       },
       (error: HttpErrorResponse) => {
@@ -169,6 +209,9 @@ export class BookComponent implements OnInit {
       this.deletedBook = book;
       button.setAttribute('data-target', '#deleteBookModal');
     }
+    if (mode === 'bulkDelete' && this.selection.hasValue()) {
+      button.setAttribute('data-target', '#bulkDeleteAuthorsModal');
+    }
     if (mode === 'detail') {
       this.detailBook = book;
       button.setAttribute('data-target', '#detailBookModal')
@@ -185,6 +228,7 @@ export class BookComponent implements OnInit {
   public onPageChange(event: PageEvent) {
     this.pageSortFilterParameters.pageNumber = event.pageIndex;
     this.pageSortFilterParameters.pageSize = event.pageSize;
+    this.selection.clear();
     this.getBooksWithParameters()
   }
 
@@ -196,6 +240,7 @@ export class BookComponent implements OnInit {
     } else {
       this.pageSortFilterParameters.order = 'DESC'
     }
+    this.selection.clear();
     this.getBooksWithParameters();
   }
 
@@ -224,6 +269,14 @@ export class BookComponent implements OnInit {
     )
   }
 
+  public changeElementsPerPage(event: number) {
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.pageSortFilterParameters.pageSize = event;
+    this.matPaginator.pageIndex = 0;
+    this.matPaginator.pageSize = event;
+    this.getBooksWithParameters()
+  }
+
   public onInputChange() {
     this.searchedAuthors = this.authors;
     const searchInput = this.multiAuthorSearch.nativeElement.value ?
@@ -232,5 +285,34 @@ export class BookComponent implements OnInit {
       const name: string = a.firstName.toLowerCase();
       return name.indexOf(searchInput) > -1;
     })
+  }
+
+  public isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.authors.length;
+    return numSelected === numRows;
+  }
+
+  // Selects all rows if they are not all selected; otherwise clear selection.
+  public masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.books.forEach(row => this.selection.select(row));
+  }
+
+  public bulkDelete() {
+    if (this.selection.hasValue()) {
+      let authorsIds = this.selection.selected.map(value => value.id);
+      this.bookService.bulkDelete(authorsIds).subscribe(
+        (response: void) => {
+          console.log(response);
+          this.notificationService.successSnackBar("Success!");
+          this.getBooksWithParameters();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
+        }
+      )
+    }
   }
 }
