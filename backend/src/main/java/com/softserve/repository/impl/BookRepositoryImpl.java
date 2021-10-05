@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -49,11 +50,14 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         return books;
     }
 
-    //TODO it doesnt work
     @Override
-    public boolean deleteBooks(List<Integer> ids) {
+    @Transactional(propagation = Propagation.MANDATORY)
+    public boolean deleteBooks(List<BigInteger> ids) {
         LOGGER.debug("deleteBooks({})", ids);
-        return false;
+        CriteriaDelete<Book> deleteQuery = criteriaBuilder.createCriteriaDelete(Book.class);
+        Root<Book> authors = deleteQuery.from(Book.class);
+        deleteQuery.where(authors.get("id").in(ids));
+        return entityManager.createQuery(deleteQuery).executeUpdate() > 0;
     }
 
     @Override
@@ -115,7 +119,8 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
                 );
             }
             if (filterParameters.getSearchingName() != null) {
-                String filterName = filterParameters.getSearchingName();;
+                String filterName = filterParameters.getSearchingName();
+                ;
                 Join<Book, Author> authors = books.join("authors");
                 predicates.add(
                         criteriaBuilder.or(

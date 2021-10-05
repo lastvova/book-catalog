@@ -18,7 +18,7 @@ CREATE TABLE books
 (
     id             BIGINT UNSIGNED AUTO_INCREMENT,
     name           VARCHAR(256) NOT NULL,
-    year_publisher INT check ( year_publisher ),
+    year_publisher INT,
     isbn           BIGINT       NOT NULL,
     publisher      VARCHAR(512),
     rating         DECIMAL(3, 2) DEFAULT 0.00,

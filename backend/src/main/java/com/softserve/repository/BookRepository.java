@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BookRepository extends BaseRepository<Book, BigInteger> {
 
-    boolean deleteBooks(List<Integer> ids);
+    boolean deleteBooks(List<BigInteger> ids);
 }

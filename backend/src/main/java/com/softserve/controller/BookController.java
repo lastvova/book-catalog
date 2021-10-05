@@ -99,11 +99,11 @@ public class BookController extends BaseController {
 
     @DeleteMapping
     public ResponseEntity<String> bulkDelete(@RequestParam List<BigInteger> ids) {
-        LOGGER.debug("bulkDelete({})", ids);
+        LOGGER.debug("bulkDelete()");
         if (CollectionUtils.isEmpty(ids)) {
-            throw new IllegalStateException("Empty collection with ids");
+            throw new IllegalArgumentException("Empty collection with ids");
         }
-        bookService.delete(null);
+        bookService.bulkDelete(ids);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("authors was deleted");
     }
 

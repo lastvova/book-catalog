@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implements BookService {
@@ -32,6 +34,13 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
                 || book.getIsbn() == null
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || isInValidYearOfPublisher(book);
+    }
+
+    @Override
+    @Transactional
+    public boolean bulkDelete(List<BigInteger> ids) {
+        LOGGER.debug("bulkDelete({})", ids);
+        return repository.deleteBooks(ids);
     }
 
     private boolean isInValidYearOfPublisher(Book book) {
