@@ -20,6 +20,7 @@ import {NgxMaskModule} from "ngx-mask";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { BookPageComponent } from './views/book-page/book-page.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     AuthorComponent,
     ReviewComponent,
     MainPageComponent,
+    BookPageComponent,
   ],
     imports: [
         BrowserModule,

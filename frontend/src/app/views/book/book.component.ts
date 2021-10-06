@@ -146,7 +146,6 @@ export class BookComponent implements OnInit {
       editForm.controls.isbn.markAsDirty();
       return;
     }
-
     if (editForm.untouched) {
       //@ts-ignore
       document.getElementById('close-edit-book-form').click();
