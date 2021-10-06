@@ -11,7 +11,7 @@
               <button class="btn btn-outline-primary" (click)="onOpenModal('add',$any(null))"
                       style="width: 90px; margin: 0 10px 0 0">CREATE
               </button>
-              <button class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
+              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
                        style="width: 90px;">DELETE
               </button>
             </div>

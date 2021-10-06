@@ -41,6 +41,7 @@ export class BookComponent implements OnInit {
   @ViewChild('multiSearch') multiAuthorSearch: ElementRef;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
+
   constructor(private bookService: BookService, private authorService: AuthorService,
               private reviewService: ReviewService, private notificationService: NotificationService) {
   }
@@ -190,7 +191,7 @@ export class BookComponent implements OnInit {
     this.bookFilterParameters.toRating = this.filterForm.value.toRating;
     this.bookFilterParameters.fromRating = this.filterForm.value.fromRating;
     this.bookFilterParameters.yearPublisher = this.filterForm.value.yearPublisher;
-    this.bookFilterParameters.searchingName = this.filterForm.value.searchingName;
+    this.bookFilterParameters.authorName = this.filterForm.value.searchingName;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.matPaginator.pageIndex = 0;
     this.pageSortFilterParameters.pageNumber = 0;

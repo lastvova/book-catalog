@@ -11,7 +11,7 @@
               <button class="btn btn-outline-primary" (click)="onOpenModal('add',$any(null))"
                       style="width: 90px; margin: 0 10px 0 0">CREATE
               </button>
-              <button class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
+              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
                       style="width: 90px;">DELETE
               </button>
             </div>
@@ -32,10 +32,10 @@
                       <div class="col-md-10" style="display: flex;align-items: center">
                         <label style="margin-left:0">Name:</label>
                         <input class="form-control" type="text" ngModel name="name"
-                               style="width: 150px; height: 30.8px">
+                               style="width: 150px; height: 31px">
                         <label style="margin-left:10px">Authors:</label>
                         <input class="form-control" type="text" ngModel name="searchingName"
-                               style="width: 150px; height: 30.8px">
+                               style="width: 150px; height: 31px">
                         <label style="margin-left:10px">Rating from:</label>
                         <select class="dataTable-selector form-select" ngModel name="fromRating" style="width: auto">
                           <option>0</option>
@@ -56,7 +56,7 @@
                         </select>
                       </div>
                       <div class="col-md-2 text-end">
-                        <button [disabled]="filterForm.invalid" type="submit" class="btn btn-outline-primary"
+                        <button [disabled]="filterForm.untouched || filterForm.pristine" type="submit" class="btn btn-outline-primary"
                                 style="width: 90px">SEARCH
                         </button>
                       </div>
@@ -65,14 +65,14 @@
                       <div class="col-md-10" style="display: flex;align-items: center">
                         <label style="margin-left:0">Publisher:</label>
                         <input class="form-control" type="text" ngModel name="publisher"
-                               style="width: 200px; height: 30.8px">
+                               style="width: 200px; height: 31px">
                         <label style="margin-left:10px">Year:</label>
                         <input class="form-control" type="number" ngModel name="yearPublisher"
-                               style="width: 100px; height: 30.8px">
+                               style="width: 100px; height: 31px">
                         <label style="margin-left:10px">ISBN</label>
                         <input class="form-control" type="text" ngModel name="isbn"
-                               style="width: 175px; height: 30.8px" mask="000-0-0000-0000-0" minlength="17"
-                               maxlength="17" hintLabel="Type 13 digits">
+                               style="width: 175px; height: 31px" mask="000-0-0000-0000-0" minlength="17"
+                               maxlength="17">
                       </div>
                       <div class="col-md-2 text-end">
                         <button type="button" (click)="resetForm(filterForm)" class="btn btn-outline-dark"
@@ -85,6 +85,7 @@
               </div>
             </div>
             <table class="table table-striped dataTable-table">
+              <caption hidden>Books:</caption>
               <thead>
               <tr>
                 <th id="tableMarks" class="text-center" style="width: 5%;">
@@ -193,7 +194,7 @@
                 </td>
                 <td>
                   <ul class="pagination pagination-primary float-end dataTable-pagination"
-                      style="align-items: center;margin-bottom: 0px">
+                      style="align-items: center;margin-bottom: 0">
                     <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
                                                    data-page="1"><em class="fa fa-step-backward"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
@@ -219,39 +220,6 @@
 <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
                (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
 </mat-paginator>
-
-<!--<div class="modal fade text-left" id="detailBookModal" data-backdrop="static" tabindex="-1" role="dialog"-->
-<!--     aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        Details-->
-<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        <p>First name: {{detailBook.name}}</p>-->
-<!--        <div>Authors:<a *ngFor="let author of detailBook?.authors">-->
-<!--          {{author.firstName}}-->
-<!--          {{author.secondName}}-->
-<!--        </a>-->
-<!--        </div>-->
-<!--        <div id="rating-line"><label style="margin-right: 10px">Rating:</label>-->
-<!--          <div id="step" class="star-rating" title="{{detailBook.rating}}/5">-->
-<!--            <div class="star-value" [ngStyle]="{'width': (detailBook.rating * 100 / 5)+ '%' } "></div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <p>Publisher: {{detailBook.publisher}}</p>-->
-<!--        <p>Year: {{detailBook.yearPublisher}}</p>-->
-<!--        <p>ISBN: {{detailBook.isbn}}</p>-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">-->
-<!--          Close-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 
 <div class="modal fade text-left" id="createBookModal" data-backdrop="static" tabindex="-1" role="dialog"
      aria-hidden="true">
@@ -282,15 +250,6 @@
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <!--                  <mat-form-field appearance="fill">-->
-                  <!--                    <mat-label>Authors</mat-label>-->
-                  <!--                    <mat-select multiple required ngModel name="authors">-->
-                  <!--                      <mat-option *ngFor="let author of authors" [value]="author">-->
-                  <!--                        {{author.firstName}}-->
-                  <!--                        {{author.secondName}}-->
-                  <!--                      </mat-option>-->
-                  <!--                    </mat-select>-->
-                  <!--                  </mat-form-field>-->
                   <mat-form-field class="dropdown-search col-12">
                     <mat-select multiple placeholder="authors" required ngModel name="authors">
                       <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"
