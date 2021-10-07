@@ -1,9 +1,10 @@
 import {Book} from "./Book";
 
-export class Author{
+export class Author {
   id: number;
-  firstName: string;
-  secondName: string;
+  firstName: string = '';
+  secondName: string = '';
   rating: number;
   books: Book[];
+  fullName: string = this.firstName + " " + this.secondName;
 }
