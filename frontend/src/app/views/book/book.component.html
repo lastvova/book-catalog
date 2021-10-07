@@ -71,7 +71,7 @@
                         <label style="margin-left:10px">Year:</label>
                         <input class="form-control" type="number" ngModel name="yearPublisher"
                                style="width: 100px; height: 31px">
-                        <label style="margin-left:10px">ISBN</label>
+                        <label style="margin-left:10px">ISBN:</label>
                         <input class="form-control" type="text" ngModel name="isbn"
                                style="width: 175px; height: 31px" mask="000-0-0000-0000-0" minlength="17"
                                maxlength="17">
@@ -155,10 +155,10 @@
                     <li>{{ author.firstName}} {{author.secondName}}</li>
                   </ul>
                 </td>
-                <td>{{book.rating}}</td>
+                <td >{{book.rating}}</td>
                 <td>{{book.publisher}}</td>
                 <td>{{book.yearPublisher}}</td>
-                <td>{{book.isbn}}</td>
+                <td>{{formatIsbn(book.isbn.toString())}}</td>
                 <td class="text-end">
                   <div class="btn-group text-end" role="group">
                     <a (click)="onOpenModal('edit', book)" class="mat-icon-button" role="button"
