@@ -9,7 +9,6 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
-import {ReviewService} from "../../service/review.service";
 import {SelectionModel} from "@angular/cdk/collections";
 import {NotificationService} from "../../service/notification.service";
 import {MatAccordion} from "@angular/material/expansion";
@@ -23,7 +22,6 @@ export class BookComponent implements OnInit {
 
   public books: Book[] = [];
   public authors: Author[] = [];
-  public searchedAuthors: Author[] = [];
   public detailBook: Book = new Book();
   public editBook: Book = new Book();
   public deletedBook: Book = new Book();
@@ -36,18 +34,30 @@ export class BookComponent implements OnInit {
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
   public bookFilterParameters: BookFilterParameters;
 
+  selectedAuthors: Author[] = [];
+  dropdownSettings = {};
+  requiredAuthors: boolean = false;
+
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   @ViewChild('filterForm') filterForm: NgForm;
-  @ViewChild('multiSearch') multiAuthorSearch: ElementRef;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
 
   constructor(private bookService: BookService, private authorService: AuthorService,
-              private reviewService: ReviewService, private notificationService: NotificationService) {
+              private notificationService: NotificationService) {
   }
 
   ngOnInit() {
     this.getBooks();
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'firstName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true
+    }
   }
 
   public getAuthors(): void {
@@ -58,12 +68,12 @@ export class BookComponent implements OnInit {
     this.authorService.getAuthorsWithParameters(pageParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
-        this.searchedAuthors = response.content;
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    );
+    this.setFullNameForAuthors()
   }
 
   public getBooks(): void {
@@ -112,10 +122,12 @@ export class BookComponent implements OnInit {
   }
 
   public createBook(addForm: NgForm): void {
+    debugger
     if (addForm.invalid) {
       Object.keys(addForm.form.controls).forEach(key => {
         addForm.form.controls[key].markAsTouched()
       })
+      this.requiredAuthors = true;
       return;
     }
     let createdBook: Book = addForm.value;
@@ -134,17 +146,18 @@ export class BookComponent implements OnInit {
         addForm.reset();
       }
     );
+    this.requiredAuthors = false;
     //@ts-ignore
     document.getElementById('close-book-form').click();
   }
 
   public updateBook(editForm: NgForm): void {
-    debugger;
     if (editForm.invalid) {
       editForm.controls.name.markAsDirty();
       editForm.controls.authors.markAsDirty();
       editForm.controls.publisher.markAsDirty();
       editForm.controls.isbn.markAsDirty();
+      this.requiredAuthors = true;
       return;
     }
     if (editForm.untouched) {
@@ -166,6 +179,7 @@ export class BookComponent implements OnInit {
         alert(error.message);
       }
     );
+    this.requiredAuthors = false;
     //@ts-ignore
     document.getElementById('close-edit-book-form').click();
   }
@@ -205,12 +219,15 @@ export class BookComponent implements OnInit {
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
-      this.getAuthors()
+      this.getAuthors();
+
+      this.selectedAuthors = [];
       button.setAttribute('data-target', '#createBookModal');
     }
     if (mode === 'edit') {
       this.editBook = book;
       this.getAuthors();
+      this.selectedAuthors = this.editBook.authors;
       button.setAttribute('data-target', '#updateBookModal');
     }
     if (mode === 'delete') {
@@ -261,38 +278,12 @@ export class BookComponent implements OnInit {
     this.getBooksWithParameters();
   }
 
-  public createReview(reviewForm: NgForm): void {
-    // @ts-ignore
-    document.getElementById('add-review-form').click();
-    this.reviewService.createReview(reviewForm.value).subscribe(
-      (response: any) => {
-        console.log(response);
-        this.getBooksWithParameters();
-        reviewForm.reset();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-        reviewForm.reset();
-      }
-    )
-  }
-
   public changeElementsPerPage(event: number) {
     this.pageSortFilterParameters.pageNumber = 0;
     this.pageSortFilterParameters.pageSize = event;
     this.matPaginator.pageIndex = 0;
     this.matPaginator.pageSize = event;
     this.getBooksWithParameters()
-  }
-
-  public onInputChange() {
-    this.searchedAuthors = this.authors;
-    const searchInput = this.multiAuthorSearch.nativeElement.value ?
-      this.multiAuthorSearch.nativeElement.value.toLowerCase() : '';
-    this.authors = this.searchedAuthors.filter(a => {
-      const name: string = a.firstName.toLowerCase();
-      return name.indexOf(searchInput) > -1;
-    })
   }
 
   public isAllSelected() {
@@ -322,5 +313,17 @@ export class BookComponent implements OnInit {
         }
       )
     }
+  }
+
+  onItemSelect(item: any) {
+    this.selectedAuthors.push(item)
+  }
+
+  onSelectAll(items: any) {
+    this.selectedAuthors.push(items);
+  }
+
+  private setFullNameForAuthors(){
+    this.authors.forEach(author => author.fullName = author.firstName + " " + author.secondName);
   }
 }

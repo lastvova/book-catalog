@@ -11,7 +11,8 @@
               <button class="btn btn-outline-primary" (click)="onOpenModal('add',$any(null))"
                       style="width: 90px; margin: 0 10px 0 0">CREATE
               </button>
-              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
+              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger"
+                      (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
                       style="width: 90px;">DELETE
               </button>
             </div>
@@ -56,7 +57,8 @@
                         </select>
                       </div>
                       <div class="col-md-2 text-end">
-                        <button [disabled]="filterForm.untouched || filterForm.pristine" type="submit" class="btn btn-outline-primary"
+                        <button [disabled]="filterForm.untouched || filterForm.pristine" type="submit"
+                                class="btn btn-outline-primary"
                                 style="width: 90px">SEARCH
                         </button>
                       </div>
@@ -103,7 +105,7 @@
                     *ngIf="pageSortFilterParameters.sortField === 'name' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
                 <th id="tableAuthors" style="width: 25%;">Authors</th>
-                <th id="tableRating" style="width: 5%;"><a (click)="sortByColumn('rating')">Rating
+                <th id="tableRating" style="width: 10%;"><a (click)="sortByColumn('rating')">Rating
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
@@ -119,7 +121,7 @@
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'publisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
-                <th id="tableYearOfPublisher" style="width: 5%;"><a (click)="sortByColumn('yearPublisher')">Year
+                <th id="tableYearOfPublisher" style="width: 10%;"><a (click)="sortByColumn('yearPublisher')">Year
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
@@ -149,12 +151,11 @@
                 </td>
                 <td>{{book.name}}</td>
                 <td>
-                  <div *ngFor="let author of book.authors">
-                    {{author.firstName}}
-                    {{author.secondName}}
-                  </div>
+                  <ul *ngFor="let author of book.authors">
+                    <li>{{ author.firstName}} {{author.secondName}}</li>
+                  </ul>
                 </td>
-                <td class="text-center">{{book.rating}}</td>
+                <td>{{book.rating}}</td>
                 <td>{{book.publisher}}</td>
                 <td>{{book.yearPublisher}}</td>
                 <td>{{book.isbn}}</td>
@@ -236,7 +237,7 @@
             <div class="row">
               <div class="col-12">
                 <div class="form-group">
-                  <label for="bookName">First Name*</label>
+                  <label for="bookName">Name*</label>
                   <input type="text" id="bookName" class="form-control" ngModel name="name"
                          #name="ngModel" placeholder="name" minlength="1" maxlength="256"
                          pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
@@ -250,21 +251,26 @@
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <mat-form-field class="dropdown-search col-12">
-                    <mat-select multiple placeholder="authors" required ngModel name="authors">
-                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"
-                             #multiSearch (input)="onInputChange()">
-                      <mat-option *ngFor="let author of authors"
-                                  [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                  <label>Authors*</label>
+                  <ng-multiselect-dropdown
+                    [placeholder]="'select authors'"
+                    [settings]="dropdownSettings"
+                    [data]="authors"
+                    (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)" ngModel name="authors" required="authors">
+                  </ng-multiselect-dropdown>
+                  <div *ngIf="requiredAuthors" class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="addForm.controls.authors.errors?.required">
+                      Wrong authors.
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="form-group">
                   <label for="bookPublisher">Publisher*</label>
                   <input type="text" id="bookPublisher" class="form-control" #publisher="ngModel" ngModel
-                         name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
+                         name="publisher" placeholder="publisher" minlength="1" maxlength="512"
                          pattern="((?:\s*[A-Za-z0-9_]\s*){1,512})$" required>
                   <div *ngIf="publisher.invalid && (publisher.dirty || publisher.touched)"
                        class="alert alert-danger" style="padding: 5px">
@@ -276,16 +282,16 @@
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label for="bookYearPublisher">Year:</label>
+                  <label for="bookYearPublisher">Year</label>
                   <input type="number" id="bookYearPublisher" class="form-control" ngModel name="yearPublisher"
-                         placeholder="Year" maxlength="{{currentYear}}">
+                         placeholder="year" maxlength="{{currentYear}}">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
-                  <label for="bookIsbn">ISBN:</label>
+                  <label for="bookIsbn">ISBN*</label>
                   <input type="text" id="bookIsbn" class="form-control" #isbn="ngModel" ngModel name="isbn"
-                         placeholder="ISBN" mask="000-0-0000-0000-0" required>
+                         placeholder="isbn" mask="000-0-0000-0000-0" required>
                   <div *ngIf="isbn.invalid && (isbn.dirty || isbn.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="isbn.errors?.required">
@@ -338,23 +344,22 @@
               </div>
               <div class="col-12">
                 <div class="form-group">
-                  <!--                  <mat-form-field appearance="fill">-->
-                  <!--                    <mat-label>Authors</mat-label>-->
-                  <!--                    <mat-select multiple required ngModel name="authors">-->
-                  <!--                      <mat-option *ngFor="let author of authors" [value]="author">-->
-                  <!--                        {{author.firstName}}-->
-                  <!--                        {{author.secondName}}-->
-                  <!--                      </mat-option>-->
-                  <!--                    </mat-select>-->
-                  <!--                  </mat-form-field>-->
-                  <mat-form-field class="dropdown-search col-12">
-                    <mat-select multiple placeholder="authors" required ngModel name="authors">
-                      <input type="text" class="p-2" autocomplete="on" matInput placeholder="authors"
-                             #multiSearch (input)="onInputChange()">
-                      <mat-option *ngFor="let author of authors"
-                                  [value]="author">{{author.firstName}} {{author.secondName}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                  <div class="form-group">
+                    <label>Authors*</label>
+                    <ng-multiselect-dropdown
+                      [placeholder]="'select authors'"
+                      [settings]="dropdownSettings"
+                      [data]="authors"
+                      [(ngModel)]="selectedAuthors"
+                      (onSelect)="onItemSelect($event)"
+                      (onSelectAll)="onSelectAll($event)" ngModel name="authors" required="authors">
+                    </ng-multiselect-dropdown>
+                    <div *ngIf="requiredAuthors" class="alert alert-danger" style="padding: 5px">
+                      <div *ngIf="addForm.controls.authors.errors?.required">
+                        Wrong authors.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col-12">
@@ -362,7 +367,7 @@
                   <label for="bookPublisher">Publisher*</label>
                   <input type="text" class="form-control" #bookPublisher="ngModel" ngModel="{{editBook.publisher}}"
                          name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                         pattern="((?:\w*[A-Za-z0-9_]\s*){1,256})$" required>
                   <div *ngIf="bookPublisher.invalid && (bookPublisher.dirty || bookPublisher.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="bookPublisher.errors?.required || bookPublisher.errors?.pattern">

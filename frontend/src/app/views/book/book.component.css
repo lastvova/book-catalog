@@ -216,3 +216,12 @@ table {
   size: auto;
   opacity: 0.7;
 }
+
+ol, ul {
+  padding-left: 1rem;
+  vertical-align: middle;
+}
+
+td{
+  vertical-align: middle;
+}

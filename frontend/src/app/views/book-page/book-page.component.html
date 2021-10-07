@@ -17,9 +17,9 @@
             <div class="row" style="width: 100%">
               <div class="col-6">
                 <h2>Authors:
-                  <div
-                    *ngFor="let author of book.authors">{{ author.firstName}} {{author.secondName}},
-                  </div>
+                  <ul *ngFor="let author of book.authors">
+                    <li>{{ author.firstName}} {{author.secondName}}</li>
+                  </ul>
                 </h2>
               </div>
               <div class="col-6">
@@ -161,7 +161,7 @@
 
                       <li (click)="countStar(star)"
                           [ngClass]="{'selected': (star <= selectedValue)}">
-                        <i class="fa fa-star fa-2x"></i>
+                        <em class="fa fa-star fa-2x"></em>
                       </li>
                     </ul>
                   </div>
