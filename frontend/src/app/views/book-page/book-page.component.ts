@@ -66,4 +66,8 @@ export class BookPageComponent implements OnInit {
     this.selectedValue = star;
     console.log('Value of star', star);
   }
+
+  public formatIsbn(isbn: string): string {
+    return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
+  }
 }

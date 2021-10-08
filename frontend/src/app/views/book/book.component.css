@@ -222,6 +222,20 @@ ol, ul {
   vertical-align: middle;
 }
 
-td{
+td {
   vertical-align: middle;
+}
+
+.filter-form-label {
+  margin-left: 10px;
+  margin-right: 5px
+}
+
+#filter-forms > .row > .col-md-10 > input {
+  height: 31px;
+}
+.dataTable-selector{
+  font-size: 1rem;
+  height: 31px;
+  padding-top: 2px;
 }

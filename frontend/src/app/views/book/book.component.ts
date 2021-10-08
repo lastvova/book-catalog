@@ -73,7 +73,7 @@ export class BookComponent implements OnInit {
         alert(error.message);
       }
     );
-    this.setFullNameForAuthors()
+    // this.setFullNameForAuthors()
   }
 
   public getBooks(): void {
@@ -154,10 +154,11 @@ export class BookComponent implements OnInit {
   public updateBook(editForm: NgForm): void {
     if (editForm.invalid) {
       editForm.controls.name.markAsDirty();
-      editForm.controls.authors.markAsDirty();
       editForm.controls.publisher.markAsDirty();
       editForm.controls.isbn.markAsDirty();
-      this.requiredAuthors = true;
+      if (editForm.controls.authors.invalid){
+        this.requiredAuthors = true;
+      }
       return;
     }
     if (editForm.untouched) {
@@ -323,7 +324,10 @@ export class BookComponent implements OnInit {
     this.selectedAuthors.push(items);
   }
 
-  private setFullNameForAuthors(){
-    this.authors.forEach(author => author.fullName = author.firstName + " " + author.secondName);
+  // private setFullNameForAuthors(){
+  //   this.authors.forEach(author => author.fullName = author.firstName + " " + author.secondName);
+  // }
+  public formatIsbn(isbn: string): string {
+    return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }
 }

@@ -216,3 +216,16 @@ table {
   size: auto;
   opacity: 0.7;
 }
+.filter-form-label {
+  margin-left: 10px;
+  margin-right: 5px
+}
+
+#filter-forms > .col-md-8 > input, select{
+  height: 31px;
+}
+.dataTable-selector{
+  font-size: 1rem;
+  height: 31px;
+  padding-top: 2px;
+}

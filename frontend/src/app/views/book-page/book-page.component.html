@@ -25,120 +25,26 @@
               <div class="col-6">
                 <div><h2>Publisher: {{book.publisher}}</h2></div>
                 <div><h2>Year: {{book.yearPublisher}}</h2></div>
-                <div><h2>ISBN: {{(book.isbn).toString().substring(0, 3)}}-{{(book.isbn).toString().substring(3, 4)}}
-                  -{{(book.isbn).toString().substring(4, 8)}}-{{(book.isbn).toString().substring(8, 12)}}
-                  -{{(book.isbn).toString().substring(12, 13)}}</h2></div>
+                <div><h2>ISBN: {{formatIsbn(book.isbn.toString())}}</h2></div>
               </div>
             </div>
             <div class="col-6" style="margin-bottom: 10px">
-              <button class="btn btn-outline-primary" [routerLink]="['/books']">TO BOOKS
+              <button class="btn btn-outline-primary" [routerLink]="['/books']">BACK
               </button>
             </div>
             <div class="col-6 text-end" style="margin-bottom: 10px">
-              <!--              <button class="btn btn-outline-primary" data-toggle="collapse" href="#createReviewModal"-->
-              <!--                      style="width: 120px">ADD REVIEW-->
-              <!--              </button>-->
               <button class="btn btn-outline-primary" data-toggle="modal" data-target="#createReviewModal"
                       style="width: 120px">ADD REVIEW
               </button>
             </div>
           </div>
           <div class="dataTable-container">
-            <!--            <div class="collapse" id="collapseExample">-->
-            <!--              <div class="card card-body">-->
-            <!--                <form #createReviewForm="ngForm" (ngSubmit)="createReview(createReviewForm)">-->
-            <!--                  <div id="filter-forms" class="row-12">-->
-            <!--                    <div class="row" style="margin-bottom: 5px">-->
-            <!--                      <div class="col-md-9" style="display: flex;align-items: center">-->
-            <!--                        <label style="margin-left:0">Commenter name:</label>-->
-            <!--                        <input class="form-control" type="text" ngModel name="commenterName"-->
-            <!--                               style="width: 150px; height: 31px">-->
-            <!--                        <label style="margin-left:10px">Rating :</label>-->
-            <!--                        <select class="dataTable-selector form-select" ngModel name="rating" style="width: auto;height: 31px">-->
-            <!--                          <option>0</option>-->
-            <!--                          <option>1</option>-->
-            <!--                          <option>2</option>-->
-            <!--                          <option>3</option>-->
-            <!--                          <option>4</option>-->
-            <!--                          <option>5</option>-->
-            <!--                        </select>-->
-            <!--                        <label style="margin-left:10px">Comment:</label>-->
-            <!--                        <textarea class="form-control" type="text" ngModel name="comment"-->
-            <!--                                  style="height: 31px"></textarea>-->
-
-            <!--                      </div>-->
-            <!--                      <div class="col-md-3   text-end">-->
-            <!--                        <button [disabled]="createReviewForm.untouched || createReviewForm.pristine" type="submit"-->
-            <!--                                class="btn btn-outline-primary"-->
-            <!--                                style="width: 90px;margin: 5px">SAVE-->
-            <!--                        </button>-->
-            <!--                        <button type="button" (click)="createReviewForm.resetForm()" class="btn btn-outline-dark"-->
-            <!--                                style="width: 90px;margin: 5px">RESET-->
-            <!--                        </button>-->
-            <!--                      </div>-->
-            <!--                    </div>-->
-            <!--                    <div class="row" style="margin-top: 5px">-->
-            <!--                      <div class="col-md-2 text-end">-->
-            <!--                      </div>-->
-            <!--                    </div>-->
-            <!--                  </div>-->
-            <!--                </form>-->
-            <!--              </div>-->
-            <!--            </div>-->
           </div>
         </div>
       </div>
     </div>
   </section>
 </div>
-<!--<div class="modal fade" id="createReviewModal" tabindex="-1" role="dialog" aria-labelledby="createReviewModal"-->
-<!--     aria-hidden="true">-->
-<!--  <div class="modal-dialog" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <H2 class="modal-title">Create Review</H2>-->
-<!--        <button class="close" data-dismiss="modal">X</button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        <form #reviewForm="ngForm" (ngSubmit)="createReview(reviewForm)" >-->
-<!--          <div class="form-group">-->
-<!--            <label for="commenterName">Commenter name</label>-->
-<!--            <input type="text" ngModel name="commenterName" class="form-control" id="commenterName" placeholder="name"-->
-<!--                   minlength="1" maxlength="256" required>-->
-<!--          </div>-->
-<!--          <div class="form-group">-->
-<!--            <div style="display: flex; align-items: center">-->
-<!--              <label for="rating" style="margin-bottom: 0">Rating: </label>-->
-<!--              <ul class="list-inline rating-list"-->
-<!--                  *ngFor="let star of [1,2,3,4,5]" style="display: inline-block">-->
-
-<!--                <li (click)="countStar(star)"-->
-<!--                    [ngClass]="{'selected': (star <= selectedValue)}">-->
-<!--                  <i class="fa fa-star"></i>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--            <input id="rating" hidden type="number" ngModel="{{selectedValue}}" name="rating" class="form-control"-->
-<!--                   placeholder="rating"-->
-<!--                   min="1" max="5" required>-->
-<!--          </div>-->
-<!--          <div class="form-group">-->
-<!--            <label for="comment">Comment</label>-->
-<!--            <textarea type="text" ngModel name="comment" class="form-control" id="comment" placeholder="comment"-->
-<!--                      minlength="1" required></textarea>-->
-<!--          </div>-->
-<!--          <div class="form-group">-->
-<!--            <input hidden type="text" [ngModel]="book" name="book" class="form-control" value="{{book}}">-->
-<!--          </div>-->
-<!--          <div class="modal-footer">-->
-<!--            <button [disabled]="reviewForm.invalid" type="submit" class="btn btn-success">Save</button>-->
-<!--            <button type="button" id="add-review-form" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--          </div>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 <div class="modal fade text-left" id="createReviewModal" data-backdrop="static" tabindex="-1" role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
