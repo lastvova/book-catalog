@@ -153,12 +153,10 @@ export class BookComponent implements OnInit {
 
   public updateBook(editForm: NgForm): void {
     if (editForm.invalid) {
-      editForm.controls.name.markAsDirty();
-      editForm.controls.publisher.markAsDirty();
-      editForm.controls.isbn.markAsDirty();
-      if (editForm.controls.authors.invalid){
-        this.requiredAuthors = true;
-      }
+      Object.keys(editForm.form.controls).forEach(key => {
+        editForm.form.controls[key].markAsTouched()
+      })
+      this.requiredAuthors = true;
       return;
     }
     if (editForm.untouched) {
@@ -316,11 +314,11 @@ export class BookComponent implements OnInit {
     }
   }
 
-  onItemSelect(item: any) {
+  public onItemSelect(item: any) {
     this.selectedAuthors.push(item)
   }
 
-  onSelectAll(items: any) {
+  public onSelectAll(items: any) {
     this.selectedAuthors.push(items);
   }
 

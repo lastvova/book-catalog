@@ -229,3 +229,9 @@ table {
   height: 31px;
   padding-top: 2px;
 }
+td {
+  vertical-align: middle;
+}
+.mat-checkbox-layout {
+  margin-bottom: 0.25rem;
+}

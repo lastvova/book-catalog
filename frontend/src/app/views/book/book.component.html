@@ -352,8 +352,7 @@
                       [settings]="dropdownSettings"
                       [data]="authors"
                       [(ngModel)]="selectedAuthors"
-                      (onSelect)="onItemSelect($event)"
-                      (onSelectAll)="onSelectAll($event)" ngModel name="authors" required="authors">
+                      ngModel name="authors" required="authors">
                     </ng-multiselect-dropdown>
                     <div *ngIf="requiredAuthors" class="alert alert-danger" style="padding: 5px">
                       <div *ngIf="addForm.controls.authors.errors?.required">
