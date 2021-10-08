@@ -10,6 +10,9 @@ import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParamet
 import {MatAccordion} from "@angular/material/expansion";
 import {NotificationService} from "../../service/notification.service";
 import {SelectionModel} from "@angular/cdk/collections";
+import {BookService} from "../../service/book.service";
+import {Book} from "../../model/Book";
+import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 
 @Component({
   selector: 'app-author',
@@ -22,6 +25,7 @@ export class AuthorComponent implements OnInit {
   public detailAuthor: Author = new Author();
   public editAuthor: Author = new Author();
   public deletedAuthor: Author = new Author();
+  public topThreeBooks: Book[] = [];
   public numberOfRecords: number;
   public totalRecords: number;
   public totalPages: number;
@@ -34,7 +38,8 @@ export class AuthorComponent implements OnInit {
   @ViewChild('filterForm') filterForm: NgForm;
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  constructor(private authorService: AuthorService, private notificationService: NotificationService) {
+  constructor(private authorService: AuthorService, private notificationService: NotificationService,
+              private bookService: BookService) {
   }
 
   ngOnInit(): void {
@@ -170,6 +175,7 @@ export class AuthorComponent implements OnInit {
     }
     if (mode === 'detail') {
       this.detailAuthor = author;
+      this.getTopThreeBooksOfAuthor(author);
       button.setAttribute('data-target', '#detailAuthorModal');
     }
     //@ts-ignore
@@ -241,5 +247,26 @@ export class AuthorComponent implements OnInit {
         }
       )
     }
+  }
+
+  public getTopThreeBooksOfAuthor(author: Author) {
+    let paramsForTopThreeBooks = new PageSortFilterParameters();
+    let pattern = new BookFilterParameters();
+    paramsForTopThreeBooks.pageSize = 3;
+    paramsForTopThreeBooks.pageNumber = 0;
+    paramsForTopThreeBooks.order = 'DESC';
+    paramsForTopThreeBooks.sortField = 'rating';
+    pattern.authorId = author.id;
+    paramsForTopThreeBooks.pattern = pattern;
+    debugger
+    this.bookService.getBooksWithParameters(paramsForTopThreeBooks).subscribe(
+      (response: DataWithTotalRecords) => {
+        console.log(response);
+        this.topThreeBooks = response.content;
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
   }
 }

@@ -6,4 +6,5 @@ export class BookFilterParameters {
   fromRating: number;
   toRating: number;
   authorName: string;
+  authorId: number;
 }

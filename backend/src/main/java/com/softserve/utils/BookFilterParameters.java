@@ -16,4 +16,5 @@ public class BookFilterParameters {
     private Integer fromRating;
     private Integer toRating;
     private String searchingName;
+    private BigInteger authorId;
 }
