@@ -11,8 +11,9 @@
               <button class="btn btn-outline-primary" (click)="onOpenModal('add',$any(null))"
                       style="width: 90px; margin: 0 10px 0 0">CREATE
               </button>
-              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger" (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
-                       style="width: 90px;">DELETE
+              <button [disabled]="!selection.hasValue()" class="btn btn-outline-danger"
+                      (click)="onOpenModal('bulkDelete', $any(null))" data-toggle="modal"
+                      style="width: 90px;">DELETE
               </button>
             </div>
             <div class="col-5">
@@ -175,17 +176,18 @@
 
 <div class="modal fade text-left" id="detailAuthorModal" data-backdrop="static" tabindex="-1" role="dialog"
      aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        Details
+        <h2 style="margin-bottom: 0">Details</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
       </div>
       <div class="modal-body" style="word-break: break-all;">
-        <p>First name: {{detailAuthor.firstName}}</p>
-        <p>Second name: {{detailAuthor.secondName}}</p>
-        <div id="rating-line"><label style="margin-right: 10px">Rating:</label>
-          <div id="step" class="star-rating" title="{{detailAuthor.rating}}/5">
+        <p><label class="author-info-label">First name:</label> {{detailAuthor.firstName}}</p>
+        <p><label class="author-info-label">Second name:</label> {{detailAuthor.secondName}}</p>
+        <div style="display: flex">
+          <label class="author-info-label rating-line" style="margin-right: 10px">Rating:</label>
+          <div class="star-rating" title="{{detailAuthor.rating}}/5">
             <div class="star-value" [ngStyle]="{'width': (detailAuthor.rating * 100 / 5)+ '%' } "></div>
           </div>
         </div>
@@ -195,17 +197,43 @@
               <h4 class="section-title text-uppercase">Top books</h4>
             </div>
           </div>
-          <div class="row match-height" *ngFor="let book of topThreeBooks">
-            <div class="col-12">
+          <div class="row match-height">
+            <div class="col-4 book-card" *ngFor="let book of topThreeBooks">
               <div class="card-group">
                 <div class="card">
                   <div class="card-content">
-                    <div class="card-body">
-                      <h4 class="card-title">{{book.name}}</h4>
-                      <p class="card-text">
-                        This card has supporting text below as a natural lead-in to additional
-                        content.</p>
-                      <small class="text-muted">Last updated 3 mins ago</small>
+                    <div class="card-body-book">
+                      <h3 class="card-title">{{book.name}}</h3>
+                      <div class="card-text">
+                        <div style="display: flex; align-items: center">
+                          <label class="book-card-info" style="margin-right: 10px">Rating:</label>
+                          <div class="star-rating-book " title="{{book.rating}}/5">
+                            <div class="star-value-book" [ngStyle]="{'width': (book.rating * 100 / 5)+ '%' } "></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div id="bookDetails{{book.isbn}}" class="collapse hide" aria-expanded="false">
+                            <div>Authors:
+                              <ul class="authors-list" style=""
+                                  *ngFor="let author of book.authors">
+                                <li><label>{{ author.firstName}} {{author.secondName}}</label></li>
+                              </ul>
+                            </div>
+                            <p>Publisher: {{book.publisher}}</p>
+                            <p>Year: {{book.yearPublisher}}</p>
+                            <p>isbn: {{book.isbn}}</p>
+                            <a data-dismiss="modal" [routerLink]="['/books/', book.id]" type="button"
+                               data-placement="bottom" title="Detail">Book page</a>
+                          </div>
+                          <div class="text-end">
+                            <a type="button" data-placement="bottom" data-toggle="collapse"
+                               href="#bookDetails{{book.isbn}}" title="Detail">
+                              <em id="three-dots" class="fa fa-ellipsis-h"></em>
+                              <em id="arrows-up" class="fa fa-angle-double-up"></em></a>
+                          </div>
+                        </div>
+
+                      </div>
                     </div>
                   </div>
                 </div>

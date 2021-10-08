@@ -258,7 +258,6 @@ export class AuthorComponent implements OnInit {
     paramsForTopThreeBooks.sortField = 'rating';
     pattern.authorId = author.id;
     paramsForTopThreeBooks.pattern = pattern;
-    debugger
     this.bookService.getBooksWithParameters(paramsForTopThreeBooks).subscribe(
       (response: DataWithTotalRecords) => {
         console.log(response);

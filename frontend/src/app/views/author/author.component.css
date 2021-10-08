@@ -203,7 +203,7 @@ label {
   background-size: 32px;
 }
 
-#rating-line {
+.rating-line {
   display: inline-flex;
   align-items: center;
 }
@@ -216,22 +216,77 @@ table {
   size: auto;
   opacity: 0.7;
 }
+
 .filter-form-label {
   margin-left: 10px;
   margin-right: 5px
 }
 
-#filter-forms > .col-md-8 > input, select{
+#filter-forms > .col-md-8 > input, select {
   height: 31px;
 }
-.dataTable-selector{
+
+.dataTable-selector {
   font-size: 1rem;
   height: 31px;
   padding-top: 2px;
 }
+
 td {
   vertical-align: middle;
 }
+
 .mat-checkbox-layout {
   margin-bottom: 0.25rem;
+}
+
+.book-card {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.author-info-label {
+  font-size: 1rem;
+}
+
+.book-card-info-head {
+  font-size: 0.8rem;
+  color: #000000;
+}
+
+.book-card-info-body {
+  font-size: 0.8rem;
+  color: #2d4483;
+}
+.star-rating-book {
+  position: relative;
+  display:inline-block;
+  background-image: url('src/assets/svg/star_0-book.svg');
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  cursor: pointer;
+  width: 80px;
+  height: 16px;
+  background-size: 16px;
+}
+
+.star-rating-book .star-value-book {
+  position: absolute;
+  height: 100%;
+  background: url('src/assets/svg/star_1-book.svg') repeat-x;
+  background-size: 16px;
+}
+.authors-list{
+  margin-bottom: 0;
+  padding-left: 16px
+}
+.card-body-book{
+  padding: 10px;
+}
+
+a[aria-expanded=true] #three-dots {
+  display: none;
+}
+a[aria-expanded=false] #arrows-up {
+  display: none;
 }
