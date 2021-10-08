@@ -10958,3 +10958,7 @@ textarea.form-control-lg {
 .nav-link{
   color: #000000;
 }
+
+.mat-checkbox-layout {
+  margin-bottom: 0.25rem;
+}

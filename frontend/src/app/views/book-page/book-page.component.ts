@@ -62,7 +62,7 @@ export class BookPageComponent implements OnInit {
     document.getElementById('close-review-form').click();
   }
 
-  countStar(star: any) {
+  public countStar(star: any) {
     this.selectedValue = star;
     console.log('Value of star', star);
   }

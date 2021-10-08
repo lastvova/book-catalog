@@ -18,14 +18,14 @@
               <div class="col-6">
                 <h2>Authors:
                   <ul *ngFor="let author of book.authors">
-                    <li>{{ author.firstName}} {{author.secondName}}</li>
+                    <li><label class="book-info-label">{{ author.firstName}} {{author.secondName}}</label></li>
                   </ul>
                 </h2>
               </div>
               <div class="col-6">
-                <div><h2>Publisher: {{book.publisher}}</h2></div>
-                <div><h2>Year: {{book.yearPublisher}}</h2></div>
-                <div><h2>ISBN: {{formatIsbn(book.isbn.toString())}}</h2></div>
+                <div><h2>Publisher: <label class="book-info-label">{{book.publisher}}</label></h2></div>
+                <div><h2>Year: <label class="book-info-label">{{book.yearPublisher}}</label></h2></div>
+                <div><h2>ISBN: <label class="book-info-label">{{formatIsbn(book.isbn.toString())}}</label></h2></div>
               </div>
             </div>
             <div class="col-6" style="margin-bottom: 10px">
@@ -92,7 +92,7 @@
                 <div *ngIf="commenterName.invalid && (commenterName.dirty || commenterName.touched)"
                      class="alert alert-danger" style="padding: 5px">
                   <div *ngIf="commenterName.errors?.required || commenterName.errors?.pattern">
-                    Wrong commenterName.
+                    Wrong commenter name.
                   </div>
                 </div>
               </div>

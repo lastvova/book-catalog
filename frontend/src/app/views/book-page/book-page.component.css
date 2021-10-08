@@ -4,6 +4,9 @@
   background-size: 32px;
 }
 
+h2{
+  color: black;
+}
 .star-rating .star-value {
   background-size: 32px;
 }
@@ -31,4 +34,9 @@
 
 ul {
   margin-bottom: 0;
+}
+.book-info-label {
+  font-size: 1.5rem;
+  color: #2d4483;
+  word-break: break-all;
 }
