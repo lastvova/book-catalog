@@ -247,6 +247,7 @@ td {
 
 .author-info-label {
   font-size: 1rem;
+  color: #2d4483;
 }
 
 .book-card-info-head {
@@ -289,4 +290,7 @@ a[aria-expanded=true] #three-dots {
 }
 a[aria-expanded=false] #arrows-up {
   display: none;
+}
+h3{
+  color: black;
 }

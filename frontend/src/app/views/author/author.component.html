@@ -183,10 +183,12 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
       </div>
       <div class="modal-body" style="word-break: break-all;">
-        <p><label class="author-info-label">First name:</label> {{detailAuthor.firstName}}</p>
-        <p><label class="author-info-label">Second name:</label> {{detailAuthor.secondName}}</p>
+        <div>
+          <h3>First name: <label class="author-info-label">{{detailAuthor.firstName}}</label></h3></div>
+        <div>
+          <h3>Second name: <label class="author-info-label">{{detailAuthor.secondName}}</label></h3></div>
         <div style="display: flex">
-          <label class="author-info-label rating-line" style="margin-right: 10px">Rating:</label>
+          <label class="rating-line" style="margin-right: 10px"><h3>Rating:</h3></label>
           <div class="star-rating" title="{{detailAuthor.rating}}/5">
             <div class="star-value" [ngStyle]="{'width': (detailAuthor.rating * 100 / 5)+ '%' } "></div>
           </div>
@@ -221,7 +223,7 @@
                             </div>
                             <p>Publisher: {{book.publisher}}</p>
                             <p>Year: {{book.yearPublisher}}</p>
-                            <p>isbn: {{book.isbn}}</p>
+                            <p>isbn: {{formatIsbn(book.isbn.toString())}}</p>
                             <a data-dismiss="modal" [routerLink]="['/books/', book.id]" type="button"
                                data-placement="bottom" title="Detail">Book page</a>
                           </div>
@@ -229,10 +231,9 @@
                             <a type="button" data-placement="bottom" data-toggle="collapse"
                                href="#bookDetails{{book.isbn}}" title="Detail">
                               <em id="three-dots" class="fa fa-ellipsis-h"></em>
-                              <em id="arrows-up" class="fa fa-angle-double-up"></em></a>
+                              <em [attr.aria-expanded]="true" id="arrows-up" class="fa fa-angle-double-up"></em></a>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </div>
