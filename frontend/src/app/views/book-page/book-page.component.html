@@ -43,14 +43,12 @@
               <table style="width: 100%;">
                 <tr>
                   <td>
-                    <div class="dataTable-info">Showing {{1 + numberOfRecords * matPaginator.pageSize}}
-                      to {{totalRecords <= ((1 + numberOfRecords) * matPaginator.pageSize) ? totalRecords : ((1 + numberOfRecords) * matPaginator.pageSize)}}
-                      of {{totalRecords}} reviews
+                    <div class="dataTable-info">{{getInfoAboutRecords()}} reviews
                     </div>
                   </td>
                   <td>
                     <div style="display: flex; align-items: center;justify-content: center">
-                      <label style="margin-right: 10px">Reviews per page</label>
+                      <label style="margin-right: 10px; margin-bottom: 0">Reviews per page</label>
                       <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
                               (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
                         <option value="5" selected>5</option>
@@ -84,8 +82,8 @@
   </section>
 </div>
 
-<div class="row justify-content-center" style="padding: 16px">
-  <div class="card col review-cards" *ngFor="let review of reviews">
+<div class="row justify-content-lg-center" style="padding: 16px; min-width: 850px">
+  <div class="card review-cards" *ngFor="let review of reviews">
     <div class="card-content">
       <div class="card-body">
         <h4 class="card-title">

@@ -20,6 +20,7 @@ export class BookService {
   }
 
   public getBooksWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    debugger
     return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/books`, pageSortFilterParameters);
   }
 

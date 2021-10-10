@@ -271,4 +271,14 @@ export class AuthorComponent implements OnInit {
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }
+
+  public getInfoAboutRecords(): string {
+    if (this.totalRecords > 0) {
+      let currentRecords = 1 + this.matPaginator.pageSize * this.numberOfRecords;
+      let currentRecordsTo = this.totalRecords <= ((1 + this.numberOfRecords) * this.matPaginator.pageSize) ? this.totalRecords
+        : ((1 + this.numberOfRecords) * this.matPaginator.pageSize);
+      return "Showing " + currentRecords + " to " + currentRecordsTo + " of " + this.totalRecords;
+    }
+    return "Showing 0";
+  }
 }

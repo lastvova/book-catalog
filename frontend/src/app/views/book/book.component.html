@@ -178,9 +178,7 @@
             <table style="width: 100%;">
               <tr>
                 <td>
-                  <div class="dataTable-info">Showing {{1 + numberOfRecords * matPaginator.pageSize}}
-                    to {{totalRecords <= ((1 + numberOfRecords) * matPaginator.pageSize) ? totalRecords : ((1 + numberOfRecords) * matPaginator.pageSize)}}
-                    of {{totalRecords}} books
+                  <div class="dataTable-info">{{getInfoAboutRecords()}} books
                   </div>
                 </td>
                 <td>

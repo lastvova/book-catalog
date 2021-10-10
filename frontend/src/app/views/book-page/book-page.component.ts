@@ -118,4 +118,13 @@ export class BookPageComponent implements OnInit {
     this.getReviews(this.bookId);
   }
 
+  public getInfoAboutRecords(): string {
+    if (this.totalRecords > 0) {
+    let currentRecords = 1 + this.pageSortFilterParameters.pageSize * this.numberOfRecords;
+    let currentRecordsTo = this.totalRecords <= ((1 + this.numberOfRecords) * this.pageSortFilterParameters.pageSize) ? this.totalRecords
+      : ((1 + this.numberOfRecords) * this.pageSortFilterParameters.pageSize);
+    return "Showing " + currentRecords + " to " + currentRecordsTo + " of " + this.totalRecords;
+    }
+    return "Showing 0";
+  }
 }

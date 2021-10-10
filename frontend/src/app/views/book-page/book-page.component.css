@@ -61,8 +61,11 @@ ul {
 }
 
 .review-cards{
+  width: 20%;
+  max-width: 20%;
+  min-width: 20%;
   padding: 0;
-  margin: 5px 5px;
+  margin: 2.5px 2.5px;
 }
 
 a[aria-expanded=true] #three-dots {
@@ -83,6 +86,45 @@ a[aria-expanded=false] #arrows-up {
   font-size: 1rem;
   height: 31px;
   padding-top: 2px;
+}
+
+.dataTable-pagination a {
+  border: 1px solid transparent;
+  float: left;
+  margin: 0px;
+  padding: 6px 12px;
+  position: relative;
+  text-decoration: none;
+  color: #333;
+}
+
+.dataTable-pagination a:hover {
+  background-color: #d9d9d9;
+}
+
+.dataTable-pagination .active a,
+.dataTable-pagination .active a:focus,
+.dataTable-pagination .active a:hover {
+  background-color: #d9d9d9;
+  cursor: default;
+}
+
+.dataTable-pagination .ellipsis a,
+.dataTable-pagination .disabled a,
+.dataTable-pagination .disabled a:focus,
+.dataTable-pagination .disabled a:hover {
+  cursor: not-allowed;
+}
+
+.dataTable-pagination .disabled a,
+.dataTable-pagination .disabled a:focus,
+.dataTable-pagination .disabled a:hover {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.dataTable-pagination .pager a {
+  font-weight: bold;
 }
 
 

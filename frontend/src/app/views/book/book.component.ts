@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Book} from "../../model/Book";
 import {BookService} from "../../service/book.service";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -204,7 +204,7 @@ export class BookComponent implements OnInit {
     this.bookFilterParameters.toRating = this.filterForm.value.toRating;
     this.bookFilterParameters.fromRating = this.filterForm.value.fromRating;
     this.bookFilterParameters.yearPublisher = this.filterForm.value.yearPublisher;
-    this.bookFilterParameters.authorName = this.filterForm.value.searchingName;
+    this.bookFilterParameters.searchingName = this.filterForm.value.searchingName;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.matPaginator.pageIndex = 0;
     this.pageSortFilterParameters.pageNumber = 0;
@@ -327,5 +327,15 @@ export class BookComponent implements OnInit {
   // }
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
+  }
+
+  public getInfoAboutRecords(): string {
+    if (this.totalRecords > 0) {
+      let currentRecords = 1 + this.matPaginator.pageSize * this.numberOfRecords;
+      let currentRecordsTo = this.totalRecords <= ((1 + this.numberOfRecords) * this.matPaginator.pageSize) ? this.totalRecords
+        : ((1 + this.numberOfRecords) * this.matPaginator.pageSize);
+      return "Showing " + currentRecords + " to " + currentRecordsTo + " of " + this.totalRecords;
+    }
+    return "Showing 0";
   }
 }
