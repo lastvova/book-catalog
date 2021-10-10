@@ -3,6 +3,8 @@ package com.softserve.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigInteger;
+
 @Getter
 @Setter
 public class ReviewFilterParameters {
@@ -11,4 +13,5 @@ public class ReviewFilterParameters {
     private Integer fromRating;
     private Integer toRating;
     private String bookName;
+    private BigInteger bookId;
 }

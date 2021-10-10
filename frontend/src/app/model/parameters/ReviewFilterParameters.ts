@@ -4,4 +4,5 @@ export class ReviewFilterParameters {
   fromRating: number;
   toRating: number;
   bookName: string;
+  bookId: number;
 }

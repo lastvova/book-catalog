@@ -7,15 +7,16 @@
       <div class="card-body">
         <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
           <div class="dataTable-top row">
-            <h2>
-              <div class="rating-line"><label style="margin-right: 10px; margin-bottom: 0">Rating:</label>
-                <div class="step" class="star-rating" title="{{book.rating}}/5">
-                  <div class="star-value" [ngStyle]="{'width': (book.rating * 100 / 5)+ '%' } "></div>
-                </div>
-              </div>
-            </h2>
+
             <div class="row" style="width: 100%">
               <div class="col-6">
+                <h2>
+                  <div class="rating-line"><label style="margin-right: 10px; margin-bottom: 0">Rating:</label>
+                    <div class="step" class="star-rating" title="{{book.rating}}/5">
+                      <div class="star-value" [ngStyle]="{'width': (book.rating * 100 / 5)+ '%' } "></div>
+                    </div>
+                  </div>
+                </h2>
                 <h2>Authors:
                   <ul *ngFor="let author of book.authors">
                     <li><label class="book-info-label">{{ author.firstName}} {{author.secondName}}</label></li>
@@ -38,13 +39,85 @@
               </button>
             </div>
           </div>
-          <div class="dataTable-container">
+            <div class="dataTable-bottom">
+              <table style="width: 100%;">
+                <tr>
+                  <td>
+                    <div class="dataTable-info">Showing {{1 + numberOfRecords * matPaginator.pageSize}}
+                      to {{totalRecords <= ((1 + numberOfRecords) * matPaginator.pageSize) ? totalRecords : ((1 + numberOfRecords) * matPaginator.pageSize)}}
+                      of {{totalRecords}} reviews
+                    </div>
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center;justify-content: center">
+                      <label style="margin-right: 10px">Reviews per page</label>
+                      <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
+                              (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <ul class="pagination pagination-primary float-end dataTable-pagination"
+                        style="align-items: center;margin-bottom: 0px">
+                      <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
+                                                     data-page="1"><em class="fa fa-step-backward"></em></a></li>
+                      <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
+                                                     data-page="1"><em class="fa fa-arrow-left"></em></a></li>
+                      <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
+                      <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
+                      <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
+                      <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
+                                                     data-page="2"><em class="fa fa-arrow-right"></em></a></li>
+                      <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
+                                                     data-page="2"><em class="fa fa-step-forward"></em> </a></li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
           </div>
         </div>
       </div>
     </div>
   </section>
 </div>
+
+<div class="row justify-content-center" style="padding: 16px">
+  <div class="card col review-cards" *ngFor="let review of reviews">
+    <div class="card-content">
+      <div class="card-body">
+        <h4 class="card-title">
+          <div style="display: flex">
+            <div class="star-rating-book" title="{{review.rating}}/5">
+              <div class="star-value-book" [ngStyle]="{'width': (review.rating * 100 / 5)+ '%' } "></div>
+            </div>
+          </div>
+        </h4>
+        <p class="card-text">Commenter: {{review.commenterName}}
+        </p>
+        <div>
+          <div id="comment{{review.id}}" class="collapse hide" aria-expanded="false">
+            <p>Commenter: {{review.comment}}</p>
+          </div>
+          <div class="text-end">
+            <a type="button" data-placement="bottom" data-toggle="collapse"
+               href="#comment{{review.id}}" title="More">
+              <em id="three-dots" class="fa fa-ellipsis-h"></em>
+              <em id="arrows-up" class="fa fa-angle-double-up"></em></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
+               (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
+</mat-paginator>
+
 <div class="modal fade text-left" id="createReviewModal" data-backdrop="static" tabindex="-1" role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -66,12 +139,12 @@
                         *ngFor="let star of [1,2,3,4,5]" style="display: inline-block">
 
                       <li (click)="countStar(star)"
-                          [ngClass]="{'selected': (star <= selectedValue)}">
+                          [ngClass]="{'selected': (star <= selectedStars)}">
                         <em class="fa fa-star fa-2x"></em>
                       </li>
                     </ul>
                   </div>
-                  <input id="rating" hidden type="number" ngModel="{{selectedValue}}" #reviewRating="ngModel"
+                  <input id="rating" hidden type="number" ngModel="{{selectedStars}}" #reviewRating="ngModel"
                          name="rating" class="form-control"
                          placeholder="rating" min="1" max="5" required>
                   <div *ngIf="reviewRating.invalid && (reviewRating.dirty || reviewRating.touched)"

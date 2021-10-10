@@ -61,6 +61,11 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
                         criteriaBuilder.like(book.get("name"),
                                 "%" + filterParameters.getBookName() + "%"));
             }
+            if (filterParameters.getBookId() != null) {
+                Join<Review, Book> book = reviews.join("book");
+                predicates.add(
+                        criteriaBuilder.equal(book.get("id"), filterParameters.getBookId()));
+            }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
