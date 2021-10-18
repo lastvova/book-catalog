@@ -19,9 +19,11 @@ import {BookFilterParameters} from "../../model/parameters/BookFilterParameters"
   templateUrl: './author.component.html',
   styleUrls: ['./author.component.css']
 })
+//TODO try to look at similar places for the remaining views
 export class AuthorComponent implements OnInit {
 
   public authors: Author[] = [];
+  //TODO these 3 objects should not be created (I might never want to delete an author, but an object has been created anyhow)
   public detailAuthor: Author = new Author();
   public editAuthor: Author = new Author();
   public deletedAuthor: Author = new Author();
@@ -46,9 +48,11 @@ export class AuthorComponent implements OnInit {
     this.getAuthors();
   }
 
+  //TODO is this method needed? it seems getAuthorsWithParameters could be used instead
   public getAuthors(): void {
     this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
+        //TODO why is this needed here?
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
@@ -64,6 +68,7 @@ export class AuthorComponent implements OnInit {
   public getAuthorsWithParameters(): void {
     this.authorService.getAuthorsWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
+        //TODO why is this needed here?
         this.authors = [];
         this.authors = response.content;
         this.totalRecords = response.totalElements;
@@ -91,7 +96,9 @@ export class AuthorComponent implements OnInit {
     }
     this.authorService.createAuthor(createdAuthor).subscribe(
       (response: Author) => {
+        //TODO do not keep smth like this in the master branch, however feel free to use it in the dev branch
         console.log(response);
+        //TODO avoid this call
         this.getAuthorsWithParameters();
         addForm.reset();
         this.notificationService.successSnackBar("Success!");
@@ -102,6 +109,7 @@ export class AuthorComponent implements OnInit {
         addForm.reset();
       }
     );
+    //TODO avoid ts-ignore
     //@ts-ignore
     document.getElementById('close-author-form').click();
   }
@@ -113,10 +121,13 @@ export class AuthorComponent implements OnInit {
     }
     this.editAuthor = editForm.value;
     this.editAuthor.firstName = this.editAuthor.firstName.trim();
+    //TODO if (createdAuthor.secondName != null) {... consistency?
     this.editAuthor.secondName = this.editAuthor.secondName.trim();
+    //TODO this.editAuthor could be passed, no need for that class variable if this the case
     this.authorService.updateAuthor(editForm.value).subscribe(
       (response: Author) => {
         console.log(response);
+        //TODO avoid this call
         this.getAuthorsWithParameters();
         this.notificationService.successSnackBar("Success!");
         editForm.resetForm(this.editAuthor);
@@ -134,6 +145,7 @@ export class AuthorComponent implements OnInit {
       (response: void) => {
         console.log(response);
         this.notificationService.successSnackBar("Success!");
+        //TODO avoid this call
         this.getAuthorsWithParameters();
       },
       (error: HttpErrorResponse) => {
@@ -192,6 +204,7 @@ export class AuthorComponent implements OnInit {
 
   public sortByColumn(sortBy: string) {
     this.pageSortFilterParameters.sortField = sortBy;
+    //TODO not sure why this is required, could be rewritten using the order
     this.pageSortFilterParameters.reverseForSorting = !this.pageSortFilterParameters.reverseForSorting;
     if (this.pageSortFilterParameters.reverseForSorting) {
       this.pageSortFilterParameters.order = 'ASC'
@@ -205,6 +218,7 @@ export class AuthorComponent implements OnInit {
   public resetForm(filterForm: NgForm) {
     filterForm.reset();
     // @ts-ignore
+    //TODO why null? can't it be {} like defined in the class originally?
     this.pageSortFilterParameters.pattern = null;
     this.pageSortFilterParameters.pageSize = this.matPaginator.pageSize;
     this.pageSortFilterParameters.pageNumber = 0;
@@ -240,6 +254,7 @@ export class AuthorComponent implements OnInit {
         (response: void) => {
           console.log(response);
           this.notificationService.successSnackBar("Success!");
+          //TODO avoid this call
           this.getAuthorsWithParameters();
         },
         (error: HttpErrorResponse) => {
@@ -268,6 +283,7 @@ export class AuthorComponent implements OnInit {
       }
     )
   }
+  //TODO out of place method
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }

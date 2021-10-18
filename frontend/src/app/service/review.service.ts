@@ -9,6 +9,7 @@ import {Review} from "../model/Review";
 @Injectable({
   providedIn: 'root'
 })
+//TODO the same remarks as in the author.service.ts
 export class ReviewService {
   private apiServerUrl = environment.apiBaseUrl;
 
