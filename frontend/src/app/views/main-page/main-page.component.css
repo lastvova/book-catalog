@@ -1,4 +1,26 @@
 .table {
   margin: auto;
-  width: 50% !important;
+  width: 100% !important;
+}
+
+h1{
+  margin-bottom: 0;
+}
+.star-rating-book {
+  position: relative;
+  display:inline-block;
+  background-image: url('src/assets/svg/star_0-book.svg');
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  cursor: pointer;
+  width: 80px;
+  height: 16px;
+  background-size: 16px;
+}
+
+.star-rating-book .star-value-book {
+  position: absolute;
+  height: 100%;
+  background: url('src/assets/svg/star_1-book.svg') repeat-x;
+  background-size: 16px;
 }

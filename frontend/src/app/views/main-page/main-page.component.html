@@ -1,68 +1,187 @@
 <body>
-<div class="row justify-content-center">
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead>
-      <tr class="active">
-        <th>Rating</th>
-        <th>Stars</th>
-        <th>Total count</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>1 stars</td>
-        <td>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-        </td>
-        <td>{{oneStarBooks}}</td>
-      </tr>
-      <tr>
-        <td>2 stars</td>
-        <td><span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-        </td>
-        <td>{{twoStarBooks}}</td>
-      </tr>
-      <tr>
-        <td>3 stars</td>
-        <td><span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star_outline</span>
-          <span class="material-icons">star_outline</span>
-        </td>
-        <td>{{threeStarBooks}}</td>
-      </tr>
-      <tr>
-        <td>4 stars</td>
-        <td><span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star_outline</span>
-        </td>
-        <td>{{fourStarBooks}}</td>
-      </tr>
-      <tr>
-        <td>5 stars</td>
-        <td><span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-          <span class="material-icons">star</span>
-        </td>
-        <td>{{fiveStarBooks}}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+
 </body>
+
+
+<section id="content-types">
+  <div class="row">
+    <div class="col-xl-4 col-md-6 col-sm-12">
+      <div class="card" id="booksByRating">
+        <div class="card-content">
+          <div class="card-body">
+            <h1 class="card-title pl-1">Books by rating</h1>
+            <div class="row justify-content-center">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                  <tr class="active">
+                    <th>Stars</th>
+                    <th class="text-center">Total count</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                    </td>
+                    <td class="text-center">{{zeroStarBooks}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                    </td>
+                    <td class="text-center">{{oneStarBooks}}</td>
+                  </tr>
+                  <tr>
+                    <td><span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                    </td>
+                    <td class="text-center">{{twoStarBooks}}</td>
+                  </tr>
+                  <tr>
+                    <td><span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star_outline</span>
+                      <span class="material-icons">star_outline</span>
+                    </td>
+                    <td class="text-center">{{threeStarBooks}}</td>
+                  </tr>
+                  <tr>
+                    <td><span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star_outline</span>
+                    </td>
+                    <td class="text-center">{{fourStarBooks}}</td>
+                  </tr>
+                  <tr>
+                    <td><span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                      <span class="material-icons">star</span>
+                    </td>
+                    <td class="text-center">{{fiveStarBooks}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-xl-4 col-md-6 col-sm-12">
+      <div class="card collapse-icon accordion-icon-rotate">
+        <div class="card-header">
+          <h1 class="card-title pl-1" style="margin-bottom: 0">Top 3 books</h1>
+        </div>
+        <div class="card-content">
+          <div class="card-body" *ngFor="let book of topThreeBooks">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <p>{{book.name}}</p>
+                  <div style="display: flex; align-items: center">
+                    <label class="book-card-info" style="margin-right: 10px">Rating:</label>
+                    <div class="star-rating-book " title="{{book.rating}}/5">
+                      <div class="star-value-book" [ngStyle]="{'width': (book.rating * 100 / 5)+ '%' } "></div>
+                    </div>
+                  </div>
+                  <a [routerLink]="['/books/', book.id]">Book details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--    <div class="col-xl-4 col-md-6 col-sm-12">-->
+    <!--      <div class="card collapse-icon accordion-icon-rotate">-->
+    <!--        <div class="card-header">-->
+    <!--          <h1 class="card-title pl-1">Accordion</h1>-->
+    <!--        </div>-->
+    <!--        <div class="card-content">-->
+    <!--          <div class="card-body">-->
+    <!--            <div class="accordion" id="cardAccordion">-->
+    <!--              <div class="card">-->
+    <!--                <div class="card-header collapsed" id="headingOne" data-bs-toggle="collapse"-->
+    <!--                     data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" role="button">-->
+    <!--                  <span class="collapsed collapse-title">Accordion Item 1</span>-->
+    <!--                </div>-->
+    <!--                <div id="collapseOne" class="pt-1 collapse" aria-labelledby="headingOne" data-parent="#cardAccordion"-->
+    <!--                     style="">-->
+    <!--                  <div class="card-body">-->
+    <!--                    Cheesecake muffin cupcake dragée lemon drops tiramisu cake-->
+    <!--                    gummies chocolate-->
+    <!--                    cake. Marshmallow tart-->
+    <!--                    croissant. Tart dessert tiramisu marzipan lollipop lemon drops.-->
+    <!--                  </div>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--              <div class="card collapse-header">-->
+    <!--                <div class="card-header" id="headingTwo" data-bs-toggle="collapse" data-bs-target="#collapseTwo"-->
+    <!--                     aria-expanded="false" aria-controls="collapseTwo" role="button">-->
+    <!--                  <span class="collapsed collapse-title">Accordion Item 2</span>-->
+    <!--                </div>-->
+    <!--                <div id="collapseTwo" class="collapse pt-1" aria-labelledby="headingTwo" data-parent="#cardAccordion">-->
+    <!--                  <div class="card-body">-->
+    <!--                    Pastry pudding cookie toffee bonbon jujubes jujubes powder-->
+    <!--                    topping. Jelly-->
+    <!--                    beans-->
+    <!--                    gummi bears sweet-->
+    <!--                    roll bonbon muffin liquorice. Wafer lollipop sesame snaps.-->
+    <!--                  </div>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--              <div class="card open">-->
+    <!--                <div class="card-header" id="headingThree" data-bs-toggle="collapse" data-bs-target="#collapseThree"-->
+    <!--                     aria-expanded="true" aria-controls="collapseThree" role="button">-->
+    <!--                  <span class="collapsed collapse-title">Accordion Item 3</span>-->
+    <!--                </div>-->
+    <!--                <div id="collapseThree" class="collapse show pt-1" aria-labelledby="headingThree"-->
+    <!--                     data-parent="#cardAccordion">-->
+    <!--                  <div class="card-body">-->
+    <!--                    Sweet pie candy jelly. Sesame snaps biscuit sugar plum. Sweet-->
+    <!--                    roll topping-->
+    <!--                    fruitcake. Caramels-->
+    <!--                    liquorice biscuit ice cream fruitcake cotton candy tart.-->
+    <!--                  </div>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--              <div class="card">-->
+    <!--                <div class="card-header collapsed" id="headingFour" data-bs-toggle="collapse"-->
+    <!--                     data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" role="button">-->
+    <!--                  <span class="collapsed  collapse-title">Accordion Item 4</span>-->
+    <!--                </div>-->
+    <!--                <div id="collapseFour" class="pt-1 collapse" aria-labelledby="headingFour" data-parent="#cardAccordion"-->
+    <!--                     style="">-->
+    <!--                  <div class="card-body">-->
+    <!--                    Sweet pie candy jelly. Sesame snaps biscuit sugar plum. Sweet-->
+    <!--                    roll topping-->
+    <!--                    fruitcake. Caramels-->
+    <!--                    liquorice biscuit ice cream fruitcake cotton candy tart.-->
+    <!--                  </div>-->
+    <!--                </div>-->
+    <!--              </div>-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+  </div>
+</section>

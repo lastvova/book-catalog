@@ -4,12 +4,14 @@
   background-size: 32px;
 }
 
-h2{
+h2 {
   color: black;
 }
+
 .star-rating .star-value {
   background-size: 32px;
 }
+
 .rating-line {
   display: inline-flex;
   align-items: center;
@@ -35,6 +37,7 @@ h2{
 ul {
   margin-bottom: 0;
 }
+
 .book-info-label {
   font-size: 1.5rem;
   color: #2d4483;
@@ -43,7 +46,7 @@ ul {
 
 .star-rating-book {
   position: relative;
-  display:inline-block;
+  display: inline-block;
   background-image: url('src/assets/svg/star_0-book.svg');
   background-position: 0 0;
   background-repeat: repeat-x;
@@ -60,7 +63,7 @@ ul {
   background-size: 16px;
 }
 
-.review-cards{
+.review-cards {
   width: 20%;
   max-width: 20%;
   min-width: 20%;
@@ -68,12 +71,21 @@ ul {
   margin: 2.5px 2.5px;
 }
 
-a[aria-expanded=true] #three-dots {
-  display: none;
-}
-a[aria-expanded=false] #arrows-up {
-  display: none;
-}
+/*a[aria-expanded=true] #three-dots {*/
+/*  display: none;*/
+/*}*/
+
+/*a[aria-expanded=false] #arrows-up {*/
+/*  display: none;*/
+/*}*/
+
+/*a[aria-expanded=false] .fa {*/
+/*  display: none;*/
+/*}*/
+
+/*a[aria-expanded=false] .fa-angle-double-up {*/
+/*  display: none;*/
+/*}*/
 
 .review-comment {
   max-width: 200px;

@@ -96,14 +96,14 @@
         <p class="card-text">Commenter: {{review.commenterName}}
         </p>
         <div>
-          <div id="comment{{review.id}}" class="collapse hide" aria-expanded="false">
+          <div id="comment{{review.id}}" class="collapse hide" aria-expanded="false"  >
             <p>Commenter: {{review.comment}}</p>
           </div>
-          <div class="text-end">
+          <div class="text-end" *ngIf="review.comment.length > 32">
             <a type="button" data-placement="bottom" data-toggle="collapse"
                href="#comment{{review.id}}" title="More">
-              <em id="three-dots" class="fa fa-ellipsis-h"></em>
-              <em id="arrows-up" class="fa fa-angle-double-up"></em></a>
+<!--              <em id="three-dots" class="fa fa-ellipsis-h"></em>-->
+              <em class="fa fa-angle-double-down"  id="arrows-up"></em></a>
           </div>
         </div>
 

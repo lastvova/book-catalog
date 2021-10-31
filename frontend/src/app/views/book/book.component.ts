@@ -52,7 +52,7 @@ export class BookComponent implements OnInit {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
-      textField: 'firstName',
+      textField: 'fullName',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 5,
@@ -68,12 +68,13 @@ export class BookComponent implements OnInit {
     this.authorService.getAuthorsWithParameters(pageParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
+        this.setFullNameForAuthors()
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
       }
     );
-    // this.setFullNameForAuthors()
+
   }
 
   public getBooks(): void {
@@ -322,9 +323,10 @@ export class BookComponent implements OnInit {
     this.selectedAuthors.push(items);
   }
 
-  // private setFullNameForAuthors(){
-  //   this.authors.forEach(author => author.fullName = author.firstName + " " + author.secondName);
-  // }
+  private setFullNameForAuthors() {
+    this.authors.forEach(author => author.fullName = author.firstName + " " + (author.secondName === null ? "" : author.secondName));
+  }
+
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }

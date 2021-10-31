@@ -285,10 +285,10 @@ td {
   padding: 10px;
 }
 
-a[aria-expanded=true] #three-dots {
+a[aria-expanded=false] #three-dots {
   display: none;
 }
-a[aria-expanded=false] #arrows-up {
+a[aria-expanded=true] .fa-angle-double-up {
   display: none;
 }
 h3{
