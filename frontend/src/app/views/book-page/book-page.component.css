@@ -64,34 +64,47 @@ ul {
 }
 
 .review-cards {
-  width: 20%;
+  width: 19.8%;
   max-width: 20%;
-  min-width: 20%;
+  min-width: 19.8%;
   padding: 0;
-  margin: 2.5px 2.5px;
+  margin: 0.1% 0.1%;
 }
 
-/*a[aria-expanded=true] #three-dots {*/
-/*  display: none;*/
-/*}*/
-
-/*a[aria-expanded=false] #arrows-up {*/
-/*  display: none;*/
-/*}*/
-
-/*a[aria-expanded=false] .fa {*/
-/*  display: none;*/
-/*}*/
-
-/*a[aria-expanded=false] .fa-angle-double-up {*/
-/*  display: none;*/
-/*}*/
-
-.review-comment {
-  max-width: 200px;
+.truncate {
+  max-width: 95%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.truncate.truncated {
+  white-space: initial;
+  width: 500px;
+}
+
+.truncate.truncated .help-icon-down {
+  display: none;
+}
+
+.truncate.truncated .help-icon-up {
+  display: inline-block;
+}
+
+.truncate .help-icon-up {
+  display: none;
+}
+
+.help-icon-down {
+  right: 0;
+  padding-right: 10px;
+  position: absolute;
+}
+
+.help-icon-up {
+  right: 0;
+  padding-right: 10px;
+  position: absolute;
 }
 
 .dataTable-selector {
@@ -139,4 +152,10 @@ ul {
   font-weight: bold;
 }
 
+.card-footer {
+  padding: 1rem;
+}
 
+.dataTable-bottom {
+  padding: 0 0;
+}

@@ -11,8 +11,9 @@
             <div class="row" style="width: 100%">
               <div class="col-6">
                 <h2>
-                  <div class="rating-line"><label style="margin-right: 10px; margin-bottom: 0">Rating:</label>
-                    <div class="step" class="star-rating" title="{{book.rating}}/5">
+                  <div class="rating-line">
+                    <label style="margin-right: 10px; margin-bottom: 0">Rating:</label>
+                    <div class="step star-rating" title="{{book.rating}}/5">
                       <div class="star-value" [ngStyle]="{'width': (book.rating * 100 / 5)+ '%' } "></div>
                     </div>
                   </div>
@@ -39,78 +40,100 @@
               </button>
             </div>
           </div>
-            <div class="dataTable-bottom">
-              <table style="width: 100%;">
-                <tr>
-                  <td>
-                    <div class="dataTable-info">{{getInfoAboutRecords()}} reviews
-                    </div>
-                  </td>
-                  <td>
-                    <div style="display: flex; align-items: center;justify-content: center">
-                      <label style="margin-right: 10px; margin-bottom: 0">Reviews per page</label>
-                      <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
-                              (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
-                        <option value="5" selected>5</option>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <ul class="pagination pagination-primary float-end dataTable-pagination"
-                        style="align-items: center;margin-bottom: 0px">
-                      <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
-                                                     data-page="1"><em class="fa fa-step-backward"></em></a></li>
-                      <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
-                                                     data-page="1"><em class="fa fa-arrow-left"></em></a></li>
-                      <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
-                      <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
-                      <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
-                      <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
-                                                     data-page="2"><em class="fa fa-arrow-right"></em></a></li>
-                      <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
-                                                     data-page="2"><em class="fa fa-step-forward"></em> </a></li>
-                    </ul>
-                  </td>
-                </tr>
-              </table>
-          </div>
         </div>
       </div>
     </div>
   </section>
 </div>
 
-<div class="row justify-content-lg-center" style="padding: 16px; min-width: 850px">
-  <div class="card review-cards" *ngFor="let review of reviews">
-    <div class="card-content">
-      <div class="card-body">
-        <h4 class="card-title">
-          <div style="display: flex">
-            <div class="star-rating-book" title="{{review.rating}}/5">
-              <div class="star-value-book" [ngStyle]="{'width': (review.rating * 100 / 5)+ '%' } "></div>
+<section id="reviews-card" style="min-width: 800px;">
+  <div class="card">
+    <div class="row justify-content-lg" style="padding: 16px; min-width: 800px">
+      <div class="review-cards" *ngFor="let review of reviews">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <h4 class="card-title">
+                <div style="display: flex">
+                  <div class="star-rating-book" title="{{review.rating}}/5">
+                    <div class="star-value-book" [ngStyle]="{'width': (review.rating * 100 / 5)+ '%' } "></div>
+                  </div>
+                </div>
+              </h4>
+              <p class="card-text">Name: {{review.commenterName}}
+              </p>
+              <div>
+                <div id="review{{review.id}}" class="review-comment truncate">
+                  <span #htmlSpanElement> Comment: {{review.comment}}</span>
+                  <div *ngIf="htmlSpanElement.offsetWidth > 128">
+                    <a type="button" class="help-icon-down fa fa-arrow-down"
+                       (click)="toggleClass('review'+review.id)"></a>
+                    <a type="button" class="help-icon-up fa fa-arrow-up" (click)="toggleClass('review'+review.id)"></a>
+                  </div>
+                </div>
+
+                <!--              <div id="comment{{review.id}}" class="collapse" aria-expanded="false">-->
+                <!--                <p>Comment: {{review.comment}}</p>-->
+                <!--              </div>-->
+                <!--              <div class="text-end" *ngIf="review.comment.length > 255">-->
+                <!--                <a type="button" data-placement="bottom" data-toggle="collapse"-->
+                <!--                   href="#comment{{review.id}}" title="More">-->
+                <!--                  &lt;!&ndash;              <em id="three-dots" class="fa fa-ellipsis-h"></em>&ndash;&gt;-->
+                <!--                  <em class="fa fa-angle-double-down" id="arrows-up"></em></a>-->
+                <!--              </div>-->
+                <!--              <div class="text-end" *ngIf="review.comment.length <= 255">-->
+                <!--                <a type="button" data-placement="bottom" data-toggle="collapse"-->
+                <!--                   href="#comment{{review.id}}" title="More">-->
+                <!--                  &lt;!&ndash;              <em id="three-dots" class="fa fa-ellipsis-h"></em>&ndash;&gt;-->
+                <!--                  More</a>-->
+                <!--              </div>-->
+              </div>
             </div>
           </div>
-        </h4>
-        <p class="card-text">Commenter: {{review.commenterName}}
-        </p>
-        <div>
-          <div id="comment{{review.id}}" class="collapse hide" aria-expanded="false"  >
-            <p>Commenter: {{review.comment}}</p>
-          </div>
-          <div class="text-end" *ngIf="review.comment.length > 32">
-            <a type="button" data-placement="bottom" data-toggle="collapse"
-               href="#comment{{review.id}}" title="More">
-<!--              <em id="three-dots" class="fa fa-ellipsis-h"></em>-->
-              <em class="fa fa-angle-double-down"  id="arrows-up"></em></a>
-          </div>
         </div>
-
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="dataTable-bottom">
+        <table style="width: 100%;">
+          <tr>
+            <td>
+              <div class="dataTable-info">{{getInfoAboutRecords()}} reviews
+              </div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center;justify-content: center">
+                <label style="margin-right: 10px; margin-bottom: 0">Reviews per page</label>
+                <select class="dataTable-selector form-select" ngModel="5" name="pageSize"
+                        (ngModelChange)="changeElementsPerPage($event)" style="width: auto;">
+                  <option value="5" selected>5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                </select>
+              </div>
+            </td>
+            <td>
+              <ul class="pagination pagination-primary float-end dataTable-pagination"
+                  style="align-items: center;margin-bottom: 0px">
+                <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
+                                               data-page="1"><em class="fa fa-step-backward"></em></a></li>
+                <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
+                                               data-page="1"><em class="fa fa-arrow-left"></em></a></li>
+                <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
+                <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
+                <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
+                <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
+                                               data-page="2"><em class="fa fa-arrow-right"></em></a></li>
+                <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
+                                               data-page="2"><em class="fa fa-step-forward"></em> </a></li>
+              </ul>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <mat-paginator #matPaginator [length]="totalRecords" [pageSize]="5" [pageSizeOptions]="[5,10,20]"
                (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
