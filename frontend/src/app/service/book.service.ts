@@ -9,6 +9,7 @@ import {PageSortFilterParameters} from "../model/parameters/PageSortFilterParame
 @Injectable({
   providedIn: 'root'
 })
+//TODO the same remarks as in the author.service.ts
 export class BookService {
   private apiServerUrl = environment.apiBaseUrl;
 

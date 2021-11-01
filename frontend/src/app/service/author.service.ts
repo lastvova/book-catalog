@@ -15,11 +15,14 @@ export class AuthorService {
   constructor(private http: HttpClient) {
   }
 
+  //TODO redundant parameter
   public getAuthors(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    //TODO should the "api" path be in the apiBaseUrl?
     return this.http.get<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors`);
   }
 
   public getAuthorsWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
+    //TODO extract the "authors" path to the existing class variable apiServerUrl
     return this.http.post<DataWithTotalRecords>(`${this.apiServerUrl}/api/authors`, pageSortFilterParameters);
   }
 
@@ -28,6 +31,7 @@ export class AuthorService {
   }
 
   public createAuthor(author: Author): Observable<Author> {
+    //TODO is the data in the grid being refreshed right after the creation?
     return this.http.post<Author>(`${this.apiServerUrl}/api/authors/create`, author);
   }
 
@@ -36,6 +40,7 @@ export class AuthorService {
   }
 
   public deleteAuthor(authorId: number): Observable<void> {
+    //TODO is the data in the grid being refreshed right after the deletion?
     return this.http.delete<void>(`${this.apiServerUrl}/api/authors/${authorId}`);
   }
 
