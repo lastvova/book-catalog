@@ -128,7 +128,7 @@ export class BookPageComponent implements OnInit {
     return "Showing 0";
   }
 
-  public toggleClass(reviewId: string){
+  public toggleClassForComment(reviewId: string){
     let element = document.getElementById(reviewId);
     // @ts-ignore
     element.classList.toggle("truncated")

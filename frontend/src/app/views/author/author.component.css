@@ -285,12 +285,12 @@ td {
   padding: 10px;
 }
 
-a[aria-expanded=false] #three-dots {
-  display: none;
-}
-a[aria-expanded=true] .fa-angle-double-up {
-  display: none;
-}
+/*a[aria-expanded=false] #three-dots {*/
+/*  display: none;*/
+/*}*/
+/*a[aria-expanded=true] #three-dots {*/
+/*  display: inline-block;*/
+/*}*/
 h3{
   color: black;
 }

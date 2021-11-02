@@ -145,14 +145,11 @@
                 </td>
                 <td>
                   <ul class="pagination pagination-primary float-end dataTable-pagination"
-                      style="align-items: center;margin-bottom: 0px">
+                      style="align-items: center;margin-bottom: 0">
                     <li class="page-item pager"><a (click)="matPaginator.firstPage()" class="page-link"
                                                    data-page="1"><em class="fa fa-step-backward"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
                                                    data-page="1"><em class="fa fa-arrow-left"></em></a></li>
-                    <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
-                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
-                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
                     <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
                                                    data-page="2"><em class="fa fa-arrow-right"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
@@ -219,9 +216,9 @@
                                 <li><label>{{ author.firstName}} {{author.secondName}}</label></li>
                               </ul>
                             </div>
-                            <p>Publisher: {{book.publisher}}</p>
-                            <p>Year: {{book.yearPublisher}}</p>
-                            <p>isbn: {{formatIsbn(book.isbn.toString())}}</p>
+                            <div>Publisher: {{book.publisher}}</div>
+                            <div>Year: {{book.yearPublisher}}</div>
+                            <div>ISBN: {{formatIsbn(book.isbn.toString())}}</div>
                             <a data-dismiss="modal" [routerLink]="['/books/', book.id]" type="button"
                                data-placement="bottom" title="Detail">Book page</a>
                           </div>
@@ -229,7 +226,6 @@
                             <a type="button" data-placement="bottom" data-toggle="collapse"
                                href="#bookDetails{{book.isbn}}" title="Detail">
                               <em id="three-dots" class="fa">More</em></a>
-<!--                              <em [attr.aria-expanded]="true" id="arrows-up" class="fa fa-angle-double-up"></em></a>-->
                           </div>
                         </div>
                       </div>
