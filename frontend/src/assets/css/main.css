@@ -7005,6 +7005,7 @@ textarea.form-control-lg {
 }
 
 .mb-3 {
+  min-width: 800px;
   margin-bottom: 1rem !important
 }
 

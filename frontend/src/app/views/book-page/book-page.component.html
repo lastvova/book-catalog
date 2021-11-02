@@ -63,13 +63,14 @@
               <p class="card-text">Name: {{review.commenterName}}
               </p>
               <div>
-                <div id="review{{review.id}}" class="review-comment truncate">
+                <div #divElement id="review{{review.id}}" class="review-comment truncate">
                   <span #htmlSpanElement> Comment: {{review.comment}}</span>
-                  <div *ngIf="htmlSpanElement.offsetWidth > 128">
-                    <a type="button" class="help-icon-down fa fa-arrow-down"
-                       (click)="toggleClass('review'+review.id)"></a>
-                    <a type="button" class="help-icon-up fa fa-arrow-up" (click)="toggleClass('review'+review.id)"></a>
+                  <div *ngIf="htmlSpanElement.offsetWidth > divElement.offsetWidth">
+                    <a type="button" class="help-icon-down fa" (click)="toggleClass('review'+review.id)"
+                       style="color: #435ebe">More</a>
                   </div>
+                  <a type="button" class="help-icon-up fa" (click)="toggleClass('review'+review.id)"
+                     style="color: #435ebe">Hide</a>
                 </div>
 
                 <!--              <div id="comment{{review.id}}" class="collapse" aria-expanded="false">-->
