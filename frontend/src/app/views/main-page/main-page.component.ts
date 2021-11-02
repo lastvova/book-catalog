@@ -6,6 +6,8 @@ import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalR
 import {HttpErrorResponse} from "@angular/common/http";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 import {AuthorService} from "../../service/author.service";
+import {Author} from "../../model/Author";
+import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
 
 @Component({
   selector: 'app-main-page',
@@ -13,7 +15,6 @@ import {AuthorService} from "../../service/author.service";
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit {
-  public books: Book[] = [];
   public zeroStarBooks: number;
   public oneStarBooks: number;
   public twoStarBooks: number;
@@ -21,7 +22,9 @@ export class MainPageComponent implements OnInit {
   public fourStarBooks: number;
   public fiveStarBooks: number;
   public topThreeBooks: Book[] = [];
+  public topThreeAuthors: Author[] = [];
   public bookFilterParameters: BookFilterParameters;
+  public authorFilterParameters: AuthorFilterParameters;
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
 
   constructor(private bookService: BookService, private authorService: AuthorService) {
@@ -35,6 +38,7 @@ export class MainPageComponent implements OnInit {
     this.getBooksByRatingFour();
     this.getBooksByRatingFive();
     this.getTopThreeBooks();
+    this.getTopThreeAuthors();
 
   }
 
@@ -51,7 +55,21 @@ export class MainPageComponent implements OnInit {
         alert(error.message);
       }
     );
+  }
 
+  public getTopThreeAuthors(): void {
+    this.pageSortFilterParameters.pattern = {};
+    this.pageSortFilterParameters.pageSize = 3;
+    this.pageSortFilterParameters.pageNumber = 0;
+    this.pageSortFilterParameters.order = "DESC";
+    this.pageSortFilterParameters.sortField = "rating";
+    this.authorService.getAuthorsWithParameters(this.pageSortFilterParameters).subscribe(
+      (response: DataWithTotalRecords) => {
+        this.topThreeAuthors = response.content;
+      }, (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
   }
 
   public getBooksByRatingZero(): void {
@@ -131,7 +149,6 @@ export class MainPageComponent implements OnInit {
 
   public getBooksByRatingFive(): void {
     this.bookFilterParameters = new BookFilterParameters();
-    this.bookFilterParameters.toRating;
     this.bookFilterParameters.fromRating = 5;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getBooksWithParameters(this.pageSortFilterParameters).subscribe(
