@@ -97,7 +97,7 @@
                                 [indeterminate]="selection.hasValue() && !isAllSelected()">
                   </mat-checkbox>
                 </th>
-                <th id="tableName" style="width: 25%;"><a (click)="sortByColumn('name')">Name
+                <th id="tableName" style="width: 20%;"><a (click)="sortByColumn('name')">Name
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'name' && !pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
@@ -105,7 +105,7 @@
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'name' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
-                <th id="tableAuthors" style="width: 25%;">Authors</th>
+                <th id="tableAuthors" style="width: 20%;">Authors</th>
                 <th id="tableRating" style="width: 10%;"><a (click)="sortByColumn('rating')">Rating
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'rating' && pageSortFilterParameters.reverseForSorting"
@@ -122,7 +122,7 @@
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'publisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
-                <th id="tableYearOfPublisher" style="width: 10%;"><a (click)="sortByColumn('yearPublisher')">Year
+                <th id="tableYearOfPublisher" style="width: 5%;"><a (click)="sortByColumn('yearPublisher')">Year
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'yearPublisher' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>
@@ -131,7 +131,7 @@
                     *ngIf="pageSortFilterParameters.sortField === 'yearPublisher' && !pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-desc"></em></a></th>
 
-                <th id="tableIsbn" style="width: 10%;"><a (click)="sortByColumn('isbn')">ISBN
+                <th id="tableIsbn" style="width: 15%;"><a (click)="sortByColumn('isbn')">ISBN
                   <em
                     *ngIf="pageSortFilterParameters.sortField === 'isbn' && pageSortFilterParameters.reverseForSorting"
                     class="fa fa-sort-asc"></em>

@@ -79,8 +79,8 @@ ul {
 }
 
 .truncate.truncated {
-  white-space: initial;
-  width: 500px;
+  white-space: pre-line;
+  width: 95%;
 }
 
 .truncate.truncated .help-icon-down {

@@ -41,7 +41,7 @@ export class BookPageComponent implements OnInit {
   }
 
   public getBook(bookId: any) {
-    this.bookService.getBook(bookId).subscribe((response: Book) => {
+    this.bookService.getById(bookId).subscribe((response: Book) => {
         this.book = response
       },
       (error: HttpErrorResponse) => {
@@ -52,7 +52,7 @@ export class BookPageComponent implements OnInit {
   public getReviews(bookId: any) {
     this.reviewFilterParameters.bookId = bookId;
     this.pageSortFilterParameters.pattern = this.reviewFilterParameters;
-    this.reviewService.getReviewsWithParameters(this.pageSortFilterParameters).subscribe(
+    this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.reviews = [];
         this.reviews = response.content;
@@ -78,7 +78,7 @@ export class BookPageComponent implements OnInit {
     let createdReview: Review = reviewForm.value;
     createdReview.commenterName = createdReview.commenterName.trim();
     createdReview.comment = createdReview.comment.trim();
-    this.reviewService.createReview(reviewForm.value).subscribe(
+    this.reviewService.create(reviewForm.value).subscribe(
       (response: any) => {
         console.log(response);
         this.getBook(this.bookId);

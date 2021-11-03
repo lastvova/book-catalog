@@ -48,7 +48,7 @@ export class BookComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getBooks();
+    this.getBooksWithParameters();
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'id',
@@ -65,7 +65,7 @@ export class BookComponent implements OnInit {
     //todo
     pageParameters.pageNumber = 0;
     pageParameters.pageSize = 999999;
-    this.authorService.getAuthorsWithParameters(pageParameters).subscribe(
+    this.authorService.getAllWithParameters(pageParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.authors = response.content;
         this.setFullNameForAuthors()
@@ -77,23 +77,8 @@ export class BookComponent implements OnInit {
 
   }
 
-  public getBooks(): void {
-    this.bookService.getBooks(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
-        this.books = [];
-        this.books = response.content;
-        this.totalRecords = response.totalElements;
-        this.totalPages = response.totalPages;
-        this.numberOfRecords = response.number;
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
-  }
-
   public getBooksWithParameters(): void {
-    this.bookService.getBooksWithParameters(this.pageSortFilterParameters).subscribe(
+    this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.books = [];
         this.books = response.content;
@@ -111,7 +96,7 @@ export class BookComponent implements OnInit {
   }
 
   public getBook(bookId: number): void {
-    this.bookService.getBook(bookId).subscribe(
+    this.bookService.getById(bookId).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
@@ -134,7 +119,7 @@ export class BookComponent implements OnInit {
     let createdBook: Book = addForm.value;
     createdBook.name = createdBook.name.trim();
     createdBook.publisher = createdBook.publisher.trim();
-    this.bookService.createBook(createdBook).subscribe(
+    this.bookService.create(createdBook).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
@@ -168,7 +153,7 @@ export class BookComponent implements OnInit {
     this.editBook = editForm.value;
     this.editBook.name = this.editBook.name.trim();
     this.editBook.publisher = this.editBook.publisher.trim();
-    this.bookService.updateBook(editForm.value).subscribe(
+    this.bookService.update(editForm.value).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
@@ -185,7 +170,7 @@ export class BookComponent implements OnInit {
   }
 
   public deleteBook(bookId: number): void {
-    this.bookService.deleteBook(bookId).subscribe(
+    this.bookService.delete(bookId).subscribe(
       (response: void) => {
         console.log(response);
         this.notificationService.successSnackBar("Success!");
@@ -323,10 +308,6 @@ export class BookComponent implements OnInit {
     this.selectedAuthors.push(items);
   }
 
-  private setFullNameForAuthors() {
-    this.authors.forEach(author => author.fullName = author.firstName + " " + (author.secondName === null ? "" : author.secondName));
-  }
-
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }
@@ -339,5 +320,9 @@ export class BookComponent implements OnInit {
       return "Showing " + currentRecords + " to " + currentRecordsTo + " of " + this.totalRecords;
     }
     return "Showing 0";
+  }
+
+  private setFullNameForAuthors() {
+    this.authors.forEach(author => author.fullName = author.firstName + " " + (author.secondName === null ? "" : author.secondName));
   }
 }

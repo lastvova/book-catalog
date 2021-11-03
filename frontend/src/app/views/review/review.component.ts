@@ -33,7 +33,7 @@ export class ReviewComponent implements OnInit {
   }
 
   public getReviews(): void {
-    this.reviewService.getReviews(this.pageSortFilterParameters).subscribe(
+    this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.reviews = [];
         this.reviews = response.content;
@@ -48,7 +48,7 @@ export class ReviewComponent implements OnInit {
   }
 
   public getReviewsWithParameters(): void {
-    this.reviewService.getReviewsWithParameters(this.pageSortFilterParameters).subscribe(
+    this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         this.reviews = [];
         this.reviews = response.content;
@@ -65,7 +65,7 @@ export class ReviewComponent implements OnInit {
   public createAuthor(addForm: NgForm): void {
     //@ts-ignore
     document.getElementById('add-author-form').click();
-    this.reviewService.createReview(addForm.value).subscribe(
+    this.reviewService.create(addForm.value).subscribe(
       (response: Review) => {
         console.log(response);
         this.getReviewsWithParameters();

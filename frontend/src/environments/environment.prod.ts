@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:8080/book-catalog'
+  apiBaseUrl: 'http://localhost:8080/book-catalog/api'
 };

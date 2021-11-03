@@ -45,26 +45,11 @@ export class AuthorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAuthors();
-  }
-
-  //TODO is this method needed? it seems getAuthorsWithParameters could be used instead
-  public getAuthors(): void {
-    this.authorService.getAuthors(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
-        this.authors = response.content;
-        this.totalRecords = response.totalElements;
-        this.totalPages = response.totalPages;
-        this.numberOfRecords = response.number;
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+    this.getAuthorsWithParameters();
   }
 
   public getAuthorsWithParameters(): void {
-    this.authorService.getAuthorsWithParameters(this.pageSortFilterParameters).subscribe(
+    this.authorService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords) => {
         //TODO why is this needed here?
         this.authors = response.content;
@@ -91,7 +76,7 @@ export class AuthorComponent implements OnInit {
     if (createdAuthor.secondName != null) {
       createdAuthor.secondName = createdAuthor.secondName.trim();
     }
-    this.authorService.createAuthor(createdAuthor).subscribe(
+    this.authorService.create(createdAuthor).subscribe(
       (response: Author) => {
         //TODO do not keep smth like this in the master branch, however feel free to use it in the dev branch
         console.log(response);
@@ -121,7 +106,7 @@ export class AuthorComponent implements OnInit {
     //TODO if (createdAuthor.secondName != null) {... consistency?
     this.editAuthor.secondName = this.editAuthor.secondName.trim();
     //TODO this.editAuthor could be passed, no need for that class variable if this the case
-    this.authorService.updateAuthor(editForm.value).subscribe(
+    this.authorService.update(editForm.value).subscribe(
       (response: Author) => {
         console.log(response);
         //TODO avoid this call
@@ -138,7 +123,7 @@ export class AuthorComponent implements OnInit {
   }
 
   public deleteAuthor(authorId: number): void {
-    this.authorService.deleteAuthor(authorId).subscribe(
+    this.authorService.delete(authorId).subscribe(
       (response: void) => {
         console.log(response);
         this.notificationService.successSnackBar("Success!");
@@ -270,7 +255,7 @@ export class AuthorComponent implements OnInit {
     paramsForTopThreeBooks.sortField = 'rating';
     pattern.authorId = author.id;
     paramsForTopThreeBooks.pattern = pattern;
-    this.bookService.getBooksWithParameters(paramsForTopThreeBooks).subscribe(
+    this.bookService.getAllWithParameters(paramsForTopThreeBooks).subscribe(
       (response: DataWithTotalRecords) => {
         console.log(response);
         this.topThreeBooks = response.content;
