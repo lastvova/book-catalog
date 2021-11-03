@@ -209,7 +209,7 @@
                           </div>
                         </div>
                         <div>
-                          <div id="bookDetails{{book.isbn}}" class="collapse hide" aria-expanded="false">
+                          <div id="bookDetails{{book.isbn}}" aria-expanded="false">
                             <div>Authors:
                               <ul class="authors-list" style=""
                                   *ngFor="let author of book.authors">
@@ -221,11 +221,6 @@
                             <div>ISBN: {{formatIsbn(book.isbn.toString())}}</div>
                             <a data-dismiss="modal" [routerLink]="['/books/', book.id]" type="button"
                                data-placement="bottom" title="Detail">Book page</a>
-                          </div>
-                          <div class="text-end">
-                            <a type="button" data-placement="bottom" data-toggle="collapse"
-                               href="#bookDetails{{book.isbn}}" title="Detail">
-                              <em id="three-dots" class="fa">More</em></a>
                           </div>
                         </div>
                       </div>

@@ -67,8 +67,7 @@ export class BookComponent implements OnInit {
     pageParameters.pageSize = 999999;
     this.authorService.getAllWithParameters(pageParameters).subscribe(
       (response: DataWithTotalRecords) => {
-        this.authors = response.content;
-        this.setFullNameForAuthors()
+        this.authors = this.setFullNameForAuthors(response.content);
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -108,7 +107,6 @@ export class BookComponent implements OnInit {
   }
 
   public createBook(addForm: NgForm): void {
-    debugger
     if (addForm.invalid) {
       Object.keys(addForm.form.controls).forEach(key => {
         addForm.form.controls[key].markAsTouched()
@@ -127,7 +125,7 @@ export class BookComponent implements OnInit {
         this.notificationService.successSnackBar("Success!");
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        // alert(error.message);
         this.notificationService.errorSnackBar((error.message))
         addForm.reset();
       }
@@ -145,15 +143,17 @@ export class BookComponent implements OnInit {
       this.requiredAuthors = true;
       return;
     }
-    if (editForm.untouched) {
+    if (editForm.untouched && this.selectedAuthors.length === this.editBook.authors.length) {
       //@ts-ignore
       document.getElementById('close-edit-book-form').click();
       return;
     }
+
     this.editBook = editForm.value;
     this.editBook.name = this.editBook.name.trim();
     this.editBook.publisher = this.editBook.publisher.trim();
-    this.bookService.update(editForm.value).subscribe(
+    this.editBook.authors = this.authors.filter(author => this.editBook.authors.map(authorsId => authorsId.id).includes(author.id));
+    this.bookService.update(this.editBook).subscribe(
       (response: Book) => {
         console.log(response);
         this.getBooksWithParameters();
@@ -161,7 +161,7 @@ export class BookComponent implements OnInit {
         editForm.resetForm(this.editBook);
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        // alert(error.message);
       }
     );
     this.requiredAuthors = false;
@@ -210,9 +210,9 @@ export class BookComponent implements OnInit {
       button.setAttribute('data-target', '#createBookModal');
     }
     if (mode === 'edit') {
-      this.editBook = book;
       this.getAuthors();
-      this.selectedAuthors = this.editBook.authors;
+      this.editBook = book;
+      this.selectedAuthors = this.setFullNameForAuthors(this.editBook.authors);
       button.setAttribute('data-target', '#updateBookModal');
     }
     if (mode === 'delete') {
@@ -221,14 +221,6 @@ export class BookComponent implements OnInit {
     }
     if (mode === 'bulkDelete' && this.selection.hasValue()) {
       button.setAttribute('data-target', '#bulkDeleteBooksModal');
-    }
-    if (mode === 'detail') {
-      this.detailBook = book;
-      button.setAttribute('data-target', '#detailBookModal')
-    }
-    if (mode === 'createReview') {
-      this.detailBook = book;
-      button.setAttribute('data-target', '#createReviewModal')
     }
     // @ts-ignore
     container.appendChild(button);
@@ -322,7 +314,8 @@ export class BookComponent implements OnInit {
     return "Showing 0";
   }
 
-  private setFullNameForAuthors() {
-    this.authors.forEach(author => author.fullName = author.firstName + " " + (author.secondName === null ? "" : author.secondName));
+  private setFullNameForAuthors(authors: Author[]): Author[] {
+    authors.forEach(author => author.fullName = author.firstName + " " + (author.secondName === null ? "" : author.secondName));
+    return authors;
   }
 }

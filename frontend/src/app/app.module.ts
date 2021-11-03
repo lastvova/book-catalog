@@ -21,6 +21,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {BookPageComponent} from './views/book-page/book-page.component';
+import {errorInterceptorProviders} from "./service/error-interceptor.service";
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import {BookPageComponent} from './views/book-page/book-page.component';
     MatButtonModule,
     MatCheckboxModule,
   ],
-  providers: [],
+  providers: [errorInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule {
