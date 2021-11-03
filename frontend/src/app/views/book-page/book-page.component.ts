@@ -69,6 +69,7 @@ export class BookPageComponent implements OnInit {
   }
 
   public createReview(reviewForm: NgForm): void {
+    debugger
     if (reviewForm.invalid) {
       Object.keys(reviewForm.form.controls).forEach(key => {
         reviewForm.form.controls[key].markAsTouched()
@@ -78,7 +79,8 @@ export class BookPageComponent implements OnInit {
     let createdReview: Review = reviewForm.value;
     createdReview.commenterName = createdReview.commenterName.trim();
     createdReview.comment = createdReview.comment.trim();
-    this.reviewService.create(reviewForm.value).subscribe(
+    createdReview.book = this.book;
+    this.reviewService.create(createdReview).subscribe(
       (response: any) => {
         console.log(response);
         this.getBook(this.bookId);
