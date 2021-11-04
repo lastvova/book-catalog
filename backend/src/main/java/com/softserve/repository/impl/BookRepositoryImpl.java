@@ -31,6 +31,17 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Book getById(BigInteger id) {
+        LOGGER.debug("getById({})", id);
+        Book book = super.getById(id);
+        if (book != null) {
+            book.getAuthors().size();
+        }
+        return book;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Page<Book> getAll(ListParams<?> params) {
         LOGGER.debug("getAll");
         Page<Book> books = super.getAll(params);

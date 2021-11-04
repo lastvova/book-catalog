@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Book;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.BookRepository;
 import com.softserve.service.BookService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -22,17 +20,6 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
     private final BookRepository repository;
-
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Book getById(BigInteger id) {
-        Book book = super.getById(id);
-        if (book == null) {
-            throw new EntityNotFoundException("Not found entity with id: " + id);
-        }
-        book.getAuthors().size();
-        return book;
-    }
 
     @Autowired
     public BookServiceImpl(BookRepository repository) {
