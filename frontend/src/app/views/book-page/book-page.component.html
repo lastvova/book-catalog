@@ -31,11 +31,11 @@
               </div>
             </div>
             <div class="col-6" style="margin-bottom: 10px">
-              <button class="btn btn-outline-primary" [routerLink]="['/books']">BACK
+              <button class="btn btn-outline-primary" (click)="backInBrowserHistory()" >BACK
               </button>
             </div>
             <div class="col-6 text-end" style="margin-bottom: 10px">
-              <button class="btn btn-outline-primary" data-toggle="modal" data-target="#createReviewModal"
+              <button *ngIf="previousUrl != '/main'" class="btn btn-outline-primary" data-toggle="modal" data-target="#createReviewModal"
                       style="width: 120px">ADD REVIEW
               </button>
             </div>

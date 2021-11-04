@@ -13,6 +13,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {BookService} from "../../service/book.service";
 import {Book} from "../../model/Book";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
+import {RouterService} from "../../service/router.service";
 
 @Component({
   selector: 'app-author',
@@ -41,7 +42,7 @@ export class AuthorComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
   constructor(private authorService: AuthorService, private notificationService: NotificationService,
-              private bookService: BookService) {
+              private bookService: BookService, private router: RouterService) {
   }
 
   ngOnInit(): void {

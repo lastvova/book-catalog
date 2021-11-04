@@ -11,6 +11,7 @@ import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterPar
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {ReviewFilterParameters} from "../../model/parameters/ReviewFilterParameters";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
+import {RouterService} from "../../service/router.service";
 
 @Component({
   selector: 'app-book-page',
@@ -21,6 +22,7 @@ export class BookPageComponent implements OnInit {
   public book = new Book();
   public reviews: Review[] = [];
   public bookId: any;
+  public previousUrl: string;
   public selectedStars: any;
   public numberOfRecords: number;
   public totalRecords: number;
@@ -30,11 +32,15 @@ export class BookPageComponent implements OnInit {
 
   @ViewChild('matPaginator') matPaginator: MatPaginator;
 
-  constructor(private route: ActivatedRoute, private bookService: BookService,
-              private reviewService: ReviewService, private notificationService: NotificationService) {
+  constructor(private route: ActivatedRoute,
+              private router: RouterService,
+              private bookService: BookService,
+              private reviewService: ReviewService,
+              private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
+    this.previousUrl = this.router.getPreviousUrl();
     this.bookId = this.route.snapshot.paramMap.get('id');
     this.getBook(this.bookId);
     this.getReviews(this.bookId);
@@ -69,7 +75,6 @@ export class BookPageComponent implements OnInit {
   }
 
   public createReview(reviewForm: NgForm): void {
-    debugger
     if (reviewForm.invalid) {
       Object.keys(reviewForm.form.controls).forEach(key => {
         reviewForm.form.controls[key].markAsTouched()
@@ -130,9 +135,13 @@ export class BookPageComponent implements OnInit {
     return "Showing 0";
   }
 
-  public toggleClassForComment(reviewId: string){
+  public toggleClassForComment(reviewId: string) {
     let element = document.getElementById(reviewId);
     // @ts-ignore
     element.classList.toggle("truncated")
+  }
+
+  public backInBrowserHistory(): void {
+    this.router.goToPrevious();
   }
 }

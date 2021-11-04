@@ -12,6 +12,7 @@ import {BookFilterParameters} from "../../model/parameters/BookFilterParameters"
 import {SelectionModel} from "@angular/cdk/collections";
 import {NotificationService} from "../../service/notification.service";
 import {MatAccordion} from "@angular/material/expansion";
+import {RouterService} from "../../service/router.service";
 
 @Component({
   selector: 'app-book',
@@ -44,7 +45,7 @@ export class BookComponent implements OnInit {
 
 
   constructor(private bookService: BookService, private authorService: AuthorService,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService, private router: RouterService) {
   }
 
   ngOnInit() {
@@ -143,11 +144,11 @@ export class BookComponent implements OnInit {
       this.requiredAuthors = true;
       return;
     }
-    if (editForm.untouched && this.selectedAuthors.length === this.editBook.authors.length) {
-      //@ts-ignore
-      document.getElementById('close-edit-book-form').click();
-      return;
-    }
+    // if (editForm.untouched && this.selectedAuthors.length === this.editBook.authors.length) {
+    //   //@ts-ignore
+    //   document.getElementById('close-edit-book-form').click();
+    //   return;
+    // }
 
     this.editBook = editForm.value;
     this.editBook.name = this.editBook.name.trim();

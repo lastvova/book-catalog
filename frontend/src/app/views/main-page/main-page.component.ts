@@ -8,6 +8,7 @@ import {BookFilterParameters} from "../../model/parameters/BookFilterParameters"
 import {AuthorService} from "../../service/author.service";
 import {Author} from "../../model/Author";
 import {AuthorFilterParameters} from "../../model/parameters/AuthorFilterParameters";
+import {RouterService} from "../../service/router.service";
 
 @Component({
   selector: 'app-main-page',
@@ -27,7 +28,7 @@ export class MainPageComponent implements OnInit {
   public authorFilterParameters: AuthorFilterParameters;
   public pageSortFilterParameters: PageSortFilterParameters = new PageSortFilterParameters();
 
-  constructor(private bookService: BookService, private authorService: AuthorService) {
+  constructor(private bookService: BookService, private authorService: AuthorService, private router: RouterService) {
   }
 
   ngOnInit(): void {

@@ -4,7 +4,6 @@ import {HttpClient} from "@angular/common/http";
 import {PageSortFilterParameters} from "../model/parameters/PageSortFilterParameters";
 import {Observable} from "rxjs";
 import {DataWithTotalRecords} from "../model/result-parameters/DataWithTotalRecords";
-import {Author} from "../model/Author";
 
 @Injectable({
   providedIn: 'root'
