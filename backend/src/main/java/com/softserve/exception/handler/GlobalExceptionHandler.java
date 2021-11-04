@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
             DeleteAuthorWithBooksException exception) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
             EntityNotFoundException exception) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.NOT_FOUND);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
             WrongEntityException exception) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PropertyVetoException.class)
     public ResponseEntity<ErrorInfo> propertyVetoExceptionHandler(PropertyVetoException exception) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
-        errorInfo.setErrorMessage("Some property represents an unacceptable value");
+        errorInfo.setMessage("Some property represents an unacceptable value");
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> noResultExceptionHandler(HttpServletRequest request, NoResultException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.NOT_FOUND);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage("Not found entity with this id");
+        errorInfo.setMessage("Not found entity with this id");
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorInfo> constraintViolationExceptionHandler(ConstraintViolationException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
-        errorInfo.setErrorMessage("Cannot add or update entity, because isbn already exists, reference on not exist entity");
+        errorInfo.setMessage("Cannot add or update entity, because isbn already exists, reference on not exist entity");
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> illegalStateExceptionHandler(HttpServletRequest request, IllegalStateException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> noSuchElementExceptionHandler(HttpServletRequest request, NoSuchElementException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> illegalArgumentExceptionHandler(HttpServletRequest request, IllegalArgumentException exception){
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
-        errorInfo.setErrorMessage(exception.getMessage());
+        errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());
         return ResponseEntity.status(errorInfo.getStatus()).body(errorInfo);
     }

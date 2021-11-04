@@ -10,7 +10,7 @@ public class ErrorInfo {
 
     private HttpStatus status;
     private String url;
-    private String errorMessage;
+    private String message;
 
     public ErrorInfo(HttpStatus status) {
         this.status = status;
