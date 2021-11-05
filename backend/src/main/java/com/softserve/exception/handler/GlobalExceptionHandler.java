@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInfo> deleteAuthorWithBooksExceptionHandler(
             HttpServletRequest request,
             DeleteAuthorWithBooksException exception) {
-        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST);
+        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR);
         errorInfo.setUrl(request.getRequestURL().toString());
         errorInfo.setMessage(exception.getMessage());
         LOGGER.error(exception.getMessage());

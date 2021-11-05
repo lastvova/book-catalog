@@ -5,6 +5,7 @@ import com.softserve.exception.DeleteAuthorWithBooksException;
 import com.softserve.repository.AuthorRepository;
 import com.softserve.utils.AuthorFilterParameters;
 import com.softserve.utils.ListParams;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,10 +89,27 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean deleteAuthors(List<BigInteger> ids) {
         LOGGER.debug("deleteAuthors({})", ids);
+        if (authorsHasBooks(ids)) {
+            throw new DeleteAuthorWithBooksException("Cant delete authors, because they have books");
+        }
         CriteriaDelete<Author> deleteQuery = criteriaBuilder.createCriteriaDelete(Author.class);
         Root<Author> authors = deleteQuery.from(Author.class);
         deleteQuery.where(authors.get("id").in(ids));
         return entityManager.createQuery(deleteQuery).executeUpdate() > 0;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public boolean authorsHasBooks(List<BigInteger> ids) {
+        LOGGER.debug("authorsHasBooks({})", ids);
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new IllegalStateException("Wrong authors ids");
+        }
+        BigInteger count = (BigInteger) entityManager
+                .createNativeQuery("select exists (select 1 from authors_books a " +
+                        "where a.author_id in (:id))")
+                .setParameter("id", ids)
+                .getSingleResult();
+        return count.compareTo(BigInteger.ZERO) > 0;
     }
 
     @Override
