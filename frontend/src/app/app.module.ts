@@ -22,6 +22,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {BookPageComponent} from './views/book-page/book-page.component';
 import {errorInterceptorProviders} from "./service/error-interceptor.service";
+import { BaseComponent } from './views/base/base.component';
 
 
 @NgModule({

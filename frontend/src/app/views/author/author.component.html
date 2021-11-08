@@ -27,7 +27,7 @@
           <div class="dataTable-container">
             <div class="collapse" id="collapseExample">
               <div class="card card-body">
-                <form #filterForm="ngForm" (ngSubmit)="filterAuthors()">
+                <form #filterForm="ngForm" (ngSubmit)="filterEntity()">
                   <div id="filter-forms" class="row align-items-center">
                     <div class="col-md-8" style="display: flex;align-items: center">
                       <label style="margin-left:0">Name:</label>
@@ -68,9 +68,9 @@
               <thead>
               <tr>
                 <th id="tableMarks" class="text-center" style="width: 5%;">
-                  <mat-checkbox (change)="$event ? masterToggle() : null"
-                                [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  <mat-checkbox (change)="$event ? masterToggleForSelection() : null"
+                                [checked]="selection.hasValue() && isAllSelectedInSelection()"
+                                [indeterminate]="selection.hasValue() && !isAllSelectedInSelection()">
                   </mat-checkbox>
                 </th>
                 <th id="tableFirstName" style="width: 40%;"><a (click)="sortByColumn('firstName')">First name
@@ -101,7 +101,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let author of authors">
+              <tr *ngFor="let author of entityArray">
                 <td class="text-center align-middle">
                   <mat-checkbox (click)="$event.stopPropagation()"
                                 (change)="$event ? selection.toggle(author) : null"
@@ -251,7 +251,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="createForm" #addForm="ngForm" (ngSubmit)="createAuthor(addForm)" class="form form-vertical">
+        <form id="createForm" #addForm="ngForm" (ngSubmit)="create(addForm)" class="form form-vertical">
           <div class="form-body">
             <div class="row">
               <div class="col-12">
@@ -279,7 +279,7 @@
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
-            <button type="button" id="close-author-form" class="btn btn-outline-dark" data-dismiss="modal"
+            <button type="button" id="close-create-form" class="btn btn-outline-dark" data-dismiss="modal"
                     (click)="addForm.resetForm()" style="width: 80px">Close
             </button>
           </div>
@@ -296,7 +296,7 @@
       <div class="modal-header">
         Edit
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                (click)="editForm.resetForm(editAuthor)">X
+                (click)="editForm.resetForm(editEntity)">X
         </button>
       </div>
       <div class="modal-body">
@@ -306,8 +306,8 @@
               <div class="col-12">
                 <div class="form-group">
                   <label for="authorFirstName">First Name*</label>
-                  <input type="text" class="form-control" ngModel="{{editAuthor.firstName}}" name="firstName"
-                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"
+                  <input type="text" class="form-control" ngModel="{{editEntity?.firstName}}" name="firstName"
+                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128" value="{{editEntity?.firstName}}"
                          pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
                   <div *ngIf="editFirstName.invalid && editFirstName.dirty"
                        class="alert alert-danger" style="padding: 5px">
@@ -317,22 +317,22 @@
                   </div>
                 </div>
               </div>
-              <input type="hidden" ngModel="{{editAuthor?.id}}" name="id" class="form-control">
+              <input type="hidden" ngModel="{{editEntity?.id}}" name="id" class="form-control">
               <div class="col-12">
                 <div class="form-group">
                   <label for="authorSecondName">Second Name</label>
-                  <input type="text" class="form-control" ngModel="{{editAuthor.secondName}}" name="secondName"
+                  <input type="text" class="form-control" ngModel="{{editEntity?.secondName}}" name="secondName"
                          placeholder="Second Name" minlength="1" maxlength="128">
                 </div>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-success" (click)="updateAuthor(editForm)"
+            <button type="submit" class="btn btn-outline-success" (click)="update(editForm)"
                     style="width: 80px">Save
             </button>
             <button id="close-edit-form" type="button" class="btn btn-outline-dark" data-dismiss="modal"
-                    style="width: 80px" (click)="editForm.resetForm(editAuthor)">Close
+                    style="width: 80px" (click)="editForm.resetForm(editEntity)">Close
             </button>
           </div>
         </form>
@@ -346,10 +346,10 @@
     <div class="modal-content">
       <div class="modal-body text-center" style="word-break: break-all">
         <h3>Are you want to delete?</h3>
-        <p> {{deletedAuthor.firstName}} {{deletedAuthor.secondName}}</p>
+        <p> {{deletedAuthor?.firstName}} {{deletedAuthor?.secondName}}</p>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteAuthor(deletedAuthor.id)">Delete
+        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="delete(deletedAuthor.id)">Delete
         </button>
         <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
       </div>

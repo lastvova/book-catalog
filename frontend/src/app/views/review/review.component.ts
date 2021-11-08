@@ -34,7 +34,7 @@ export class ReviewComponent implements OnInit {
 
   public getReviews(): void {
     this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Review>) => {
         this.reviews = [];
         this.reviews = response.content;
         this.totalRecords = response.totalElements;
@@ -49,7 +49,7 @@ export class ReviewComponent implements OnInit {
 
   public getReviewsWithParameters(): void {
     this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Review>) => {
         this.reviews = [];
         this.reviews = response.content;
         this.totalRecords = response.totalElements;

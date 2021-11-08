@@ -27,7 +27,7 @@
           <div class="dataTable-container">
             <div class="collapse" id="collapseExample">
               <div class="card card-body">
-                <form #filterForm="ngForm" (ngSubmit)="filterBooks()">
+                <form #filterForm="ngForm" (ngSubmit)="filterEntity()">
                   <div id="filter-forms" class="row-12">
                     <div class="row" style="margin-bottom: 5px">
                       <div class="col-md-10" style="display: flex;align-items: center">
@@ -92,9 +92,9 @@
               <thead>
               <tr>
                 <th id="tableMarks" class="text-center" style="width: 5%;">
-                  <mat-checkbox (change)="$event ? masterToggle() : null"
-                                [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  <mat-checkbox (change)="$event ? masterToggleForSelection() : null"
+                                [checked]="selection.hasValue() && isAllSelectedInSelection()"
+                                [indeterminate]="selection.hasValue() && !isAllSelectedInSelection()">
                   </mat-checkbox>
                 </th>
                 <th id="tableName" style="width: 20%;"><a (click)="sortByColumn('name')">Name
@@ -143,7 +143,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let book of books">
+              <tr *ngFor="let book of entityArray">
                 <td class="text-center align-middle">
                   <mat-checkbox (click)="$event.stopPropagation()"
                                 (change)="$event ? selection.toggle(book) : null"
@@ -231,7 +231,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="createForm" #addForm="ngForm" (ngSubmit)="createBook(addForm)" class="form form-vertical">
+        <form id="createForm" #addForm="ngForm" (ngSubmit)="create(addForm)" class="form form-vertical">
           <div class="form-body">
             <div class="row">
               <div class="col-12">
@@ -303,7 +303,7 @@
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
-            <button type="button" id="close-book-form" class="btn btn-outline-dark" data-dismiss="modal"
+            <button type="button" id="close-create-form" class="btn btn-outline-dark" data-dismiss="modal"
                     (click)="addForm.resetForm()" style="width: 80px">Close
             </button>
           </div>
@@ -320,17 +320,17 @@
       <div class="modal-header">
         Edit
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                (click)="editForm.resetForm(editBook)">X
+                (click)="editForm.resetForm(editEntity)">X
         </button>
       </div>
       <div class="modal-body">
-        <form id="editForm" #editForm="ngForm" (ngSubmit)="updateBook(editForm)" class="form form-vertical">
+        <form id="editForm" #editForm="ngForm" (ngSubmit)="update(editForm)" class="form form-vertical">
           <div class="form-body">
             <div class="row">
               <div class="col-12">
                 <div class="form-group">
                   <label for="bookName">First Name*</label>
-                  <input type="text" class="form-control" ngModel="{{editBook.name}}" name="name"
+                  <input type="text" class="form-control" ngModel="{{editEntity?.name}}" name="name"
                          #bookName="ngModel" placeholder="name" minlength="1" maxlength="256"
                          pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
                   <div *ngIf="bookName.invalid && (bookName.dirty || bookName.touched)"
@@ -363,7 +363,7 @@
               <div class="col-12">
                 <div class="form-group">
                   <label for="bookPublisher">Publisher*</label>
-                  <input type="text" class="form-control" #bookPublisher="ngModel" ngModel="{{editBook.publisher}}"
+                  <input type="text" class="form-control" #bookPublisher="ngModel" ngModel="{{editEntity?.publisher}}"
                          name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
                          pattern="((?:\w*[A-Za-z0-9_]\s*){1,256})$" required>
                   <div *ngIf="bookPublisher.invalid && (bookPublisher.dirty || bookPublisher.touched)"
@@ -377,14 +377,14 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookYearPublisher">Year:</label>
-                  <input type="number" class="form-control" ngModel="{{editBook.yearPublisher}}" name="yearPublisher"
+                  <input type="number" class="form-control" ngModel="{{editEntity?.yearPublisher}}" name="yearPublisher"
                          placeholder="Year" max="{{currentYear}}">
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookIsbn">ISBN:</label>
-                  <input type="text" class="form-control" #bookIsbn="ngModel" ngModel="{{editBook.isbn}}" name="isbn"
+                  <input type="text" class="form-control" #bookIsbn="ngModel" ngModel="{{editEntity?.isbn}}" name="isbn"
                          placeholder="ISBN" mask="000-0-0000-0000-0" required>
                   <div *ngIf="bookIsbn.invalid && (isbn.dirty || bookIsbn.touched)"
                        class="alert alert-danger" style="padding: 5px">
@@ -393,14 +393,14 @@
                     </div>
                   </div>
                 </div>
-                <input type="hidden" ngModel="{{editBook?.id}}" name="id" class="form-control">
+                <input type="hidden" ngModel="{{editEntity?.id}}" name="id" class="form-control">
               </div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-outline-success" style="width: 80px">Save</button>
-            <button type="button" id="close-edit-book-form" class="btn btn-outline-dark" data-dismiss="modal"
-                    (click)="editForm.resetForm(editBook)" style="width: 80px">Close
+            <button type="button" id="close-edit-form" class="btn btn-outline-dark" data-dismiss="modal"
+                    (click)="editForm.resetForm(editEntity)" style="width: 80px">Close
             </button>
           </div>
         </form>
@@ -414,10 +414,10 @@
     <div class="modal-content">
       <div class="modal-body text-center" style="word-break: break-all">
         <h3>Are you want to delete?</h3>
-        <p> {{deletedBook.name}}</p>
+        <p> {{deletedBook?.name}}</p>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="deleteBook(deletedBook.id)">Delete
+        <button class="btn btn-outline-danger" data-dismiss="modal" (click)="delete(deletedBook.id)">Delete
         </button>
         <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
       </div>

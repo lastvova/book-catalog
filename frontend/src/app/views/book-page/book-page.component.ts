@@ -42,24 +42,21 @@ export class BookPageComponent implements OnInit {
   ngOnInit(): void {
     this.previousUrl = this.router.getPreviousUrl();
     this.bookId = this.route.snapshot.paramMap.get('id');
-    this.getBook(this.bookId);
     this.getReviews(this.bookId);
+    this.getBook(this.bookId);
   }
 
   public getBook(bookId: any) {
     this.bookService.getById(bookId).subscribe((response: Book) => {
-        this.book = response
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message)
-      });
+      this.book = response
+    });
   }
 
   public getReviews(bookId: any) {
     this.reviewFilterParameters.bookId = bookId;
     this.pageSortFilterParameters.pattern = this.reviewFilterParameters;
     this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Review>) => {
         this.reviews = [];
         this.reviews = response.content;
         this.totalRecords = response.totalElements;
@@ -67,11 +64,7 @@ export class BookPageComponent implements OnInit {
         this.numberOfRecords = response.number;
         this.pageSortFilterParameters.pageNumber = response.number;
         this.pageSortFilterParameters.pageSize = response.size;
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+      });
   }
 
   public createReview(reviewForm: NgForm): void {
@@ -87,24 +80,20 @@ export class BookPageComponent implements OnInit {
     createdReview.book = this.book;
     this.reviewService.create(createdReview).subscribe(
       (response: any) => {
-        console.log(response);
         this.getBook(this.bookId);
         this.getReviews(this.bookId)
         this.notificationService.successSnackBar("Success");
         reviewForm.reset();
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
         reviewForm.reset();
       }
     );
-    //@ts-ignore
-    document.getElementById('close-review-form').click();
+    document.getElementById('close-review-form')!.click();
   }
 
   public countStar(star: any) {
     this.selectedStars = star;
-    console.log('Value of star', star);
   }
 
   public formatIsbn(isbn: string): string {
@@ -136,8 +125,7 @@ export class BookPageComponent implements OnInit {
   }
 
   public toggleClassForComment(reviewId: string) {
-    let element = document.getElementById(reviewId);
-    // @ts-ignore
+    let element = document.getElementById(reviewId)!;
     element.classList.toggle("truncated")
   }
 

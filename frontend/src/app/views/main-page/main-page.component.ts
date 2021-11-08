@@ -3,7 +3,6 @@ import {Book} from "../../model/Book";
 import {BookService} from "../../service/book.service";
 import {PageSortFilterParameters} from "../../model/parameters/PageSortFilterParameters";
 import {DataWithTotalRecords} from "../../model/result-parameters/DataWithTotalRecords";
-import {HttpErrorResponse} from "@angular/common/http";
 import {BookFilterParameters} from "../../model/parameters/BookFilterParameters";
 import {AuthorService} from "../../service/author.service";
 import {Author} from "../../model/Author";
@@ -50,12 +49,9 @@ export class MainPageComponent implements OnInit {
     this.pageSortFilterParameters.order = "DESC";
     this.pageSortFilterParameters.sortField = "rating";
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.topThreeBooks = response.content;
-      }, (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+      });
   }
 
   public getTopThreeAuthors(): void {
@@ -65,12 +61,9 @@ export class MainPageComponent implements OnInit {
     this.pageSortFilterParameters.order = "DESC";
     this.pageSortFilterParameters.sortField = "rating";
     this.authorService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Author>) => {
         this.topThreeAuthors = response.content;
-      }, (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+      });
   }
 
   public getBooksByRatingZero(): void {
@@ -79,13 +72,9 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 0;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.zeroStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 
   public getBooksByRatingOne(): void {
@@ -94,13 +83,9 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 1;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.oneStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 
   public getBooksByRatingTwo(): void {
@@ -109,13 +94,9 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 2;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.twoStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 
   public getBooksByRatingThree(): void {
@@ -124,13 +105,9 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 3;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.threeStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 
   public getBooksByRatingFour(): void {
@@ -139,13 +116,9 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 4;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.fourStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 
   public getBooksByRatingFive(): void {
@@ -153,12 +126,8 @@ export class MainPageComponent implements OnInit {
     this.bookFilterParameters.fromRating = 5;
     this.pageSortFilterParameters.pattern = this.bookFilterParameters;
     this.bookService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
-      (response: DataWithTotalRecords) => {
+      (response: DataWithTotalRecords<Book>) => {
         this.fiveStarBooks = response.totalElements
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+      })
   }
 }
