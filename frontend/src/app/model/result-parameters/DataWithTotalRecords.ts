@@ -1,9 +1,8 @@
 import {Pageable} from "./Pageable";
 import {PageableSort} from "./PageableSort";
 
-export class DataWithTotalRecords {
-  //TODO generics could be used
-  content: any[];
+export class DataWithTotalRecords<T> {
+  content: T[];
   pageable: Pageable;
   sort: PageableSort;
   //TODO it would be good to structure these class variables

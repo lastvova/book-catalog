@@ -17,8 +17,8 @@ export class Base<T> {
     this.modelUrl = url;
   }
 
-  public getAllWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords> {
-    return this.http.post<DataWithTotalRecords>(this.apiServerUrl + this.modelUrl, pageSortFilterParameters);
+  public getAllWithParameters(pageSortFilterParameters: PageSortFilterParameters): Observable<DataWithTotalRecords<T>> {
+    return this.http.post<DataWithTotalRecords<T>>(this.apiServerUrl + this.modelUrl, pageSortFilterParameters);
   }
 
   public getById(id: number): Observable<T> {

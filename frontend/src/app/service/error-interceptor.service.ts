@@ -7,7 +7,7 @@ import {
   HttpInterceptor,
   HttpRequest
 } from "@angular/common/http";
-import {Observable, throwError} from "rxjs";
+import {EMPTY, Observable, throwError} from "rxjs";
 import {NotificationService} from "./notification.service";
 import {catchError} from "rxjs/operators";
 import {RouterService} from "./router.service";
@@ -31,7 +31,7 @@ export class ErrorInterceptorService implements HttpInterceptor {
       if (err instanceof HttpErrorResponse) {
         this.notificationService.errorSnackBar(err.error.message);
       }
-      return throwError(err);
+      return EMPTY;
     }));
   }
 }
