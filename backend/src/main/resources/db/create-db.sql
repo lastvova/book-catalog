@@ -49,39 +49,10 @@ CREATE TABLE authors_books
     CONSTRAINT authors_books_book_id_fk FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE CASCADE
 );
 
-DROP PROCEDURE IF EXISTS count_authors_rating_by_book;
-CREATE PROCEDURE count_authors_rating_by_book(book_id_id INT)
-BEGIN
-
-    #   @authorIds is a string which contains array of author_id.
-    SET @authorIds = (SELECT CONCAT(GROUP_CONCAT(author_id), ',') FROM authors_books WHERE book_id = book_id_id);
-    WHILE (LOCATE(',', @authorIds) > 0)
-        DO
-#           get author_id and assign it into @value
-            SET @value = SUBSTRING(@authorIds, 1, LOCATE(',', @authorIds) - 1);
-#           truncate first author_id and assign new result into @authorIds
-            SET @authorIds = SUBSTRING(@authorIds, LOCATE(',', @authorIds) + 1);
-            CALL count_author_rating(@value);
-        END WHILE;
-END;
-
-DROP PROCEDURE IF EXISTS count_author_rating;
-CREATE PROCEDURE count_author_rating(author_id INT)
-BEGIN
-    UPDATE authors AS a
-    SET rating = IFNULL((SELECT AVG(b.rating)
-                         FROM books AS b
-                         WHERE b.id IN (
-                             SELECT ab.book_id
-                             FROM authors_books AS ab
-                             WHERE ab.author_id = author_id)
-                           AND b.rating > 0), 0.00)
-    WHERE a.id = author_id;
-END;
 
 DELIMITER //
-DROP TRIGGER IF EXISTS count_rating_when_insert_review//
-CREATE TRIGGER count_rating_when_insert_review
+DROP TRIGGER IF EXISTS count_rating_when_insert//
+CREATE TRIGGER count_rating_when_insert
     AFTER INSERT
     ON reviews
     FOR EACH ROW
@@ -93,37 +64,30 @@ BEGIN
     SET b.rating = avg_rating_for_book
     WHERE b.id = NEW.book_id;
 
-    CALL count_authors_rating_by_book(NEW.book_id);
+    UPDATE authors AS a
+    SET rating = (SELECT AVG(r.rating)
+                  FROM reviews AS r
+                           LEFT JOIN books AS b ON r.book_id = b.id
+                           INNER JOIN authors_books AS ab ON b.id = ab.book_id AND ab.author_id = a.id
+                  GROUP BY author_id)
+    WHERE a.id IN (SELECT author_id FROM authors_books WHERE book_id = NEW.book_id);
 END//
 DELIMITER ;
 
 DELIMITER //
 DROP TRIGGER IF EXISTS count_rating_when_delete_book//
 CREATE TRIGGER count_rating_when_delete_book
-    AFTER DELETE
-    ON authors_books
+    BEFORE DELETE
+    ON books
     FOR EACH ROW
 BEGIN
-    CALL count_author_rating(OLD.author_id);
+    UPDATE authors AS a
+    SET rating = (SELECT IFNULL(AVG(r.rating), 0.00)
+                  FROM reviews AS r
+                           LEFT JOIN books AS b ON r.book_id = b.id
+                           INNER JOIN authors_books AS ab
+                                      ON b.id = ab.book_id AND ab.author_id = a.id and r.book_id <> OLD.id
+                  GROUP BY author_id)
+    WHERE a.id IN (SELECT author_id FROM authors_books WHERE book_id = OLD.id);
 END//
 DELIMITER ;
-
-# Next trigger was created for case when we will can delete the separate review
-#
-# DELIMITER //
-# DROP TRIGGER IF EXISTS count_rating_when_delete_review//
-# CREATE TRIGGER count_rating_when_delete_review
-#     AFTER UPDATE
-#     ON reviews
-#     FOR EACH ROW
-# BEGIN
-#     DECLARE avg_rating_for_book DECIMAL(3, 2);
-#     SELECT avg(rating) INTO avg_rating_for_book FROM reviews WHERE book_id = OLD.book_id;
-#
-#     UPDATE books AS b
-#     SET b.rating = avg_rating_for_book
-#     WHERE b.id = OLD.book_id;
-#
-#     CALL count_authors_rating_by_book(OLD.book_id);
-# END//
-# DELIMITER ;
