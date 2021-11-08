@@ -9,7 +9,7 @@ export class RouterService {
   private previousUrl: string;
   private currentUrl: string;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     this.currentUrl = this.router.url;
     router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -28,6 +28,14 @@ export class RouterService {
   }
 
   public goToPrevious(): void {
-      this.router.navigateByUrl(this.previousUrl);
-    }
+    this.router.navigateByUrl(this.previousUrl);
+  }
+
+  public backByBrowserHistory() {
+    this.location.back();
+  }
+
+  public navigateToUrl(url: string){
+    this.router.navigateByUrl(url);
+  }
 }
