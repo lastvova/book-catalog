@@ -3,7 +3,6 @@ import {ActivatedRoute} from "@angular/router";
 import {Book} from "../../model/Book";
 import {BookService} from "../../service/book.service";
 import {ReviewService} from "../../service/review.service";
-import {HttpErrorResponse} from "@angular/common/http";
 import {NgForm} from "@angular/forms";
 import {NotificationService} from "../../service/notification.service";
 import {Review} from "../../model/Review";
@@ -57,7 +56,6 @@ export class BookPageComponent implements OnInit {
     this.pageSortFilterParameters.pattern = this.reviewFilterParameters;
     this.reviewService.getAllWithParameters(this.pageSortFilterParameters).subscribe(
       (response: DataWithTotalRecords<Review>) => {
-        this.reviews = [];
         this.reviews = response.content;
         this.totalRecords = response.totalElements;
         this.totalPages = response.totalPages;
@@ -77,6 +75,9 @@ export class BookPageComponent implements OnInit {
     let createdReview: Review = reviewForm.value;
     createdReview.commenterName = createdReview.commenterName.trim();
     createdReview.comment = createdReview.comment.trim();
+    if (createdReview.comment.length === 0) {
+      return;
+    }
     createdReview.book = this.book;
     this.reviewService.create(createdReview).subscribe(
       (response: any) => {
@@ -84,11 +85,7 @@ export class BookPageComponent implements OnInit {
         this.getReviews(this.bookId)
         this.notificationService.successSnackBar("Success");
         reviewForm.reset();
-      },
-      (error: HttpErrorResponse) => {
-        reviewForm.reset();
-      }
-    );
+      });
     document.getElementById('close-review-form')!.click();
   }
 

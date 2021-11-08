@@ -178,7 +178,7 @@
                 <label for="comment">Comment* </label>
                 <textarea type="text" id="comment" class="form-control" ngModel name="comment"
                           #reviewComment="ngModel" placeholder="Comment" minlength="1" required></textarea>
-                <div *ngIf="reviewComment.invalid && (reviewComment.dirty || reviewComment.touched)"
+                <div *ngIf="reviewComment.value.trim().length === 0 && (reviewComment.dirty || reviewComment.touched)"
                      class="alert alert-danger" style="padding: 5px">
                   <div *ngIf="reviewComment.errors?.required || reviewComment.errors?.pattern">
                     Wrong comment.
