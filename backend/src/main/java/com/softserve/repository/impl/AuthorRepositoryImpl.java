@@ -37,7 +37,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
                 .createNativeQuery("select exists (select 1 from authors_books a " +
                         "where a.author_id = :id)")
                 .setParameter("id", id)
-                .getSingleResult();
+                .getSingleResult(); // todo: actually "exists" return boolean value, please fix this
         return count.compareTo(BigInteger.ZERO) > 0;
     }
 
@@ -50,7 +50,7 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         }
         Author author = getById(id);
         if (author == null) {
-            return false;
+            return false; // todo: why false?
         }
         if (hasBooks(id)) {
             throw new DeleteAuthorWithBooksException("Cant delete author, because it has books");
@@ -105,10 +105,11 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
             throw new IllegalStateException("Wrong authors ids");
         }
         BigInteger count = (BigInteger) entityManager
+                // todo: this query is incorrect!
                 .createNativeQuery("select exists (select 1 from authors_books a " +
                         "where a.author_id in (:id))")
                 .setParameter("id", ids)
-                .getSingleResult();
+                .getSingleResult(); // todo: actually "exists" return boolean value, please fix this
         return count.compareTo(BigInteger.ZERO) > 0;
     }
 

@@ -43,7 +43,7 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
         return repository.deleteBooks(ids);
     }
 
-    private boolean isInValidYearOfPublisher(Book book) {
+    private boolean isInValidYearOfPublisher(Book book) { // todo: duplicate of: com.softserve.repository.impl.BookRepositoryImpl.isInValidYearOfPublisher
         if (book.getYearPublisher() == null) {
             return false;
         }
