@@ -43,7 +43,8 @@ export class BookComponent extends BaseComponent<Book> implements OnInit {
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 5,
-      allowSearchFilter: true
+      allowSearchFilter: true,
+      enableCheckAll: false,
     }
   }
 

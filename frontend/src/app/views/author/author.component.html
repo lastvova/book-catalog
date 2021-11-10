@@ -53,7 +53,7 @@
                       </select>
                     </div>
                     <div class="col-md-4 text-end">
-                      <button [disabled]="filterForm.untouched || filterForm.pristine" type="submit" class="btn btn-outline-primary"
+                      <button [disabled]="filterForm.pristine" type="submit" class="btn btn-outline-primary"
                               style="width: 90px">SEARCH
                       </button>
                       <button type="button" (click)="resetForm(filterForm)" class="btn btn-outline-dark"
@@ -241,7 +241,8 @@
   </div>
 </div>
 
-<div class="modal fade text-left" id="createAuthorModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+<div class="modal fade text-left" id="createAuthorModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+     role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -258,8 +259,8 @@
                 <div class="form-group">
                   <label for="authorFirstName">First Name*</label>
                   <input type="text" id="authorFirstName" class="form-control" ngModel name="firstName"
-                         #firstName="ngModel" placeholder="First Name" minlength="1" maxlength="128"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
+                         #firstName="ngModel" minlength="1" maxlength="128"
+                         pattern="((?:\s*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,128})$" required>
                   <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="firstName.errors?.required || firstName.errors?.pattern">
@@ -272,7 +273,7 @@
                 <div class="form-group">
                   <label for="authorSecondName">Second Name</label>
                   <input type="text" id="authorSecondName" class="form-control" ngModel name="secondName"
-                         placeholder="Second Name" minlength="1" maxlength="128">
+                         minlength="1" maxlength="128">
                 </div>
               </div>
             </div>
@@ -289,7 +290,8 @@
   </div>
 </div>
 
-<div class="modal fade text-left" id="updateAuthorModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+<div class="modal fade text-left" id="updateAuthorModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+     role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -307,8 +309,8 @@
                 <div class="form-group">
                   <label for="authorFirstName">First Name*</label>
                   <input type="text" class="form-control" ngModel="{{editEntity?.firstName}}" name="firstName"
-                         #editFirstName="ngModel" placeholder="First Name" minlength="1" maxlength="128" value="{{editEntity?.firstName}}"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,128})$" required>
+                         #editFirstName="ngModel" minlength="1" maxlength="128" value="{{editEntity?.firstName}}"
+                         pattern="((?:\s*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,128})$" required>
                   <div *ngIf="editFirstName.invalid && editFirstName.dirty"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="editFirstName.errors?.required || editFirstName.errors?.pattern">
@@ -322,7 +324,7 @@
                 <div class="form-group">
                   <label for="authorSecondName">Second Name</label>
                   <input type="text" class="form-control" ngModel="{{editEntity?.secondName}}" name="secondName"
-                         placeholder="Second Name" minlength="1" maxlength="128">
+                         minlength="1" maxlength="128">
                 </div>
               </div>
             </div>

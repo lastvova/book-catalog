@@ -58,7 +58,7 @@
                         </select>
                       </div>
                       <div class="col-md-2 text-end">
-                        <button [disabled]="filterForm.untouched || filterForm.pristine" type="submit"
+                        <button [disabled]="filterForm.pristine" type="submit"
                                 class="btn btn-outline-primary"
                                 style="width: 90px">SEARCH
                         </button>
@@ -199,9 +199,6 @@
                                                    data-page="1"><em class="fa fa-step-backward"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.previousPage()" class="page-link"
                                                    data-page="1"><em class="fa fa-arrow-left"></em></a></li>
-                    <!--                <li class="page-item active"><a href="#" class="page-link" data-page="1">1</a></li>-->
-                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="2">2</a></li>-->
-                    <!--                <li class="page-item"><a href="#" class="page-link" data-page="3">3</a></li>-->
                     <li class="page-item pager"><a (click)="matPaginator.nextPage()" class="page-link"
                                                    data-page="2"><em class="fa fa-arrow-right"></em></a></li>
                     <li class="page-item pager"><a (click)="matPaginator.lastPage()" class="page-link"
@@ -221,7 +218,8 @@
                (page)="onPageChange($event)" aria-label="Select page" style="visibility: hidden">
 </mat-paginator>
 
-<div class="modal fade text-left" id="createBookModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+<div class="modal fade text-left" id="createBookModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+     role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -238,8 +236,8 @@
                 <div class="form-group">
                   <label for="bookName">Name*</label>
                   <input type="text" id="bookName" class="form-control" ngModel name="name"
-                         #name="ngModel" placeholder="name" minlength="1" maxlength="256"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                         #name="ngModel" minlength="1" maxlength="256"
+                         pattern="((?:\s*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,256})$" required>
                   <div *ngIf="name.invalid && (name.dirty || name.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="name.errors?.required || name.errors?.pattern">
@@ -258,7 +256,8 @@
                     (onSelect)="onItemSelect($event)"
                     (onSelectAll)="onSelectAll($event)" ngModel name="authors" required="authors">
                   </ng-multiselect-dropdown>
-                  <div *ngIf="requiredAuthors" class="alert alert-danger" style="padding: 5px">
+                  <div *ngIf="requiredAuthors && selectedAuthors.length === 0" class="alert alert-danger"
+                       style="padding: 5px">
                     <div *ngIf="addForm.controls.authors.errors?.required">
                       Wrong authors.
                     </div>
@@ -269,8 +268,8 @@
                 <div class="form-group">
                   <label for="bookPublisher">Publisher*</label>
                   <input type="text" id="bookPublisher" class="form-control" #publisher="ngModel" ngModel
-                         name="publisher" placeholder="publisher" minlength="1" maxlength="512"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,512})$" required>
+                         name="publisher" minlength="1" maxlength="512"
+                         pattern="((?:\s*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,512})$" required>
                   <div *ngIf="publisher.invalid && (publisher.dirty || publisher.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="publisher.errors?.required || publisher.errors?.pattern">
@@ -282,15 +281,19 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookYearPublisher">Year</label>
-                  <input type="number" id="bookYearPublisher" class="form-control" ngModel name="yearPublisher"
-                         placeholder="year" maxlength="{{currentYear}}">
+                  <input type="number" id="bookYearPublisher" class="form-control" #bookYear1="ngModel" ngModel
+                         name="yearPublisher"
+                         max="{{currentYear}}">
+                  <div *ngIf="bookYear1.invalid" class="alert alert-danger" style="padding: 5px">
+                    Wrong year.
+                  </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookIsbn">ISBN*</label>
                   <input type="text" id="bookIsbn" class="form-control" #isbn="ngModel" ngModel name="isbn"
-                         placeholder="isbn" mask="000-0-0000-0000-0" required>
+                         mask="000-0-0000-0000-0" required>
                   <div *ngIf="isbn.invalid && (isbn.dirty || isbn.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="isbn.errors?.required">
@@ -313,7 +316,8 @@
   </div>
 </div>
 
-<div class="modal fade text-left" id="updateBookModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+<div class="modal fade text-left" id="updateBookModal" data-keyboard="false" data-backdrop="static" tabindex="-1"
+     role="dialog"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -331,8 +335,8 @@
                 <div class="form-group">
                   <label for="bookName">First Name*</label>
                   <input type="text" class="form-control" ngModel="{{editEntity?.name}}" name="name"
-                         #bookName="ngModel" placeholder="name" minlength="1" maxlength="256"
-                         pattern="((?:\s*[A-Za-z0-9_]\s*){1,256})$" required>
+                         #bookName="ngModel" minlength="1" maxlength="256"
+                         pattern="((?:\s*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,256})$" required>
                   <div *ngIf="bookName.invalid && (bookName.dirty || bookName.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="bookName.errors?.required || bookName.errors?.pattern">
@@ -352,7 +356,7 @@
                       [(ngModel)]="selectedAuthors"
                       ngModel name="authors" required="authors">
                     </ng-multiselect-dropdown>
-                    <div *ngIf="requiredAuthors" class="alert alert-danger" style="padding: 5px">
+                    <div *ngIf="selectedAuthors.length === 0" class="alert alert-danger" style="padding: 5px">
                       <div *ngIf="addForm.controls.authors.errors?.required">
                         Wrong authors.
                       </div>
@@ -364,8 +368,8 @@
                 <div class="form-group">
                   <label for="bookPublisher">Publisher*</label>
                   <input type="text" class="form-control" #bookPublisher="ngModel" ngModel="{{editEntity?.publisher}}"
-                         name="publisher" placeholder="Publisher" minlength="1" maxlength="512"
-                         pattern="((?:\w*[A-Za-z0-9_]\s*){1,256})$" required>
+                         name="publisher" minlength="1" maxlength="512"
+                         pattern="((?:\w*[A-Za-z0-9а-яА-ЯіІєЄїЇ]\s*){1,256})$" required>
                   <div *ngIf="bookPublisher.invalid && (bookPublisher.dirty || bookPublisher.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="bookPublisher.errors?.required || bookPublisher.errors?.pattern">
@@ -377,15 +381,18 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookYearPublisher">Year:</label>
-                  <input type="number" class="form-control" ngModel="{{editEntity?.yearPublisher}}" name="yearPublisher"
-                         placeholder="Year" max="{{currentYear}}">
+                  <input type="number" class="form-control" #bookYear="ngModel" ngModel="{{editEntity?.yearPublisher}}"
+                         name="yearPublisher" max="{{currentYear}}">
+                  <div *ngIf="bookYear.invalid" class="alert alert-danger" style="padding: 5px">
+                    Wrong year.
+                  </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="form-group">
                   <label for="bookIsbn">ISBN:</label>
                   <input type="text" class="form-control" #bookIsbn="ngModel" ngModel="{{editEntity?.isbn}}" name="isbn"
-                         placeholder="ISBN" mask="000-0-0000-0000-0" required>
+                         mask="000-0-0000-0000-0" required>
                   <div *ngIf="bookIsbn.invalid && (isbn.dirty || bookIsbn.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="bookIsbn.errors?.required">

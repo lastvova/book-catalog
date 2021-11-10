@@ -130,7 +130,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        Create author
+        Create review
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="reviewForm.resetForm()">X
         </button>
       </div>
@@ -152,8 +152,7 @@
                     </ul>
                   </div>
                   <input id="rating" hidden type="number" ngModel="{{selectedStars}}" #reviewRating="ngModel"
-                         name="rating" class="form-control"
-                         placeholder="rating" min="1" max="5" required>
+                         name="rating" class="form-control" min="1" max="5" required>
                   <div *ngIf="reviewRating.invalid && (reviewRating.dirty || reviewRating.touched)"
                        class="alert alert-danger" style="padding: 5px">
                     <div *ngIf="reviewRating.errors?.required || reviewRating.errors?.pattern">
@@ -179,7 +178,7 @@
             </div>
             <div class="row">
               <div class="form-group">
-                <label for="comment">Comment* </label>
+                <label for="comment">Comment </label>
                 <textarea type="text" id="comment" class="form-control" ngModel name="comment"></textarea>
               </div>
               <div class="form-group">

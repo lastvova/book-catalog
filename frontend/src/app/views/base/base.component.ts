@@ -92,13 +92,14 @@ export abstract class BaseComponent<T> implements OnInit {
         this.getAllWithParameters();
         this.notificationService.successSnackBar("Success!");
         updateForm.reset(this.editEntity);
+        document.getElementById('close-edit-form')!.click();
       },
       (error: HttpErrorResponse) => {
         this.notificationService.errorSnackBar((error.message))
         updateForm.reset();
       }
     );
-    document.getElementById('close-edit-form')!.click();
+
   }
 
   public delete(tId: number) {
