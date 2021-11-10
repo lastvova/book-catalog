@@ -74,9 +74,8 @@ export class BookPageComponent implements OnInit {
     }
     let createdReview: Review = reviewForm.value;
     createdReview.commenterName = createdReview.commenterName.trim();
-    createdReview.comment = createdReview.comment.trim();
-    if (createdReview.comment.length === 0) {
-      return;
+    if (createdReview.comment != null) {
+      createdReview.comment = createdReview.comment.trim();
     }
     createdReview.book = this.book;
     this.reviewService.create(createdReview).subscribe(

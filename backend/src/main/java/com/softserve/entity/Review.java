@@ -29,13 +29,13 @@ public class Review implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    @Column(name = "commenter_name", length = 128, nullable = false)
+    @Column(name = "commenter_name", length = 256, nullable = false)
     private String commenterName;
 
-    @Column(name = "comment", length = 1024, nullable = false)
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating", columnDefinition = "TINYINT", nullable = false)
     private Integer rating;
 
     @Column(name = "created_date", insertable = false, updatable = false, nullable = false)

@@ -96,10 +96,8 @@ public class ReviewController extends BaseController {
 
     private boolean isInvalidReview(ReviewDTO reviewDTO, boolean isMethodCreate) {
         if (isMethodCreate) {
-            return reviewDTO == null || reviewDTO.getId() != null || StringUtils.isBlank(reviewDTO.getCommenterName())
-                    || StringUtils.isBlank(reviewDTO.getComment());
+            return reviewDTO == null || reviewDTO.getId() != null || StringUtils.isBlank(reviewDTO.getCommenterName());
         }
-        return reviewDTO == null || StringUtils.isBlank(reviewDTO.getCommenterName())
-                || StringUtils.isBlank(reviewDTO.getComment());
+        return reviewDTO == null || StringUtils.isBlank(reviewDTO.getCommenterName());
     }
 }
