@@ -73,7 +73,7 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
     //This overriding needs for correct count books with joining authors
     @Override
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
         Root<Review> reviews = countQuery.from(Review.class);
         reviews.join("book");
         countQuery.select(criteriaBuilder.countDistinct(reviews)).where(predicate);

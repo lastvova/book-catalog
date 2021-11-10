@@ -64,6 +64,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         if (isInvalidEntity(entity)) {
             throw new IllegalArgumentException("Wrong entity in save method ");
         }
+        // todo: what will be if entity.id != null ?
         entityManager.persist(entity);
         return entity;
     }
@@ -91,7 +92,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
         }
         T entity = getById(id);
         if (entity == null) {
-            return false;
+            return false; // todo: why false ?
         }
         entityManager.remove(entity);
         return true;
@@ -124,22 +125,22 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
 
     private void setOrder(ListParams<?> listParams, CriteriaQuery<T> criteriaQuery, Root<T> entityRoot) {
-        if (listParams.getOrder().equals("ASC")) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())),
-                    criteriaBuilder.asc(entityRoot.get("createdDate")));
+        if (listParams.getOrder().equals("ASC")) {  // todo: what id listParams.getOrder() == null ?
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())),  // todo: what id listParams.getSortField() == null ?
+                    criteriaBuilder.asc(entityRoot.get("createdDate"))); // todo: why is this field added to sorting?
         } else {
             criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(listParams.getSortField())),
-                    criteriaBuilder.desc(entityRoot.get("createdDate")));
+                    criteriaBuilder.desc(entityRoot.get("createdDate"))); // todo: why is this field added to sorting?
         }
     }
 
     private Pageable getPageable(ListParams<?> listParams) {
-        Sort sort = Sort.by(listParams.getOrder(), listParams.getSortField());
+        Sort sort = Sort.by(listParams.getOrder(), listParams.getSortField()); // todo: is it really needed ? conflicted with method setOrder
         return PageRequest.of(listParams.getPageNumber(), listParams.getPageSize(), sort);
     }
 
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
         Root<T> countRoot = countQuery.from(basicClass);
 //        countQuery.groupBy(countRoot.get("id"));
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
@@ -153,6 +154,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
     //TODO all implementations of this method only check whether the ID is not null
     // this logic should be part of the isInvalidEntity method
+    // todo: this is redundant method at all!
     protected boolean isInvalidEntityId(T entity) {
         LOGGER.debug("isInvalidEntityId({})", entity);
         return false;

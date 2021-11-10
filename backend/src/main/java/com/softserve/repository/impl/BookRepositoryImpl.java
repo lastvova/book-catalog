@@ -54,9 +54,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     public boolean deleteBooks(List<BigInteger> ids) {
         LOGGER.debug("deleteBooks({})", ids);
         CriteriaDelete<Book> deleteQuery = criteriaBuilder.createCriteriaDelete(Book.class);
-        Root<Book> authors = deleteQuery.from(Book.class);
+        Root<Book> authors = deleteQuery.from(Book.class); // todo: wrong variable name
         deleteQuery.where(authors.get("id").in(ids));
-        return entityManager.createQuery(deleteQuery).executeUpdate() > 0;
+        return entityManager.createQuery(deleteQuery).executeUpdate() > 0; // todo: better to change method signature to return count of removed books
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         LOGGER.debug("isInvalidEntity({})", book);
 
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
-                || book.getIsbn() == null
+                || book.getIsbn() == null // todo: why are you not check isbn format here?
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || isInValidYearOfPublisher(book);
     }
@@ -75,7 +75,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         return book.getId() == null;
     }
 
-    private boolean isInValidYearOfPublisher(Book book) {
+    private boolean isInValidYearOfPublisher(Book book) { // todo: why parameter is a book?
         if (book.getYearPublisher() == null) {
             return false;
         }
@@ -141,10 +141,10 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     //This overriding needs for correct count books with joining authors
     @Override
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
         Root<Book> books = countQuery.from(Book.class);
         books.join("authors");
-        countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate);
+        countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate); // todo: do you really need to use method countDistinct ?
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 }
