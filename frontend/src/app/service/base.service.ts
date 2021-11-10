@@ -26,7 +26,6 @@ export class Base<T> {
   }
 
   public create(t: T): Observable<T> {
-    //TODO is the data in the grid being refreshed right after the creation?
     return this.http.post<T>(this.apiServerUrl + this.modelUrl + '/create', t);
   }
 
@@ -35,7 +34,6 @@ export class Base<T> {
   }
 
   public delete(id: number): Observable<void> {
-    //TODO is the data in the grid being refreshed right after the deletion?
     return this.http.delete<void>(this.apiServerUrl + this.modelUrl + '/' + +id);
   }
 
