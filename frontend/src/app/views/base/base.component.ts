@@ -71,13 +71,14 @@ export abstract class BaseComponent<T> implements OnInit {
         this.getAllWithParameters();
         createForm.reset();
         this.notificationService.successSnackBar("Success!");
+        document.getElementById('close-create-form')!.click();
       },
       (error: HttpErrorResponse) => {
         this.notificationService.errorSnackBar((error.message))
         createForm.reset();
       }
     );
-    document.getElementById('close-create-form')!.click();
+
   }
 
   public update(updateForm: NgForm): void {
@@ -151,7 +152,6 @@ export abstract class BaseComponent<T> implements OnInit {
 
   public sortByColumn(sortBy: string) {
     this.pageSortFilterParameters.sortField = sortBy;
-    //TODO not sure why this is required, could be rewritten using the order
     this.pageSortFilterParameters.reverseForSorting = !this.pageSortFilterParameters.reverseForSorting;
     if (this.pageSortFilterParameters.reverseForSorting) {
       this.pageSortFilterParameters.order = 'ASC'
@@ -188,7 +188,6 @@ export abstract class BaseComponent<T> implements OnInit {
     return "Showing 0";
   }
 
-  //TODO out of place method
   public formatIsbn(isbn: string): string {
     return isbn.substring(0, 3) + "-" + isbn.substring(3, 4) + "-" + isbn.substring(4, 8) + "-" + isbn.substring(8, 12) + "-" + isbn.substring(12, 13);
   }
