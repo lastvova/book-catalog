@@ -78,16 +78,34 @@ DELIMITER //
 DROP TRIGGER IF EXISTS count_rating_when_delete_book//
 CREATE TRIGGER count_rating_when_delete_book
     BEFORE DELETE
-    ON books
+    ON authors_books
     FOR EACH ROW
 BEGIN
     UPDATE authors AS a
-    SET rating = (SELECT IFNULL(AVG(r.rating), 0.00)
+    SET rating = (SELECT AVG(r.rating)
                   FROM reviews AS r
                            LEFT JOIN books AS b ON r.book_id = b.id
                            INNER JOIN authors_books AS ab
-                                      ON b.id = ab.book_id AND ab.author_id = a.id and r.book_id <> OLD.id
+                                      ON b.id = ab.book_id AND ab.author_id = a.id and r.book_id <> OLD.book_id
                   GROUP BY author_id)
-    WHERE a.id IN (SELECT author_id FROM authors_books WHERE book_id = OLD.id);
+    WHERE a.id IN (SELECT author_id FROM authors_books WHERE book_id = OLD.book_id);
+END//
+DELIMITER ;
+
+DELIMITER //
+DROP TRIGGER IF EXISTS count_rating_when_update_book//
+CREATE TRIGGER count_rating_when_update_book
+    AFTER INSERT
+    ON authors_books
+    FOR EACH ROW
+BEGIN
+    UPDATE authors AS a
+    SET rating = (SELECT AVG(r.rating)
+                  FROM reviews AS r
+                           LEFT JOIN books AS b ON r.book_id = b.id
+                           INNER JOIN authors_books AS ab
+                                      ON b.id = ab.book_id AND ab.author_id = a.id
+                  GROUP BY author_id)
+    WHERE a.id IN (SELECT author_id FROM authors_books WHERE book_id = NEW.book_id);
 END//
 DELIMITER ;
