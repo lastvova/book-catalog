@@ -15,12 +15,10 @@ import java.math.BigInteger;
 public class ReviewServiceImpl extends BaseServiceImpl<Review, BigInteger> implements ReviewService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
-    private final ReviewRepository repository; // todo: redundant field
 
     @Autowired
     public ReviewServiceImpl(ReviewRepository repository) {
         super(repository);
-        this.repository = repository;
     }
 
     @Override

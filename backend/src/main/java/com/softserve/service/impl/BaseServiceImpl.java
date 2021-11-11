@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.interfaces.GeneralMethodsInterface;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
@@ -12,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+
 @Service
-public abstract class BaseServiceImpl<T, I> implements BaseService<T, I> {
+public abstract class BaseServiceImpl<T extends GeneralMethodsInterface<I>, I extends Serializable> implements BaseService<T, I> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceImpl.class);
     private final BaseRepository<T, I> baseRepository;

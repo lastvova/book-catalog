@@ -1,9 +1,12 @@
 package com.softserve.service;
 
+import com.softserve.entity.interfaces.GeneralMethodsInterface;
 import com.softserve.utils.ListParams;
 import org.springframework.data.domain.Page;
 
-public interface BaseService<T, I> {
+import java.io.Serializable;
+
+public interface BaseService<T extends GeneralMethodsInterface<I>, I extends Serializable> {
 
     T getById(I id);
 

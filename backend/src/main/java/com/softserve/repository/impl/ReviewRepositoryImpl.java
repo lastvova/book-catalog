@@ -70,10 +70,11 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    //This overriding needs for correct count books with joining authors
+    //This overriding needs for correct count books with joining authors.
+    // Type Long was used, because methods "count" and "countDistinct" returning type Long
     @Override
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Review> reviews = countQuery.from(Review.class);
         reviews.join("book");
         countQuery.select(criteriaBuilder.countDistinct(reviews)).where(predicate);
@@ -86,10 +87,5 @@ public class ReviewRepositoryImpl extends BaseRepositoryImpl<Review, BigInteger>
         return super.isInvalidEntity(review) || StringUtils.isBlank(review.getCommenterName())
                 || review.getBook() == null || review.getRating() == null
                 || review.getRating() <= 0 || review.getRating() > 5;
-    }
-
-    @Override
-    protected boolean isInvalidEntityId(Review entity) {
-        return entity.getId() == null;
     }
 }

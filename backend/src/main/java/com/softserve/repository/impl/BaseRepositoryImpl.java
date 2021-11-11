@@ -1,6 +1,7 @@
 package com.softserve.repository.impl;
 
 
+import com.softserve.entity.interfaces.GeneralMethodsInterface;
 import com.softserve.repository.BaseRepository;
 import com.softserve.utils.ListParams;
 import org.slf4j.Logger;
@@ -21,10 +22,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
 @Repository
-public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
+public abstract class BaseRepositoryImpl<T extends GeneralMethodsInterface<I>, I extends Serializable> implements BaseRepository<T, I> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseRepositoryImpl.class);
     protected final Class<T> basicClass;
@@ -45,7 +47,6 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public T getById(I id) {
         LOGGER.debug("getById({})", id);
-        //TODO should be part of validating methods
         if (id == null) {
             throw new IllegalArgumentException("Wrong id");
         }
@@ -61,10 +62,9 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Transactional(propagation = Propagation.MANDATORY)
     public T create(T entity) {
         LOGGER.debug("create({})", entity);
-        if (isInvalidEntity(entity)) {
+        if (isInvalidEntity(entity) || entity.getId() != null) {
             throw new IllegalArgumentException("Wrong entity in save method ");
         }
-        // todo: what will be if entity.id != null ?
         entityManager.persist(entity);
         return entity;
     }
@@ -73,10 +73,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     @Transactional(propagation = Propagation.MANDATORY)
     public T update(T entity) {
         LOGGER.debug("update({})", entity);
-        if (isInvalidEntityId(entity)) {
-            throw new IllegalArgumentException("Wrong entity id");
-        }
-        if (isInvalidEntity(entity)) {
+        if (entity.getId() == null || isInvalidEntity(entity)){
             throw new IllegalArgumentException("Wrong entity in update method " + entity);
         }
         entityManager.merge(entity);
@@ -140,9 +137,8 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(basicClass);
-//        countQuery.groupBy(countRoot.get("id"));
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
@@ -150,14 +146,6 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     protected boolean isInvalidEntity(T entity) {
         LOGGER.debug("isInvalidEntity({})", entity);
         return entity == null;
-    }
-
-    //TODO all implementations of this method only check whether the ID is not null
-    // this logic should be part of the isInvalidEntity method
-    // todo: this is redundant method at all!
-    protected boolean isInvalidEntityId(T entity) {
-        LOGGER.debug("isInvalidEntityId({})", entity);
-        return false;
     }
 }
 

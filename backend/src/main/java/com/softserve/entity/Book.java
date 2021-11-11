@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import com.softserve.entity.interfaces.GeneralMethodsInterface;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +27,7 @@ import java.util.Set;
 @Entity
 @ToString
 @Table(name = "books")
-public class Book implements Serializable {
+public class Book implements Serializable, GeneralMethodsInterface<BigInteger> {
     private static final long serialVersionUID = -4426773266096656069L;
 
     @Id

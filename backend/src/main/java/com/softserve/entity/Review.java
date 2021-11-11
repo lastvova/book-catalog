@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import com.softserve.entity.interfaces.GeneralMethodsInterface;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 @Entity
 @ToString
 @Table(name = "reviews")
-public class Review implements Serializable {
+public class Review implements Serializable, GeneralMethodsInterface<BigInteger> {
     private static final long serialVersionUID = 1020476374006568471L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

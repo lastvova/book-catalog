@@ -54,8 +54,8 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     public boolean deleteBooks(List<BigInteger> ids) {
         LOGGER.debug("deleteBooks({})", ids);
         CriteriaDelete<Book> deleteQuery = criteriaBuilder.createCriteriaDelete(Book.class);
-        Root<Book> authors = deleteQuery.from(Book.class); // todo: wrong variable name
-        deleteQuery.where(authors.get("id").in(ids));
+        Root<Book> bookAuthors = deleteQuery.from(Book.class);
+        deleteQuery.where(bookAuthors.get("id").in(ids));
         return entityManager.createQuery(deleteQuery).executeUpdate() > 0; // todo: better to change method signature to return count of removed books
     }
 
@@ -64,23 +64,20 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         LOGGER.debug("isInvalidEntity({})", book);
 
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
-                || book.getIsbn() == null // todo: why are you not check isbn format here?
+                || isInValidIsbn(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
-                || isInValidYearOfPublisher(book);
+                || isInValidYearOfPublisher(book.getYearPublisher());
     }
 
-    @Override
-    protected boolean isInvalidEntityId(Book book) {
-        LOGGER.debug("isInvalidEntityId({})", book);
-        return book.getId() == null;
+    private boolean isInValidIsbn(BigInteger isbn) {
+        return isbn == null || isbn.compareTo(BigInteger.valueOf(999_999_999_999L)) < 0;
     }
 
-    private boolean isInValidYearOfPublisher(Book book) { // todo: why parameter is a book?
-        if (book.getYearPublisher() == null) {
+    private boolean isInValidYearOfPublisher(Integer year) {
+        if (year == null) {
             return false;
         }
-        return book.getYearPublisher() < 0
-                || book.getYearPublisher() > LocalDate.now().getYear();
+        return year < 0 || year > LocalDate.now().getYear();
     }
 
     @Override
@@ -139,9 +136,12 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     }
 
     //This overriding needs for correct count books with joining authors
+    // Type Long was used, because methods "count" and "countDistinct" returning type Long
+    // CountDistinct was used, because if to use count with groupBy(book.id), the calculation of count all books will be incorrect.
+    // In this case, the number of books for each author will be calculated
     @Override
     protected long getEntityCount(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class); // todo: Please not use Long class here!
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Book> books = countQuery.from(Book.class);
         books.join("authors");
         countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate); // todo: do you really need to use method countDistinct ?

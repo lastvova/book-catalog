@@ -31,7 +31,7 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     public boolean isInvalidEntity(Book book) {
         LOGGER.debug("isInvalidEntity({})", book);
         return super.isInvalidEntity(book) || StringUtils.isBlank(book.getName())
-                || book.getIsbn() == null
+                || isInValidIsbn(book.getIsbn())
                 || CollectionUtils.isEmpty(book.getAuthors())
                 || isInValidYearOfPublisher(book);
     }
@@ -49,5 +49,9 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
         }
         return book.getYearPublisher() < 0
                 || book.getYearPublisher() > LocalDate.now().getYear();
+    }
+
+    private boolean isInValidIsbn(BigInteger isbn) {
+        return isbn == null || isbn.compareTo(BigInteger.valueOf(999_999_999_999L)) < 0;
     }
 }

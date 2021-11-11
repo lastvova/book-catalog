@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigInteger;
@@ -33,11 +32,13 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
         if (id == null) {
             throw new IllegalStateException("Wrong author id");
         }
+//        MySQL works with operator "exist" via 1 or 0.
+//        And then if result of work of entity manager to cast to Boolean type, that we will receive  an exception
         BigInteger count = (BigInteger) entityManager
                 .createNativeQuery("select exists (select 1 from authors_books a " +
                         "where a.author_id = :id)")
                 .setParameter("id", id)
-                .getSingleResult(); // todo: actually "exists" return boolean value, please fix this
+                .getSingleResult();
         return count.compareTo(BigInteger.ZERO) > 0;
     }
 
@@ -117,11 +118,5 @@ public class AuthorRepositoryImpl extends BaseRepositoryImpl<Author, BigInteger>
     public boolean isInvalidEntity(Author author) {
         LOGGER.debug("isInvalidEntity({})", author);
         return super.isInvalidEntity(author) || StringUtils.isBlank(author.getFirstName());
-    }
-
-    @Override
-    protected boolean isInvalidEntityId(Author author) {
-        LOGGER.debug("isInvalidEntityId({})", author);
-        return author.getId() == null;
     }
 }
