@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.softserve.dto.AuthorDTO;
 import com.softserve.dto.BookDTO;
 import com.softserve.entity.Book;
 import com.softserve.exception.WrongEntityException;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -59,6 +61,7 @@ public class BookController extends BaseController {
         LOGGER.debug("getAll()");
         Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(new ListParams<>()));
         List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
+        dtos.forEach(bookDTO -> bookDTO.getAuthors().sort(Comparator.comparing(AuthorDTO::getFirstName)));
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
     }
