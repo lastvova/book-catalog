@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.softserve.enums.OrderSort;
 import com.softserve.utils.ListParams;
 
 public abstract class BaseController {
@@ -24,7 +25,7 @@ public abstract class BaseController {
             params.setSortField("rating");
         }
         if (params.getOrder() == null) {
-            params.setOrder("ASC");
+            params.setOrder(OrderSort.ASC);
         }
     }
 }

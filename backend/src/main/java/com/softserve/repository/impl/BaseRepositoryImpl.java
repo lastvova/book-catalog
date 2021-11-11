@@ -125,7 +125,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
 
 
     private void setOrder(ListParams<?> listParams, CriteriaQuery<T> criteriaQuery, Root<T> entityRoot) {
-        if (listParams.getOrder().equals("ASC")) {  // todo: what id listParams.getOrder() == null ?
+        if (listParams.getOrder().toString().equals("ASC")) {  // todo: what id listParams.getOrder() == null ?
             criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())),  // todo: what id listParams.getSortField() == null ?
                     criteriaBuilder.asc(entityRoot.get("createdDate"))); // todo: why is this field added to sorting?
         } else {
@@ -135,7 +135,7 @@ public abstract class BaseRepositoryImpl<T, I> implements BaseRepository<T, I> {
     }
 
     private Pageable getPageable(ListParams<?> listParams) {
-        Sort sort = Sort.by(listParams.getOrder(), listParams.getSortField()); // todo: is it really needed ? conflicted with method setOrder
+        Sort sort = Sort.by(listParams.getOrder().toString(), listParams.getSortField()); // todo: is it really needed ? conflicted with method setOrder
         return PageRequest.of(listParams.getPageNumber(), listParams.getPageSize(), sort);
     }
 

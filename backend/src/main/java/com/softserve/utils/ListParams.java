@@ -1,5 +1,6 @@
 package com.softserve.utils;
 
+import com.softserve.enums.OrderSort;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ public class ListParams<P> {
 
 //Default sorting could be by average rating
     String sortField = "rating";
-    String order = "ASC";   // todo: Better to create enum for this property
+    OrderSort order = OrderSort.ASC;
     Integer pageNumber = 0;
     Integer pageSize = 5;
     P pattern;
