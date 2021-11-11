@@ -52,6 +52,7 @@ public class BookController extends BaseController {
         LOGGER.debug("getAllWithParameters( params = {})", pageSortFilterParameters);
         Page<Book> result = bookService.getAll(super.validatePageAndSortParameters(pageSortFilterParameters));
         List<BookDTO> dtos = bookMapper.convertToDtoList(result.getContent());
+        dtos.forEach(bookDTO -> bookDTO.getAuthors().sort(Comparator.comparing(AuthorDTO::getFirstName)));
         Page<BookDTO> finalResult = new PageImpl<>(dtos, result.getPageable(), result.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(finalResult);
     }
