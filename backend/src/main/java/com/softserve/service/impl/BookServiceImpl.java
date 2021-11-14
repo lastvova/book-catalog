@@ -40,6 +40,9 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
     @Transactional
     public boolean bulkDelete(List<BigInteger> ids) {
         LOGGER.debug("bulkDelete({})", ids);
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new IllegalArgumentException("Wrong ids in bulk delete");
+        }
         return repository.deleteBooks(ids);
     }
 
@@ -47,11 +50,11 @@ public class BookServiceImpl extends BaseServiceImpl<Book, BigInteger> implement
         if (book.getYearPublisher() == null) {
             return false;
         }
-        return book.getYearPublisher() < 0
-                || book.getYearPublisher() > LocalDate.now().getYear();
+        return book.getYearPublisher() < 0 || book.getYearPublisher() > LocalDate.now().getYear();
     }
 
     private boolean isInValidIsbn(BigInteger isbn) {
-        return isbn == null || isbn.compareTo(BigInteger.valueOf(999_999_999_999L)) < 0;
+        return isbn == null || isbn.compareTo(BigInteger.valueOf(999_999_999_999L)) < 0
+                || isbn.compareTo(BigInteger.valueOf(9_999_999_999_999L)) > 0;
     }
 }

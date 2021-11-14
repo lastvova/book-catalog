@@ -6,6 +6,7 @@ import com.softserve.exception.WrongEntityException;
 import com.softserve.repository.BaseRepository;
 import com.softserve.service.BaseService;
 import com.softserve.utils.ListParams;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public abstract class BaseServiceImpl<T extends GeneralMethodsInterface<I>, I ex
     public T getById(I id) {
         LOGGER.debug("getById({})", id);
         if (id == null) {
-            throw new IllegalStateException("Wrong entity id");
+            throw new IllegalArgumentException("Wrong entity id");
         }
         T entity = baseRepository.getById(id);
         if (entity == null) {
@@ -42,6 +43,9 @@ public abstract class BaseServiceImpl<T extends GeneralMethodsInterface<I>, I ex
     @Override
     public Page<T> getAll(ListParams<?> listParams) {
         LOGGER.debug("getAll()");
+        if (listParams == null) {
+            throw new IllegalArgumentException("Wrong parameters in getAll");
+        }
         return baseRepository.getAll(listParams);
     }
 
@@ -49,7 +53,7 @@ public abstract class BaseServiceImpl<T extends GeneralMethodsInterface<I>, I ex
     @Transactional
     public T create(T entity) {
         LOGGER.debug("create({})", entity);
-        if (isInvalidEntity(entity)) {
+        if (isInvalidEntity(entity) || entity.getId() != null) {
             throw new WrongEntityException("Wrong entity in save method :" + entity);
         }
         return baseRepository.create(entity);
@@ -59,7 +63,7 @@ public abstract class BaseServiceImpl<T extends GeneralMethodsInterface<I>, I ex
     @Transactional
     public T update(T entity) {
         LOGGER.debug("update({})", entity);
-        if (isInvalidEntity(entity)) {
+        if (isInvalidEntity(entity) || entity.getId() == null) {
             throw new WrongEntityException("Wrong entity in update method :" + entity);
         }
         return baseRepository.update(entity);

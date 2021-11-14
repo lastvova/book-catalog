@@ -53,6 +53,9 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean deleteBooks(List<BigInteger> ids) {
         LOGGER.debug("deleteBooks({})", ids);
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new IllegalArgumentException("Wrong ids in bulk delete");
+        }
         CriteriaDelete<Book> deleteQuery = criteriaBuilder.createCriteriaDelete(Book.class);
         Root<Book> bookAuthors = deleteQuery.from(Book.class);
         deleteQuery.where(bookAuthors.get("id").in(ids));
