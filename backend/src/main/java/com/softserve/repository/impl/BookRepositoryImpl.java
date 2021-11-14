@@ -144,7 +144,7 @@ public class BookRepositoryImpl extends BaseRepositoryImpl<Book, BigInteger> imp
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Book> books = countQuery.from(Book.class);
         books.join("authors");
-        countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate); // todo: do you really need to use method countDistinct ?
+        countQuery.select(criteriaBuilder.countDistinct(books)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

@@ -25,7 +25,7 @@ public abstract class BaseController {
             params.setSortField("rating");
         }
         if (params.getOrder() == null) {
-            params.setOrder(OrderSort.ASC);
+            params.setOrder(OrderSort.DESC);
         }
     }
 }

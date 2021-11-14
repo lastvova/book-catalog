@@ -2,15 +2,16 @@ package com.softserve.repository.impl;
 
 
 import com.softserve.entity.interfaces.GeneralMethodsInterface;
+import com.softserve.enums.OrderSort;
 import com.softserve.repository.BaseRepository;
 import com.softserve.utils.ListParams;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +74,7 @@ public abstract class BaseRepositoryImpl<T extends GeneralMethodsInterface<I>, I
     @Transactional(propagation = Propagation.MANDATORY)
     public T update(T entity) {
         LOGGER.debug("update({})", entity);
-        if (entity.getId() == null || isInvalidEntity(entity)){
+        if (entity.getId() == null || isInvalidEntity(entity)) {
             throw new IllegalArgumentException("Wrong entity in update method " + entity);
         }
         entityManager.merge(entity);
@@ -111,7 +112,7 @@ public abstract class BaseRepositoryImpl<T extends GeneralMethodsInterface<I>, I
         typedQuery.setFirstResult(listParams.getPageNumber() * listParams.getPageSize());
         typedQuery.setMaxResults(listParams.getPageSize());
 
-        Pageable pageable = getPageable(listParams);
+        Pageable pageable = PageRequest.of(listParams.getPageNumber(), listParams.getPageSize());
 
         long entityCount = getEntityCount(predicate);
 
@@ -122,18 +123,15 @@ public abstract class BaseRepositoryImpl<T extends GeneralMethodsInterface<I>, I
 
 
     private void setOrder(ListParams<?> listParams, CriteriaQuery<T> criteriaQuery, Root<T> entityRoot) {
-        if (listParams.getOrder().toString().equals("ASC")) {  // todo: what id listParams.getOrder() == null ?
-            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())),  // todo: what id listParams.getSortField() == null ?
-                    criteriaBuilder.asc(entityRoot.get("createdDate"))); // todo: why is this field added to sorting?
-        } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(listParams.getSortField())),
-                    criteriaBuilder.desc(entityRoot.get("createdDate"))); // todo: why is this field added to sorting?
+        if (StringUtils.isBlank(listParams.getSortField())) {
+            listParams.setSortField("createdDate");
+            listParams.setOrder(OrderSort.DESC);
         }
-    }
-
-    private Pageable getPageable(ListParams<?> listParams) {
-        Sort sort = Sort.by(listParams.getOrder().toString(), listParams.getSortField()); // todo: is it really needed ? conflicted with method setOrder
-        return PageRequest.of(listParams.getPageNumber(), listParams.getPageSize(), sort);
+        if (listParams.getOrder() != null && listParams.getOrder().toString().equals("ASC")) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(entityRoot.get(listParams.getSortField())));
+        } else {
+            criteriaQuery.orderBy(criteriaBuilder.desc(entityRoot.get(listParams.getSortField())));
+        }
     }
 
     protected long getEntityCount(Predicate predicate) {
