@@ -282,8 +282,7 @@
                 <div class="form-group">
                   <label for="bookYearPublisher">Year</label>
                   <input type="number" id="bookYearPublisher" class="form-control" #bookYear1="ngModel" ngModel
-                         name="yearPublisher"
-                         max="{{currentYear}}">
+                         name="yearPublisher" min="0" max="{{currentYear}}">
                   <div *ngIf="bookYear1.invalid" class="alert alert-danger" style="padding: 5px">
                     Wrong year.
                   </div>
@@ -382,7 +381,7 @@
                 <div class="form-group">
                   <label for="bookYearPublisher">Year:</label>
                   <input type="number" class="form-control" #bookYear="ngModel" ngModel="{{editEntity?.yearPublisher}}"
-                         name="yearPublisher" max="{{currentYear}}">
+                         name="yearPublisher" min="0" max="{{currentYear}}">
                   <div *ngIf="bookYear.invalid" class="alert alert-danger" style="padding: 5px">
                     Wrong year.
                   </div>
