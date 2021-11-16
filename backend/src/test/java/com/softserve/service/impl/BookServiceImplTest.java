@@ -53,7 +53,7 @@ class BookServiceImplTest {
 
 
     @Test
-    void getBookById() {
+    void getBookByIdWithCorrectId() {
         Mockito.when(bookRepository.getById(BigInteger.ONE)).thenReturn(book);
 
         Book resultBook = bookService.getById(BigInteger.ONE);
@@ -64,7 +64,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void throwEntityNotFoundExceptionIfBookNotFounded() {
+    void throwEntityNotFoundExceptionWhenBookNotFounded() {
         Assertions.assertThrows(EntityNotFoundException.class, () -> bookService.getById(BigInteger.TEN));
         Mockito.verify(bookRepository, Mockito.times(1)).getById(BigInteger.TEN);
     }
@@ -75,7 +75,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void createBook() {
+    void createBookWhenBookIsCorrect() {
         book.setId(null);
         Mockito.when(bookRepository.create(book)).thenReturn(book);
 
@@ -141,7 +141,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void updateBook() {
+    void updateBookWhenBookIsCorrect() {
         Mockito.when(bookRepository.update(book)).thenReturn(book);
 
         Book resultBook = bookService.update(book);
@@ -159,7 +159,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void deleteBook() {
+    void deleteBookWhenBookIsCorrect() {
         Mockito.when(bookRepository.delete(book.getId())).thenReturn(true);
 
         Assertions.assertTrue(bookService.delete(book.getId()));
@@ -168,13 +168,11 @@ class BookServiceImplTest {
 
     @Test
     void throwIllegalArgumentExceptionWhenDeleteBookIdIsNull() {
-        book.setId(null);
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.delete(book.getId()));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.delete(null));
     }
 
     @Test
-    void bulkDeleteBook() {
+    void bulkDeleteBookWhenBooksAreCorrect() {
         List<BigInteger> ids = Collections.singletonList(book.getId());
 
         Mockito.when(bookRepository.deleteBooks(ids)).thenReturn(true);
@@ -189,7 +187,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void getAll() {
+    void getAllWhenParametersIsCorrect() {
         Page<Book> page = new PageImpl<>(Collections.singletonList(book));
 
         Mockito.when(bookRepository.getAll(Mockito.any(ListParams.class))).thenReturn(page);
