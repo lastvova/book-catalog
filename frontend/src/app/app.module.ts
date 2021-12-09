@@ -23,6 +23,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {BookPageComponent} from './views/book-page/book-page.component';
 import {errorInterceptorProviders} from "./service/error-interceptor.service";
 import { BaseComponent } from './views/base/base.component';
+import { LolComponent } from './views/lol/lol.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { BaseComponent } from './views/base/base.component';
     ReviewComponent,
     MainPageComponent,
     BookPageComponent,
+    LolComponent,
   ],
   imports: [
     BrowserModule,
