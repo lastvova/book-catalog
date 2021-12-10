@@ -1,33 +1,36 @@
 pipeline {
-  agent any
-  stages{
-    
-    stage ('Build') {
-      steps {
-        sh 'mvn clean package'
-        }
-      post {
-          success {
-            echo "Archiving..."
-            archiveArtifacts artifacts:'**/target/*.war'
-          }
-      }
+    agent any
+    triggers {
+        pollSCM('*/5 * * * *')
     }
-      
-    stage ('Deploy') {
-      steps{
-        build job:'deploy-book-catalog-to-staging'
+    stages{
+        stage ('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    echo "Archiving..."
+                    archiveArtifacts artifacts:'**/target/*.war'
+                }
+            }
+        }
+        stage ('Deployments') {
+            parallel{
+                stage ('Deploy to staging'){
+                    steps {
+                        sh "cp **/target/*.war C:/AUtils/tomcat-staging/webapps"
+                    }
+                }
+                stage ('Deploy to prod') {
+                    steps {
+                        timeout(time:5, unit:'DAYS'){
+                            input message:'approve prod deploy'
+                        }
+                        sh "cp **/target/*.war C:/AUtils/tomcat/webapps"
+                    }
+                }
+            }
         }
     }
-      
-    stage ('Deploy to prod') {
-      steps{
-        timeout(time:5, unit:'DAYS'){
-          input message:'approve prod deploy'
-        }
-        build job:'deploy-book-catalog'
-        }
-    }
-      
-  }
 }
