@@ -21,7 +21,7 @@ pipeline {
       }
     stage ('Deploy') {
       steps{
-        echo "Deploy step..."
+        build job:'deploy-book-catalog-to-staging'
         }
       }
     }
