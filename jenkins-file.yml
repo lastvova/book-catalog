@@ -4,8 +4,10 @@ pipeline {
     
     stage ('Build') {
       steps {
-        mvn clean
-        mvn package
+        sh '''
+          mvn clean
+          mvn package
+        '''
         }
         post {
           success {
