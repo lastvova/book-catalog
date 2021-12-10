@@ -6,23 +6,28 @@ pipeline {
       steps {
         sh 'mvn clean package'
         }
-        post {
+      post {
           success {
             echo "Archiving..."
             archiveArtifacts artifacts:'**/target/*.war'
           }
-        }
       }
-    
-    stage ('Medium Build') {
-      steps {
-        echo "Build step..."
-        }
-      }
+    }
+      
     stage ('Deploy') {
       steps{
         build job:'deploy-book-catalog-to-staging'
         }
-      }
     }
+      
+    stage ('Deploy to prod') {
+      steps{
+        timeout(time:5, unit:'DAYS'){
+          input message:'approve prod deploy'
+        }
+        build job:'deploy-book-catalog'
+        }
+    }
+      
+  }
 }
